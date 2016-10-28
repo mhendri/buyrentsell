@@ -21,6 +21,4 @@ Retrieve our project and get it running
 ```
 $ git clone https://github.com/mhendri/buyrentsell
 $ cd brs
-
-
-
+```
