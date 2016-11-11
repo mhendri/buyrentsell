@@ -19,7 +19,7 @@ $ source activate brs
 
 # Install additional Packages
 ```
-$ conda install flask-sqlalchemy
+$ conda install -c conda-forge flask-sqlalchemy=2.1
 $ conda install sqlalchemy 
 $ conda install psycopg2
 ```
