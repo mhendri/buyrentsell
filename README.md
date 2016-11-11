@@ -32,8 +32,9 @@ $ cd brs
 
 # Postgress.app
 ```
-Download postgress.app from postgressapp.com (if using a Mac)
-# Add the following to your .bash_profile 
+# Download postgress.app from postgressapp.com (if using a Mac)
+# Add the following to your .bash_profile
+$ nano ~/.bash_profile 
 export PATH="/Applications/Postgres.app/Contents/Versions/9.6/bin:$PATH"
 ```
 
