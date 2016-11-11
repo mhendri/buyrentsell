@@ -48,5 +48,7 @@ $ python
 >>> exit()
 ```
 # Get the app running locally
+```
 $ export FLASK_APP=app.py
 $ flask run
+```
