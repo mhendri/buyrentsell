@@ -16,9 +16,31 @@ $ cd anconda3/envs/brs
 # start virtual enviornment
 $ source activate brs
 ```
+# Install additional Packages
+$ conda install flask-sqlalchemy
+$ conda install sqlalchemy 
+$ conda install psycopg2
 
 Retrieve our project and get it running
 ```
 $ git clone https://github.com/mhendri/buyrentsell
 $ cd brs
 ```
+
+# Postgress.app
+# Download postgress.app from postgressapp.com (if using a Mac)
+# Add the following to your .bash_profile 
+export PATH="/Applications/Postgres.app/Contents/Versions/9.6/bin:$PATH"
+
+# Launch postgress.app, in a separate bash terminal:
+$ createdb users
+
+# Create our database based off our model, run the following commands
+$ python
+>>> from app import db
+>>> db.create_all()
+>>> exit()
+
+# Get the app running locally
+$ export FLASK_APP=app.py
+$ flask run
