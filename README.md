@@ -40,7 +40,10 @@ export PATH="/Applications/Postgres.app/Contents/Versions/9.6/bin:$PATH"
 
 # Launch postgress.app, in a separate bash terminal:
 ```
-$ createdb users
+$ psql postgres
+$ CREATE DATABASE brs;
+$ CREATE USER brsadmin WITH PASSWORD 'yourpassword';
+$ GRANT ALL PRIVILEGES ON DATABASE brs TO brsadmin;
 
 # Create our database based off our model, run the following commands
 $ python
