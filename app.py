@@ -31,8 +31,12 @@ class User(db.Model):
 def index():
     return render_template('index.html')
 
-@app.route('/showSignUp', methods =['GET', 'POST'])
+@app.route('/showSignUp', methods =['GET'])
 def showSignUp():
+    return render_template('signup.html')
+
+@app.route('/success', methods =['POST'])
+def success():
     if request.method == 'POST':
         email = request.form['inputEmail']
         name = request.form['inputName']
@@ -45,8 +49,8 @@ def showSignUp():
             entry = User(user_name,user_email,phone,user_pw)
             db.session.add(entry)
             db.session.commit()
-            return redirect('http://127.0.0.1:5000/')
-    return render_template('signup.html')
+            return render_template('success.html')
+
 
 
 
