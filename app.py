@@ -34,15 +34,15 @@ def index():
 @app.route('/showSignUp', methods =['GET', 'POST'])
 def showSignUp():
     if request.method == 'POST':
-        email = request.form['email']
-        name = request.form['name']
-        password = request.form['password']
-        # Check that email does not already exist
+        email = request.form['inputEmail']
+        name = request.form['inputName']
+        password = request.form['inputPassword']
+        phone =  request.form['phoneNumber']
         if not db.session.query(User).filter(User.email == email).count():
-            user_email = 'mhendrickson@gmail.com'
-            user_name = 'mhendrickson'
-            user_pw = 'water'
-            entry = User(user_name,user_email,'123',user_pw)
+            user_email = email
+            user_name = name
+            user_pw = password
+            entry = User(user_name,user_email,phone,user_pw)
             db.session.add(entry)
             db.session.commit()
             return redirect('http://127.0.0.1:5000/')
@@ -51,4 +51,4 @@ def showSignUp():
 
 
 if (__name__)=='__main__':
-	app.run(host='local host', port=5555, debug=false)
+	app.run(host='local host', port=5555, debug=True)
