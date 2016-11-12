@@ -40,8 +40,8 @@ def showSignUp():
         # Check that email does not already exist
         if not db.session.query(User).filter(User.email == email).count():
             user_email = 'mhendrickson@gmail.com'
-            user_name = 'mhendrickson@gmail.com'
-            user_pw = 'mhendrickson@gmail.com'
+            user_name = 'mhendrickson'
+            user_pw = 'water'
             entry = User(user_name,user_email,'123',user_pw)
             db.session.add(entry)
             db.session.commit()
