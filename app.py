@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import render_template, request
 from flask_sqlalchemy import SQLAlchemy
+from flask import url_for
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/brs'
@@ -26,27 +27,25 @@ class User(db.Model):
         return '<E-mail %r>' % self.email
 
 # Set "homepage" to index.html
-@app.route('/')
+@app.route('/', methods =['GET', 'POST'])
 def index():
     return render_template('index.html')
 
 @app.route('/showSignUp', methods =['GET', 'POST'])
 def showSignUp():
-    email = None
     if request.method == 'POST':
         email = request.form['email']
-        #name = request.form['name']
-        #password = request.form['password']
+        name = request.form['name']
+        password = request.form['password']
         # Check that email does not already exist
         if not db.session.query(User).filter(User.email == email).count():
-            user_email = User(email)
-         #   user_name = User(name)
-          #  user_pw = User(password)
-            db.session.add(user_email)
-           # db.session.add(user_name)
-            #db.session.add(user_pw)
+            user_email = 'mhendrickson@gmail.com'
+            user_name = 'mhendrickson@gmail.com'
+            user_pw = 'mhendrickson@gmail.com'
+            entry = User(user_name,user_email,'123',user_pw)
+            db.session.add(entry)
             db.session.commit()
-            return render_template('index.html')
+            return redirect('http://127.0.0.1:5000/')
     return render_template('signup.html')
 
 
