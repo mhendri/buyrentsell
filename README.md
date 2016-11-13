@@ -22,6 +22,7 @@ $ source activate brs
 $ conda install -c conda-forge flask-sqlalchemy=2.1
 $ conda install sqlalchemy 
 $ conda install psycopg2
+$ conda install flask-login
 ```
 
 Retrieve our project and get it running
