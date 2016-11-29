@@ -1,36 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
- 
-<head>
-    <title>Buy Rent Sell</title>
-    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
-</head>
-<body>
- 
-    <div class="container">
-        <div class="header">
-            <nav>
-                <ul class="nav nav-pills pull-right">
-                    <li role="presentation"><a href="/">Home</a>
-                    </li>
-                    <li role="presentation"><a href="#">Sign In</a>
-                    </li>
-                    <li role="presentation"><a href="showSignUp">Sign Up</a>
-                    </li>
-                </ul>
-            </nav>
-            <h3 class="text-muted">Buy Rent Sell</h3>
-        </div>
- 
+{% extends "base.html" %}
+{% block content %}
        <h3>Welcome to Buy Rent Sell!</h3>
        <p> Listings will be shown below</p>
- 
-        <footer class="footer">
-            <p>&copy; Buy Rent Sell 2016</p>
-        </footer>
- 
-    </div>
-</body>
- 
-</html>
+{% endblock %}
