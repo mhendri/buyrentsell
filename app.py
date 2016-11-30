@@ -92,6 +92,5 @@ def login():
     return render_template('login.html', login=True, next=next, error=error)
 
 
-
 if (__name__)=='__main__':
 	app.run(host='local host', port=5555, debug=True)
