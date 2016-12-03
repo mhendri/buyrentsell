@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="container">
+
+    <h1>Post</h1>
+    <div class="form-inline">
+      <label for="item_name">Item:</label>
+      <input type="text" class="form-control" id="item_name">
+    </div>
+    <div class="radio">
+      <label class="radio-inline"><input type="radio" name="post_type">Sell</label>
+      <label class="radio-inline"><input type="radio" name="post_type">Rent</label>
+    </div>
+
+    <div class="form-inline">
+      <div class="checkbox">
+        <label class="checkbox-inline"><input type="checkbox" value="">auction</label>
+      </div>
+      <div class="form-group">
+        <label for="price">Price:</label>
+        <input type="text" class="form-control" id="auction">
+      </div>
+    </div>
+
+
+    <div class="form-inline">
+      <label for="duration">Duration:</label>
+      <select class="form-control" id="duration">
+        <option>1</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="desc">Desc:</label>
+      <textarea class="form-control" id="desc" cols="30" rows="10"></textarea>
+    </div>
+
+    <div class="container">
+      <input type="button" class="btn btn-info" value="Cancel">
+      <input type="submit" class="btn btn-info" value="Submit">
+    </div>
+
+
+  </div>
+{% endblock %}
