@@ -27,6 +27,7 @@
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
+        {% if not session['logged_in'] %}
         <li>
           <a href="showSignUp">
             <span class="glyphicon glyphicon-user"></span> Sign Up
@@ -37,6 +38,11 @@
             <span class="glyphicon glyphicon-log-in"></span> Login
           </a>
         </li>
+        {% else %}
+        <li>
+          <a href="user>">Welcome Boss!</a>
+        </li>
+        {% endif %}
       </ul>
     </div>
   </nav>
