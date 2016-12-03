@@ -1,14 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
-      <div class="jumbotron">
-        <h1>Login   </h1>
-        <form class="form-signin" action="success" method="post" id="btnSignUp">
-          <label for="inputEmail" class="sr-only">Email address</label>
-          <input type="email" name="inputEmail" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-          <label for="inputPassword" class="sr-only">Password</label>
-          <input type="password" name="inputPassword" id="inputPassword" class="form-control" placeholder="Password" required>
-          <br>
-          <button type="submit" id="btnSignUp" class="btn btn-lg btn-primary btn-block" >Sign in</button>
-        </form>
+  {% if session['logged_in'] %}
+    <p>You're logged in already!</p>
+  {% else %}
+    <form action="/login" method="POST">
+      <div class="login">
+        <div class="login-screen">
+          <div class="app-title">
+            <h1>Login</h1>
+          </div>
+
+          <div class="login-form">
+            <div class="control-group">
+              <input type="email" class="login-field" value="" name="email" placeholder="email">
+            </div>
+
+            <div class="control-group">
+              <input type="password" class="login-field" value="" name="password" placeholder="password">
+            </div>
+
+            <input type="submit" value="Log In" class="btn btn-primary btn-large btn-block">
+          </div>
+        </div>
       </div>
+    </form>
+  {% endif %}
 {% endblock %}
