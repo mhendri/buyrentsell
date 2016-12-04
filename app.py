@@ -15,44 +15,46 @@ from tabledef import *
 
 app = Flask(__name__)
 # set the secret key
-# app.secret_key = os.urandom(12)
+app.secret_key = os.urandom(12)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///brs.db'
 db = SQLAlchemy(app)
 admin = Admin(app, name='BRS Admin', template_mode='bootstrap3')
 admin.add_view(ModelView(User, db.session))
-#admin.add_view(ModelView(Post, db.session))
 
 #Create our database model
 class User(db.Model):
-    __tablename__ = "useraccounts"
+    __tablename__ = "Users"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column('name',db.String(120), unique=False)
+    firstname = db.Column('Firstname',db.String(120), unique=False)
+    lastname = db.Column('Lastname', db.String(120))
     email = db.Column('email', db.String(120), unique=True)
     password = db.Column('password', db.String(15), unique=False)
-    phone = db.Column('phone_number', db.Integer, unique=False)
+    phone = db.Column('phone', db.Integer, unique=False)
 
 
-    def __init__(self, name, email, phone, password):
+    def __init__(self, firstname,lastname,email,password,phone):
+        ''' '''
+        self.firstname = firstname
+        self.lastname = lastname
         self.email = email
-        self.name = name
         self.password = password
         self.phone = phone
 
-    def get_id(self):
-        return unicode(self.id)
-
-    def is_active(self):
-        return self._user.enabled
-
-    def is_anonymous(self):
-        return False
-
-    def is_authenticated(self):
-        return True
-
-    def __repr__(self):
-        return '<E-mail %r>' % self.email
+    # def get_id(self):
+    #     return unicode(self.id)
+    #
+    # def is_active(self):
+    #     return self._user.enabled
+    #
+    # def is_anonymous(self):
+    #     return False
+    #
+    # def is_authenticated(self):
+    #     return True
+    #
+    # def __repr__(self):
+    #     return '<E-mail %r>' % self.email
 
 # @login_manager.user_loader
 # def load_user(user_id):
@@ -100,6 +102,21 @@ def logout():
 @app.route('/showSignUp', methods =['GET'])
 def showSignUp():
     return render_template('signup.html')
+
+@app.route('/success', methods =['GET', 'POST'])
+def success():
+    if request.method == 'POST':
+        firstname = request.form['inputFirstName']
+        lastname = request.form['inputLastName']
+        email = request.form['inputEmail']
+        password = request.form['inputPassword']
+        phone =  request.form['phoneNumber']
+        if not db.session.query(User).filter(User.email == email).count():
+            entry = User(firstname,lastname,email,password,phone)
+            db.session.add(entry)
+            db.session.commit()
+            return render_template('success.html')
+    return render_template('success.html')
 
 if (__name__)=='__main__':
     app.run(host='localhost', port=5000, debug=True)
