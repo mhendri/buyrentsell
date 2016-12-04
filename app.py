@@ -88,10 +88,11 @@ def login():
         if result:
             session['logged_in'] = True
             flash('SUCCESS: Logged In!')
+            data_dict = dict(username=POST_USERNAME)
         else:
             flash('wrong password!')
             return render_template('login.html')
-        return index()
+        return render_template('index.html',**data_dict)
     return render_template('login.html')
 
 @app.route('/logout')
