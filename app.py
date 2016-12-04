@@ -58,3 +58,12 @@ def showSignUp():
 
 if (__name__)=='__main__':
     app.run(host='localhost', port=5000, debug=True)
+
+#Rendering pages for testing purposes delete when finished
+@app.route('/post')
+def post():
+    return render_template('post.html')
+
+@app.route('/profile')
+def profile():
+    return render_template('user_profile.html')
