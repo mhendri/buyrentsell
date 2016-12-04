@@ -82,14 +82,15 @@ def login():
 
         Session = sessionmaker(bind=engine)
         s = Session()
-        query = s.query(User).filter(User.email.in_([POST_USERNAME]),
-                                     User.password.in_([POST_PASSWORD]))
+        query = s.query(User).filter(User.email==POST_USERNAME,
+                                     User.password==POST_PASSWORD)
         result = query.first()
         if result:
             session['logged_in'] = True
             flash('SUCCESS: Logged In!')
         else:
             flash('wrong password!')
+            return render_template('login.html')
         return index()
     return render_template('login.html')
 
