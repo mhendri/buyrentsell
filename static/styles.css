@@ -121,5 +121,11 @@ input:focus {
   margin-top: 12px;
 }
 
+.form-signin {
+padding-top: 2%;
+  width: 30% ;
+  margin: auto;
+}
+
 /* End CSS from Python Spot
 */
