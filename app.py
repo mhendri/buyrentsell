@@ -41,30 +41,6 @@ class User(db.Model):
         self.password = password
         self.phone = phone
 
-    # def get_id(self):
-    #     return unicode(self.id)
-    #
-    # def is_active(self):
-    #     return self._user.enabled
-    #
-    # def is_anonymous(self):
-    #     return False
-    #
-    # def is_authenticated(self):
-    #     return True
-    #
-    # def __repr__(self):
-    #     return '<E-mail %r>' % self.email
-
-# @login_manager.user_loader
-# def load_user(user_id):
-#     user = User.query.get(user_id)
-#     if user:
-#         return User(user)
-#     else:
-#         return None
-
-
 # Set "homepage" to index.html
 @app.route('/')
 @app.route('/index')
