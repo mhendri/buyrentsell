@@ -1,7 +1,8 @@
 from flask import Flask
 from flask import flash, redirect, render_template, request, session, abort, url_for
 from flask_sqlalchemy import SQLAlchemy
-from flask import admin
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 import os
 # from flask.ext.login import LoginManager
 
@@ -19,6 +20,8 @@ app.secret_key = os.urandom(12)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/brs'
 db = SQLAlchemy(app)
 admin = Admin(app, name='brs', template_mode='bootstrap3')
+admin.add_view(ModelView(User, db.session))
+#admin.add_view(ModelView(Post, db.session))
 
 # Set "homepage" to index.html
 @app.route('/')
