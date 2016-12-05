@@ -1,44 +1,52 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="container">
-
-    <h1>Post</h1>
+<div class="jumbotron">
+  <h1>Post</h1>
+  <form action="/post" method="POST">
+    <!-- Input for item name -->
     <div class="form-inline">
       <label for="item_name">Item:</label>
       <input type="text" class="form-control" id="item_name">
     </div>
+
+    <!-- Input to post as either selling or renting an item -->
     <div class="radio">
       <label class="radio-inline"><input type="radio" name="post_type">Sell</label>
       <label class="radio-inline"><input type="radio" name="post_type">Rent</label>
     </div>
 
+    <!-- Input for item auction -->
     <div class="form-inline">
+      <!-- Make item an auction checkbox -->
       <div class="checkbox">
         <label class="checkbox-inline"><input type="checkbox" value="">auction</label>
       </div>
+      <!-- Starting bid of auction -->
       <div class="form-group">
         <label for="price">Price:</label>
         <input type="text" class="form-control" id="auction">
       </div>
     </div>
 
-
+    <!-- Set duration of item listing -->
     <div class="form-inline">
       <label for="duration">Duration:</label>
       <select class="form-control" id="duration">
         <option>1</option>
       </select>
     </div>
+
+    <!-- Input description of the item -->
     <div class="form-group">
       <label for="desc">Desc:</label>
       <textarea class="form-control" id="desc" cols="30" rows="10"></textarea>
     </div>
-
+    
+    <!-- Submission buttons -->
     <div class="container">
       <input type="button" class="btn btn-info" value="Cancel">
       <input type="submit" class="btn btn-info" value="Submit">
     </div>
-
-
-  </div>
+  </form>
+</div>
 {% endblock %}
