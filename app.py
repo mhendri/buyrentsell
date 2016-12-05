@@ -21,6 +21,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///brs.db'
 db = SQLAlchemy(app)
 admin = Admin(app, name='BRS Admin', template_mode='bootstrap3')
 admin.add_view(ModelView(User, db.session))
+admin.add_view(ModelView(Posts, db.session))
 
 #Create our database model
 class User(db.Model):
@@ -40,6 +41,25 @@ class User(db.Model):
         self.email = email
         self.password = password
         self.phone = phone
+
+class Posts(db.Model):
+    __tablename__ = "Posts"
+    id          = db.Column(db.Integer, primary_key=True)
+    user_id     = db.Column(db.Integer, db.ForeignKey(User.id))
+    title       = db.Column('Title', db.String(120))
+    price       = db.Column('Price', db.Float(precision=2,asDecimal=True))
+    is_biddable = db.Column('Is_Biddable', db.Boolean())
+    current_bid = db.Column('Current_Bid', db.Float(precision=2,asDecimal=True))
+    date_posted = db.Column('Date_Posted', db.Date())
+    is_flagged  = db.Column('Is_Flagged', db.Boolean())
+
+    def __init__(self, user_id, title="", price="", is_biddable=""):
+        self.user_id        = user_id
+        self.title          = title
+        self.price          = price
+        self.is_biddable    = is_biddable
+
+
 
 # Set "homepage" to index.html
 @app.route('/')

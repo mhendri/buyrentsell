@@ -31,6 +31,22 @@ class User(Base):
         self.password = password
         self.phone = phone
 
+class Posts(Base):
+    __tablename__ = "Posts"
+    id          = Column(Integer, primary_key=True)
+    user_id     = Column(Integer, ForeignKey(User.id))
+    title       = Column(String)
+    price       = Column(Float)
+    is_biddable = Column(Boolean)
+    current_bid = Column(Float)
+    date_posted = Column(Date)
+    is_flagged  = Column(Boolean)
+
+    def __init__(self, user_id, title="", price="", is_biddable=""):
+        self.user_id        = user_id
+        self.title          = title
+        self.price          = price
+        self.is_biddable    = is_biddable
 ################################################################################
 
 # create tables
