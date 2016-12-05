@@ -38,11 +38,11 @@ class Posts(Base):
     item_name   = Column(String)
     price       = Column(Float)
     is_biddable = Column(Boolean)
-    current_bid = Column(Float)
-    date_posted = Column(Date)
-    is_flagged  = Column(Boolean)
+    # current_bid = Column(Float)
+    # date_posted = Column(Date)
+    # is_flagged  = Column(Boolean)
 
-    def __init__(self, user_id, item_name="", price="", is_biddable=""):
+    def __init__(self, user_id, item_name="", price=0, is_biddable=""):
         self.user_id        = user_id
         self.item_name      = item_name
         self.price          = price

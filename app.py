@@ -49,9 +49,9 @@ class Posts(db.Model):
     item_name   = db.Column('item_name', db.String(120))
     price       = db.Column('Price', db.Float(precision=2,asDecimal=True))
     is_biddable = db.Column('Is_Biddable', db.Boolean())
-    current_bid = db.Column('Current_Bid', db.Float(precision=2,asDecimal=True))
-    date_posted = db.Column('Date_Posted', db.Date())
-    is_flagged  = db.Column('Is_Flagged', db.Boolean())
+    # current_bid = db.Column('Current_Bid', db.Float(precision=2,asDecimal=True))
+    # date_posted = db.Column('Date_Posted', db.Date())
+    # is_flagged  = db.Column('Is_Flagged', db.Boolean())
 
     def __init__(self, user_id, item_name="", price="", is_biddable=""):
         self.user_id        = user_id
@@ -69,6 +69,7 @@ def index():
         return render_template('index.html')
     else:
         return render_template('index.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -120,7 +121,12 @@ def success():
 def posted():
     if request.method == 'POST':
         item_name = request.form['item_name']
-
+        price = request.form['price']
+        entry = Posts(2,item_name, price, True)
+        db.session.add(entry)
+        db.session.commit()
+        return render_template('success.html')
+    return render_template('success.html')
 
 if (__name__)=='__main__':
     app.run(host='localhost', port=5000, debug=True)

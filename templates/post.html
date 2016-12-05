@@ -5,8 +5,8 @@
   <form class="form-post-item" action="posted" method="post" id="btn_post_item">
     <!-- Input for item name -->
     <div class="form-inline">
-      <label for="item_name">Item:</label>
-      <input type="text" class="form-control" id="item_name">
+      <label for="item_name" class="sr-only">Item:</label>
+      <input type="text" name="item_name" class="form-control" id="item_name">
     </div>
 
     <!-- Input to post as either selling or renting an item -->
@@ -45,7 +45,7 @@
     <!-- Submission buttons -->
     <div class="container">
       <input type="button" class="btn btn-info" value="Cancel">
-      <button type="submit" id="btn_post_item" class="btn btn-info" value="Submit">
+      <button type="submit" id="btn_post_item" class="btn btn-info">Submit</button>
     </div>
   </form>
 </div>
