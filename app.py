@@ -46,16 +46,16 @@ class Posts(db.Model):
     __tablename__ = "Posts"
     id          = db.Column(db.Integer, primary_key=True)
     user_id     = db.Column(db.Integer, db.ForeignKey(User.id))
-    title       = db.Column('Title', db.String(120))
+    item_name   = db.Column('item_name', db.String(120))
     price       = db.Column('Price', db.Float(precision=2,asDecimal=True))
     is_biddable = db.Column('Is_Biddable', db.Boolean())
     current_bid = db.Column('Current_Bid', db.Float(precision=2,asDecimal=True))
     date_posted = db.Column('Date_Posted', db.Date())
     is_flagged  = db.Column('Is_Flagged', db.Boolean())
 
-    def __init__(self, user_id, title="", price="", is_biddable=""):
+    def __init__(self, user_id, item_name="", price="", is_biddable=""):
         self.user_id        = user_id
-        self.title          = title
+        self.item_name      = item_name
         self.price          = price
         self.is_biddable    = is_biddable
 
@@ -115,6 +115,12 @@ def success():
             db.session.commit()
             return render_template('success.html')
     return render_template('success.html')
+
+@app.route('/posted', methods = ['GET', 'POST'])
+def posted():
+    if request.method == 'POST':
+        item_name = request.form['item_name']
+
 
 if (__name__)=='__main__':
     app.run(host='localhost', port=5000, debug=True)

@@ -2,7 +2,7 @@
 {% block content %}
 <div class="jumbotron">
   <h1>Post</h1>
-  <form action="/post" method="POST">
+  <form class="form-post-item" action="posted" method="post" id="btn_post_item">
     <!-- Input for item name -->
     <div class="form-inline">
       <label for="item_name">Item:</label>
@@ -24,7 +24,7 @@
       <!-- Starting bid of auction -->
       <div class="form-group">
         <label for="price">Price:</label>
-        <input type="text" class="form-control" id="auction">
+        <input type="text" class="form-control" id="price">
       </div>
     </div>
 
@@ -41,11 +41,11 @@
       <label for="desc">Desc:</label>
       <textarea class="form-control" id="desc" cols="30" rows="10"></textarea>
     </div>
-    
+
     <!-- Submission buttons -->
     <div class="container">
       <input type="button" class="btn btn-info" value="Cancel">
-      <input type="submit" class="btn btn-info" value="Submit">
+      <button type="submit" id="btn_post_item" class="btn btn-info" value="Submit">
     </div>
   </form>
 </div>

@@ -35,16 +35,16 @@ class Posts(Base):
     __tablename__ = "Posts"
     id          = Column(Integer, primary_key=True)
     user_id     = Column(Integer, ForeignKey(User.id))
-    title       = Column(String)
+    item_name   = Column(String)
     price       = Column(Float)
     is_biddable = Column(Boolean)
     current_bid = Column(Float)
     date_posted = Column(Date)
     is_flagged  = Column(Boolean)
 
-    def __init__(self, user_id, title="", price="", is_biddable=""):
+    def __init__(self, user_id, item_name="", price="", is_biddable=""):
         self.user_id        = user_id
-        self.title          = title
+        self.item_name      = item_name
         self.price          = price
         self.is_biddable    = is_biddable
 ################################################################################
