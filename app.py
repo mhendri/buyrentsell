@@ -20,9 +20,9 @@ app.secret_key = os.urandom(12)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///brs.db'
 db = SQLAlchemy(app)
 admin = Admin(app, name='BRS Admin', template_mode='bootstrap3')
-admin.add_view(ModelView(User, db.session))
 
 #Create our database model
+#Create User table
 class User(db.Model):
     __tablename__ = "Users"
     id = db.Column(db.Integer, primary_key=True)
@@ -41,6 +41,29 @@ class User(db.Model):
         self.password = password
         self.phone = phone
 
+
+#Create Post table
+class Post(db.Model):
+    __tablename__ = "Posts"
+    id = db.Column(db.Integer, primary_key=True)
+    post_posterid = db.Column('PosterID', db.Integer, unique = False)
+    post_title = db.Column('PostTitle', db.String(120), unique=False)
+    post_price = db.Column('PostPrice', db.Integer, unique=False)
+    post_descr = db.Column('PostDescription', db.String(500), unique=False)
+
+    def __init__(self, posterid, title, price, descr):
+        self.post_posterid = posterid
+        self.post_title = title
+        self.post_price = price
+        self.post_descr =  descr
+
+# Need to add few more things:
+# buyer_id, (is_biddable, current_bid, time_limit), date_posted, is_reported, image
+
+
+admin.add_view(ModelView(User, db.session))
+admin.add_view(ModelView(Post, db.session))
+
 # Set "homepage" to index.html
 @app.route('/')
 @app.route('/index')
@@ -48,6 +71,7 @@ def index():
     if not session.get('logged_in'):
         return render_template('index.html')
     else:
+        #if logged_in, we should display show_entries
         return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -114,3 +138,23 @@ def post():
 @app.route('/profile')
 def profile():
     return render_template('user_profile.html')
+
+
+@app.route('/showPosts')
+def show_entries():
+    return render_template('show_entries.html')
+'''
+#joseph's code
+@app.route('/add', methods=['POST'])
+def posting():
+    #adding entries
+    if not session.get('logged_in'):
+        print("not session.get('logged_in')")
+        abort(401)
+    db = get_db()
+    db.execute('insert into entries (title, text) values (?,?)',
+        [request.form['title'], request.form['text']])
+    db.commit()
+    flash('New entry was sucessfully posted')
+    return redirect(url_for('show_entries'))
+'''
