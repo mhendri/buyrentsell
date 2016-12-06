@@ -13,7 +13,7 @@ $ pip3 install anaconda
 $ conda create -n brs flask python=3.5
 $ cd anconda3/envs/brs
 
-# start virtual enviornment
+# start virtual environment
 $ source activate brs
 ```
 
