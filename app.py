@@ -21,8 +21,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///brs.db'
 db = SQLAlchemy(app)
 admin = Admin(app, name='BRS Admin', template_mode='bootstrap3')
 
-#Create our database model
-#Create User table
+################################################################################
+## MODELS
+################################################################################
+
+##------------------------------------------------------------------------------
+## User Model
+##------------------------------------------------------------------------------
 class User(db.Model):
     __tablename__ = "Users"
     id = db.Column(db.Integer, primary_key=True)
@@ -33,7 +38,9 @@ class User(db.Model):
     phone = db.Column('phone', db.Integer, unique=False)
     balance = db.Column('balance', db.Integer)
 
-
+    ############################################################################
+    ## CONSTRUCTOR
+    ############################################################################
     def __init__(self, email="", password="", firstname="", lastname="", phone=""):
         ''' '''
         self.firstname = firstname
@@ -90,7 +97,9 @@ class User(db.Model):
         else:
             self.balance -= amount
 
-#Create Post table
+##------------------------------------------------------------------------------
+## Posts Model
+##------------------------------------------------------------------------------
 class Post(db.Model):
     __tablename__ = "Posts"
     id = db.Column(db.Integer, primary_key=True)
@@ -99,11 +108,26 @@ class Post(db.Model):
     post_price = db.Column('PostPrice', db.Integer, unique=False)
     post_descr = db.Column('PostDescription', db.String(500), unique=False)
 
+    ############################################################################
+    ## CONSTRUCTOR
+    ############################################################################
     def __init__(self, posterid, title, price, descr):
         self.post_posterid = posterid
         self.post_title = title
         self.post_price = price
         self.post_descr =  descr
+
+    ############################################################################
+    ## GETTERS
+    ############################################################################
+
+    ############################################################################
+    ## SETTERS
+    ############################################################################
+
+    ############################################################################
+    ## OTHER METHODS
+    ############################################################################
 
 # Need to add few more things:
 # buyer_id, (is_biddable, current_bid, time_limit), date_posted, is_reported, image
@@ -115,8 +139,16 @@ class Post(db.Model):
 # following conventions in that file
 # then run `$ python dummy.py` from your shell to commit those changes
 
+################################################################################
+## FLASK-ADMIN
+################################################################################
+
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Post, db.session))
+
+################################################################################
+## ROUTES
+################################################################################
 
 # Set "homepage" to index.html
 @app.route('/')
@@ -128,6 +160,7 @@ def index():
         #if logged_in, we should display show_entries
         return render_template('index.html')
 
+# Logging In
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -149,16 +182,19 @@ def login():
         return render_template('index.html',**data_dict)
     return render_template('login.html')
 
+# Logging Out
 @app.route('/logout')
 def logout():
     session['logged_in'] = False
     flash('SUCCESS: Logged Out!')
     return index()
 
+# Signing Up
 @app.route('/showSignUp', methods =['GET'])
 def showSignUp():
     return render_template('signup.html')
 
+# Success Message
 @app.route('/success', methods =['GET', 'POST'])
 def success():
     if request.method == 'POST':
@@ -177,7 +213,7 @@ def success():
 if (__name__)=='__main__':
     app.run(host='localhost', port=5000, debug=True)
 
-#User profile pages accessible by /user/id
+# User profile pages accessible by /user/id
 @app.route('/user/<id>')
 #@login_required
 def user(id):
