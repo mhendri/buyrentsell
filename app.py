@@ -34,7 +34,7 @@ class User(db.Model):
     balance = db.Column('balance', db.Integer)
 
 
-    def __init__(self, email, password, firstname, lastname, phone):
+    def __init__(self, email="", password="", firstname="", lastname="", phone=""):
         ''' '''
         self.firstname = firstname
         self.lastname = lastname
