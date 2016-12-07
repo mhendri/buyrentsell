@@ -43,6 +43,34 @@ class User(db.Model):
         self.phone = phone
         self.balance = 0
 
+    ############################################################################
+    ## GETTERS
+    ############################################################################
+    def get_first_name(self):
+        return self.firstname
+
+    def get_last_name(self):
+        return self.lastname
+
+    def get_email(self):
+        return self.email
+
+    def get_phone(self):
+        return self.phone
+
+    def get_balance(self):
+        return self.balance
+    ############################################################################
+    ## SETTERS
+    ############################################################################
+
+    ############################################################################
+    ## OTHER METHODS
+    ############################################################################
+
+
+
+
 
 #Create Post table
 class Post(db.Model):
