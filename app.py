@@ -31,6 +31,7 @@ class User(db.Model):
     email = db.Column('email', db.String(120), unique=True)
     password = db.Column('password', db.String(15), unique=False)
     phone = db.Column('phone', db.Integer, unique=False)
+    balance = db.Column('balance', db.Integer)
 
 
     def __init__(self, email, password, firstname, lastname, phone):
@@ -40,6 +41,7 @@ class User(db.Model):
         self.email = email
         self.password = password
         self.phone = phone
+        self.balance = 0
 
 
 #Create Post table
