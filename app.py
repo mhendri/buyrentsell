@@ -73,14 +73,22 @@ class User(db.Model):
     # unsure about this setter / may not be needed
     def set_balance(self, balance):
         self.balance = balance
-        
+
     ############################################################################
     ## OTHER METHODS
     ############################################################################
 
+    # adding money to account
+    def deposit(self, amount):
+        self.balance += amount
 
-
-
+    # removing money from account
+    def withdraw(self, amount):
+        if amount > self.balance:
+            # handle error case
+            print("Insufficient Funds to perform this transaction")
+        else:
+            self.balance -= amount
 
 #Create Post table
 class Post(db.Model):
