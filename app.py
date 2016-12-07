@@ -60,10 +60,20 @@ class User(db.Model):
 
     def get_balance(self):
         return self.balance
+
     ############################################################################
     ## SETTERS
     ############################################################################
+    def set_email(self, email):
+        self.email = email
 
+    def set_phone(self, phone):
+        self.phone = phone
+
+    # unsure about this setter / may not be needed
+    def set_balance(self, balance):
+        self.balance = balance
+        
     ############################################################################
     ## OTHER METHODS
     ############################################################################
