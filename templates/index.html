@@ -1,29 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
-{% if session.logged_in %}
-      <div class="jumbotron">
-        <h1 align="center" >Buy Rent Sell</h1>
-        <p class="lead"></p>
-        <p>
-          <a class="btn btn-lg btn-success" href="showPosts" role="button">Show Latest Posts</a>
-        </p>
-      </div>
 
-{% else %}
+
       <div class="jumbotron">
         <h1 align="center" >Buy Rent Sell</h1>
         <p class="lead"></p>
+{% if not session.logged_in %}
         <p>
           <a class="btn btn-lg btn-success" href="showSignUp" role="button">Sign up today</a>
         </p>
-
+{% endif %} 
         <p>
-          
           <a class="btn btn-lg btn-success" href="showPosts" role="button">Show Latest Posts</a>
         </p>
-        
       </div>
-{% endif %} 
 
 
       <div class="row marketing">
