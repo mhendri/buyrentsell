@@ -1,8 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
-<!--{% if session.logged_in %} -->
-  <h1 align="center">show_entries.html is currently under construction</h1>
-
-<!--{% endif %} -->
-
+<h1 align="center">show_entries.html is currently under construction</h1>
+<!--
+<ul class=entries>
+  {% for entry in allpost %}
+    <li><h2>{{ entry.title }}</h2>{{ entry.text|safe }}
+  {% else %}
+    <li><em>Unbelievable.  No entries here so far</em>
+  {% endfor %}
+  </ul>
+-->
 {% endblock %}

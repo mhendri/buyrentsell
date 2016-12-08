@@ -85,6 +85,7 @@ class User(db.Model):
     ## OTHER METHODS
     ############################################################################
 
+<<<<<<< HEAD
     # adding money to account
     def deposit(self, amount):
         self.balance += amount
@@ -100,6 +101,9 @@ class User(db.Model):
 ##------------------------------------------------------------------------------
 ## Posts Model
 ##------------------------------------------------------------------------------
+=======
+#Create Post table
+>>>>>>> upstream/master
 class Post(db.Model):
     __tablename__ = "Posts"
     id = db.Column(db.Integer, primary_key=True)
@@ -108,14 +112,11 @@ class Post(db.Model):
     post_price = db.Column('PostPrice', db.Integer, unique=False)
     post_descr = db.Column('PostDescription', db.String(500), unique=False)
 
-    ############################################################################
-    ## CONSTRUCTOR
-    ############################################################################
-    def __init__(self, posterid, title, price, descr):
-        self.post_posterid = posterid
-        self.post_title = title
-        self.post_price = price
-        self.post_descr =  descr
+    def __init__(self, post_posterid=0, post_title="", post_price="", post_descr=""):
+        self.post_posterid = post_posterid
+        self.post_title = post_title
+        self.post_price = post_price
+        self.post_descr =  post_descr
 
     ############################################################################
     ## GETTERS
@@ -160,7 +161,11 @@ def index():
         #if logged_in, we should display show_entries
         return render_template('index.html')
 
+<<<<<<< HEAD
 # Logging In
+=======
+
+>>>>>>> upstream/master
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -210,6 +215,18 @@ def success():
             return render_template('success.html')
     return render_template('success.html')
 
+@app.route('/posted', methods = ['GET', 'POST'])
+def posted():
+    if request.method == 'POST':
+        post_title = request.form['post_title']
+        post_price = request.form['post_price']
+        post_descr = request.form['post_descr']
+        entry = Post(0,post_title, post_price, post_descr)
+        db.session.add(entry)
+        db.session.commit()
+        return render_template('success.html')
+    return render_template('success.html')
+
 if (__name__)=='__main__':
     app.run(host='localhost', port=5000, debug=True)
 
@@ -225,15 +242,25 @@ def user(id):
 def post():
     return render_template('post.html')
 
-@app.route('/profile')
-def profile():
-    return render_template('user_profile.html')
-
-
 @app.route('/showPosts')
 def show_entries():
     return render_template('show_entries.html')
+
 '''
+sample code from flaskr.app tutorial
+    #main page
+    db = get_db()
+    cur = db.execute('select title, text from entries order by id desc')
+    entries = cur.fetchall()
+    return render_template('show_entries.html', entries = entries)
+
+
+#my code
+    allpost = Post.query.filter_by(id).first()
+    return render_template('show_entries.html', allpost = allpost)
+
+
+
 #joseph's code
 @app.route('/add', methods=['POST'])
 def posting():
