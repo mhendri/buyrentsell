@@ -157,6 +157,12 @@ def post():
 def show_entries():
     return render_template('show_entries.html')
 
+#Item listing accessable by /item/id
+@app.route('/item/<id>')
+def item(id):
+    post = Post.query.filter_by(id=id).first()
+    return render_template('item.html', post=post)
+
 '''
 sample code from flaskr.app tutorial
     #main page
