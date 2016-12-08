@@ -5,8 +5,8 @@
   <form class="form-post-item" action="posted" method="post" id="btn_post_item">
     <!-- Input for item name -->
     <div class="form-inline">
-      <label for="item_name" class="sr-only">Item:</label>
-      <input type="text" name="item_name" class="form-control" id="item_name">
+      <label for="post_title" class="sr-only">Item:</label>
+      <input type="text" name="post_title" class="form-control" id="post_title">
     </div>
 
     <!-- Input to post as either selling or renting an item -->
@@ -23,8 +23,8 @@
       </div>
       <!-- Starting bid of auction -->
       <div class="form-group">
-        <label for="price">Price:</label>
-        <input type="text" class="form-control" id="price">
+        <label for="post_price">Price:</label>
+        <input type="number" name="post_price" class="form-control" id="post_price">
       </div>
     </div>
 
@@ -38,8 +38,8 @@
 
     <!-- Input description of the item -->
     <div class="form-group">
-      <label for="desc">Desc:</label>
-      <textarea class="form-control" id="desc" cols="30" rows="10"></textarea>
+      <label for="post_descr">Desc:</label>
+      <textarea class="form-control" name="post_descr" id="post_descr" cols="30" rows="10"></textarea>
     </div>
 
     <!-- Submission buttons -->

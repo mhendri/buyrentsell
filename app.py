@@ -50,11 +50,11 @@ class Post(db.Model):
     post_price = db.Column('PostPrice', db.Integer, unique=False)
     post_descr = db.Column('PostDescription', db.String(500), unique=False)
 
-    def __init__(self, posterid=None, title="", price="", descr=""):
-        self.post_posterid = posterid
-        self.post_title = title
-        self.post_price = price
-        self.post_descr =  descr
+    def __init__(self, post_posterid=0, post_title="", post_price="", post_descr=""):
+        self.post_posterid = post_posterid
+        self.post_title = post_title
+        self.post_price = post_price
+        self.post_descr =  post_descr
 
 # Need to add few more things:
 # buyer_id, (is_biddable, current_bid, time_limit), date_posted, is_reported, image
@@ -127,11 +127,12 @@ def success():
     return render_template('success.html')
 
 @app.route('/posted', methods = ['GET', 'POST'])
-def posted():
+def posted()
     if request.method == 'POST':
-        item_name = request.form['item_name']
-        price = request.form['price']
-        entry = Posts(2,item_name, price, True)
+        post_title = request.form['post_title']
+        post_price = request.form['post_price']
+        post_descr = request.form['post_descr']
+        entry = Post(0,post_title, post_price, post_descr)
         db.session.add(entry)
         db.session.commit()
         return render_template('success.html')
