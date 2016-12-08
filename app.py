@@ -111,7 +111,6 @@ class User(db.Model):
 ##------------------------------------------------------------------------------
 ## Posts Model
 ##------------------------------------------------------------------------------
-
 class Post(db.Model):
     __tablename__ = "Posts"
     id = db.Column(db.Integer, primary_key=True)
