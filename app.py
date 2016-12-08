@@ -8,7 +8,7 @@ import os
 
 # Database Imports
 from sqlalchemy.orm import sessionmaker
-from tabledef import *
+# from tabledef import *
 
 # # create enginer for database
 # engine = create_engine('sqlite:///brs.db', echo=True)
@@ -26,14 +26,14 @@ admin = Admin(app, name='BRS Admin', template_mode='bootstrap3')
 class User(db.Model):
     __tablename__ = "Users"
     id = db.Column(db.Integer, primary_key=True)
-    firstname = db.Column('Firstname',db.String(120), unique=False)
+    firstname = db.Column('Firstname', db.String(120), unique=False)
     lastname = db.Column('Lastname', db.String(120))
     email = db.Column('email', db.String(120), unique=True)
     password = db.Column('password', db.String(15), unique=False)
     phone = db.Column('phone', db.Integer, unique=False)
 
 
-    def __init__(self, firstname,lastname,email,password,phone):
+    def __init__(self, email="", password="", firstname="", lastname="", phone=""):
         ''' '''
         self.firstname = firstname
         self.lastname = lastname
@@ -50,7 +50,7 @@ class Post(db.Model):
     post_price = db.Column('PostPrice', db.Integer, unique=False)
     post_descr = db.Column('PostDescription', db.String(500), unique=False)
 
-    def __init__(self, posterid, title, price, descr):
+    def __init__(self, posterid=None, title="", price="", descr=""):
         self.post_posterid = posterid
         self.post_title = title
         self.post_price = price
@@ -59,6 +59,12 @@ class Post(db.Model):
 # Need to add few more things:
 # buyer_id, (is_biddable, current_bid, time_limit), date_posted, is_reported, image
 
+# Create Database
+# db.create_all()
+
+# to add mock data, add entries to dummy.py
+# following conventions in that file
+# then run `$ python dummy.py` from your shell to commit those changes
 
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Post, db.session))
@@ -80,9 +86,9 @@ def login():
         POST_USERNAME = str(request.form['email'])
         POST_PASSWORD = str(request.form['password'])
 
-        Session = sessionmaker(bind=engine)
-        s = Session()
-        query = s.query(User).filter(User.email==POST_USERNAME,
+        # Session = sessionmaker(bind=engine)
+        # s = db.session
+        query = User.query.filter(User.email==POST_USERNAME,
                                      User.password==POST_PASSWORD)
         result = query.first()
         if result:
@@ -114,7 +120,7 @@ def success():
         password = request.form['inputPassword']
         phone =  request.form['phoneNumber']
         if not db.session.query(User).filter(User.email == email).count():
-            entry = User(firstname,lastname,email,password,phone)
+            entry = User(email, password, firstname, lastname, phone)
             db.session.add(entry)
             db.session.commit()
             return render_template('success.html')
