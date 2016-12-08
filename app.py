@@ -37,6 +37,7 @@ class User(db.Model):
     password = db.Column('password', db.String(15), unique=False)
     phone = db.Column('phone', db.Integer, unique=False)
     balance = db.Column('balance', db.Integer, unique=False)
+    active = db.Column('active', db.Boolean, unique=False)
 
     ############################################################################
     ## CONSTRUCTOR
@@ -49,6 +50,9 @@ class User(db.Model):
         self.password = password
         self.phone = phone
         self.balance = 0
+        # active is initially False
+        # user must be approved by superuser
+        self.active = False
 
     ############################################################################
     ## GETTERS
@@ -81,6 +85,12 @@ class User(db.Model):
     def set_balance(self, balance):
         self.balance = balance
 
+    def activate_user(self):
+        self.active = True
+
+    def suspend_user(self):
+        self.active = False
+
     ############################################################################
     ## OTHER METHODS
     ############################################################################
@@ -96,6 +106,7 @@ class User(db.Model):
             print("Insufficient Funds to perform this transaction")
         else:
             self.balance -= amount
+
 
 ##------------------------------------------------------------------------------
 ## Posts Model
