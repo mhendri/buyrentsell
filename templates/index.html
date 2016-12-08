@@ -1,21 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-<<<<<<< HEAD
-{% if session.logged_in %}
-      <div class="jumbotron">
-        <h1 align="center" >Buy Rent Sell</h1>
-        <p class="lead"></p>
-        <p>
-          <a class="btn btn-lg btn-success" href="showPosts" role="button">Show Latest Posts</a>
-        </p>
-        <p>
-          <a class="btn btn-lg btn-success" href="post" role="button">Post an item</a>
-        </p>
-      </div>
-=======
->>>>>>> jp-show_entries
-
-
       <div class="jumbotron">
         <h1 align="center" >Buy Rent Sell</h1>
         <p class="lead"></p>
@@ -27,13 +11,12 @@
         <p>
           <a class="btn btn-lg btn-success" href="showPosts" role="button">Show Latest Posts</a>
         </p>
-<<<<<<< HEAD
+
+{% if session.logged_in %}
         <p>
           <a class="btn btn-lg btn-success" href="post" role="button">Post an item</a>
         </p>
-        
-=======
->>>>>>> jp-show_entries
+{% endif %} 
       </div>
 
 
