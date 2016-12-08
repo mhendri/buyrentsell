@@ -32,11 +32,11 @@ class User(db.Model):
     __tablename__ = "Users"
     id = db.Column(db.Integer, primary_key=True)
     firstname = db.Column('Firstname', db.String(120), unique=False)
-    lastname = db.Column('Lastname', db.String(120))
+    lastname = db.Column('Lastname', db.String(120), unique=False)
     email = db.Column('email', db.String(120), unique=True)
     password = db.Column('password', db.String(15), unique=False)
     phone = db.Column('phone', db.Integer, unique=False)
-    balance = db.Column('balance', db.Integer)
+    balance = db.Column('balance', db.Integer, unique=False)
 
     ############################################################################
     ## CONSTRUCTOR
