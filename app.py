@@ -127,7 +127,7 @@ def success():
     return render_template('success.html')
 
 @app.route('/posted', methods = ['GET', 'POST'])
-def posted()
+def posted():
     if request.method == 'POST':
         post_title = request.form['post_title']
         post_price = request.form['post_price']
@@ -153,14 +153,10 @@ def user(id):
 def post():
     return render_template('post.html')
 
-@app.route('/profile')
-def profile():
-    return render_template('user_profile.html')
-
-
 @app.route('/showPosts')
 def show_entries():
     return render_template('show_entries.html')
+
 '''
 #joseph's code
 @app.route('/add', methods=['POST'])

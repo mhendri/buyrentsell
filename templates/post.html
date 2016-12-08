@@ -6,7 +6,7 @@
     <!-- Input for item name -->
     <div class="form-inline">
       <label for="post_title" class="sr-only">Item:</label>
-      <input type="text" name="post_title" class="form-control" id="post_title">
+      <input type="text" name="post_title" class="form-control" id="post_title" placeholder="Name of item...">
     </div>
 
     <!-- Input to post as either selling or renting an item -->
@@ -14,13 +14,15 @@
       <label class="radio-inline"><input type="radio" name="post_type">Sell</label>
       <label class="radio-inline"><input type="radio" name="post_type">Rent</label>
     </div>
-
+    
     <!-- Input for item auction -->
     <div class="form-inline">
       <!-- Make item an auction checkbox -->
+      <fieldset disabled>
       <div class="checkbox">
         <label class="checkbox-inline"><input type="checkbox" value="">auction</label>
       </div>
+      </fieldset>
       <!-- Starting bid of auction -->
       <div class="form-group">
         <label for="post_price">Price:</label>
@@ -29,17 +31,19 @@
     </div>
 
     <!-- Set duration of item listing -->
+    <fieldset disabled>
     <div class="form-inline">
       <label for="duration">Duration:</label>
       <select class="form-control" id="duration">
         <option>1</option>
       </select>
     </div>
+    </fieldset>
 
     <!-- Input description of the item -->
     <div class="form-group">
       <label for="post_descr">Desc:</label>
-      <textarea class="form-control" name="post_descr" id="post_descr" cols="30" rows="10"></textarea>
+      <textarea class="form-control" name="post_descr" id="post_descr" cols="30" rows="10" placeholder="Description..."></textarea>
     </div>
 
     <!-- Submission buttons -->
