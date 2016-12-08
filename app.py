@@ -51,7 +51,7 @@ class Post(db.Model):
     post_price = db.Column('PostPrice', db.Integer, unique=False)
     post_descr = db.Column('PostDescription', db.String(500), unique=False)
 
-    def __init__(self, posterid, title, price, descr):
+    def __init__(self, posterid=None, title="", price="", descr=""):
         self.post_posterid = posterid
         self.post_title = title
         self.post_price = price
