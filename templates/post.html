@@ -2,11 +2,11 @@
 {% block content %}
 <div class="jumbotron">
   <h1>Post</h1>
-  <form action="/post" method="POST">
+  <form class="form-post-item" action="posted" method="post" id="btn_post_item">
     <!-- Input for item name -->
     <div class="form-inline">
-      <label for="item_name">Item:</label>
-      <input type="text" class="form-control" id="item_name">
+      <label for="post_title" class="sr-only">Item:</label>
+      <input type="text" name="post_title" class="form-control" id="post_title" placeholder="Name of item...">
     </div>
 
     <!-- Input to post as either selling or renting an item -->
@@ -14,38 +14,42 @@
       <label class="radio-inline"><input type="radio" name="post_type">Sell</label>
       <label class="radio-inline"><input type="radio" name="post_type">Rent</label>
     </div>
-
+    
     <!-- Input for item auction -->
     <div class="form-inline">
       <!-- Make item an auction checkbox -->
+      <fieldset disabled>
       <div class="checkbox">
         <label class="checkbox-inline"><input type="checkbox" value="">auction</label>
       </div>
+      </fieldset>
       <!-- Starting bid of auction -->
       <div class="form-group">
-        <label for="price">Price:</label>
-        <input type="text" class="form-control" id="auction">
+        <label for="post_price">Price:</label>
+        <input type="number" name="post_price" class="form-control" id="post_price">
       </div>
     </div>
 
     <!-- Set duration of item listing -->
+    <fieldset disabled>
     <div class="form-inline">
       <label for="duration">Duration:</label>
       <select class="form-control" id="duration">
         <option>1</option>
       </select>
     </div>
+    </fieldset>
 
     <!-- Input description of the item -->
     <div class="form-group">
-      <label for="desc">Desc:</label>
-      <textarea class="form-control" id="desc" cols="30" rows="10"></textarea>
+      <label for="post_descr">Desc:</label>
+      <textarea class="form-control" name="post_descr" id="post_descr" cols="30" rows="10" placeholder="Description..."></textarea>
     </div>
-    
+
     <!-- Submission buttons -->
     <div class="container">
       <input type="button" class="btn btn-info" value="Cancel">
-      <input type="submit" class="btn btn-info" value="Submit">
+      <button type="submit" id="btn_post_item" class="btn btn-info">Submit</button>
     </div>
   </form>
 </div>

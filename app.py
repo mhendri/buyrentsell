@@ -41,7 +41,6 @@ class User(db.Model):
         self.password = password
         self.phone = phone
 
-
 #Create Post table
 class Post(db.Model):
     __tablename__ = "Posts"
@@ -51,11 +50,11 @@ class Post(db.Model):
     post_price = db.Column('PostPrice', db.Integer, unique=False)
     post_descr = db.Column('PostDescription', db.String(500), unique=False)
 
-    def __init__(self, posterid=None, title="", price="", descr=""):
-        self.post_posterid = posterid
-        self.post_title = title
-        self.post_price = price
-        self.post_descr =  descr
+    def __init__(self, post_posterid=0, post_title="", post_price="", post_descr=""):
+        self.post_posterid = post_posterid
+        self.post_title = post_title
+        self.post_price = post_price
+        self.post_descr =  post_descr
 
 # Need to add few more things:
 # buyer_id, (is_biddable, current_bid, time_limit), date_posted, is_reported, image
@@ -79,6 +78,7 @@ def index():
     else:
         #if logged_in, we should display show_entries
         return render_template('index.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -126,6 +126,18 @@ def success():
             return render_template('success.html')
     return render_template('success.html')
 
+@app.route('/posted', methods = ['GET', 'POST'])
+def posted():
+    if request.method == 'POST':
+        post_title = request.form['post_title']
+        post_price = request.form['post_price']
+        post_descr = request.form['post_descr']
+        entry = Post(0,post_title, post_price, post_descr)
+        db.session.add(entry)
+        db.session.commit()
+        return render_template('success.html')
+    return render_template('success.html')
+
 if (__name__)=='__main__':
     app.run(host='localhost', port=5000, debug=True)
 
@@ -141,14 +153,10 @@ def user(id):
 def post():
     return render_template('post.html')
 
-@app.route('/profile')
-def profile():
-    return render_template('user_profile.html')
-
-
 @app.route('/showPosts')
 def show_entries():
     return render_template('show_entries.html')
+
 '''
 #joseph's code
 @app.route('/add', methods=['POST'])
