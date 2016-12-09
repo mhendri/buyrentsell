@@ -247,7 +247,10 @@ def post():
 
 @app.route('/showPosts')
 def show_entries():
-    return render_template('show_entries.html')
+
+    entries = Post.query.order_by(Post.post_posterid)
+    return render_template('show_entries.html', entries = entries)
+
 
 '''
 sample code from flaskr.app tutorial
