@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
+{% if session['logged_in'] %}
   <h1>Post</h1>
   <form class="form-post-item" action="posted" method="post" id="btn_post_item">
     <!-- Input for item name -->
@@ -14,7 +15,7 @@
       <label class="radio-inline"><input type="radio" name="post_type">Sell</label>
       <label class="radio-inline"><input type="radio" name="post_type">Rent</label>
     </div>
-    
+
     <!-- Input for item auction -->
     <div class="form-inline">
       <!-- Make item an auction checkbox -->
@@ -52,5 +53,8 @@
       <button type="submit" id="btn_post_item" class="btn btn-info">Submit</button>
     </div>
   </form>
+  {% else %}
+  <h1>You need to be logged in to post!</h1>
+  {% endif %}
 </div>
 {% endblock %}
