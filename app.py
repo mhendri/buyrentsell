@@ -178,14 +178,15 @@ def login():
         # Session = sessionmaker(bind=engine)
         # s = db.session
         query = User.query.filter(User.email==POST_USERNAME,
-                                     User.password==POST_PASSWORD, User.active == True)
+                User.password==POST_PASSWORD)
         result = query.first()
-        if result:
+        if result.active == False:
+            flash ('Account not yet active, please wait for admin')
+            return render_template('login.html')
+        elif result:
             session['logged_in'] = True
             flash('SUCCESS: Logged In!')
             data_dict = dict(username=POST_USERNAME)
-        elif User.active == False:
-            flash ('Account not yet active, please wait for admin')
         else:
             flash('wrong password!')
             return render_template('login.html')
