@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
+{% if user.id %}
 	<!-- Display the username, currently parameter is unknown -->
 	<h1>{{ user.email }}</h1>
 	<h1><small>Rating:</small><!-- { user.rating } --></h2>
@@ -19,7 +20,7 @@
           <div class="row">
             <h2 align="center">Description</h2>
             <h3 align="center">Price</h3>
-          </div> 
+          </div>
         </div>
       </div>
       <div class="col-xs-6 col-sm-4">
@@ -28,8 +29,8 @@
           <div class="row description">
             <h2 align="center">Description</h2>
             <h3 align="center">Price</h3>
-          </div> 
-        </div>      
+          </div>
+        </div>
       </div>
       <div class="col-xs-6 col-sm-4">
         <div class="post-box" align="center">
@@ -37,18 +38,21 @@
           <div class="row description">
             <h2 align="center">Description</h2>
             <h3 align="center">Price</h3>
-          </div>  
-        </div>      
-      </div>    
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-	
+
 	<!-- TODO:
 	View description
 	View rating
 	View postings
 	View joindate
 	-->
+  {% else %}
+  <h1>User does not exist!</h1>
+  {% endif %}
 </div>
 {% endblock %}

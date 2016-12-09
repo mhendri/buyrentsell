@@ -1,9 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
+{% if post.post_posterid %}
   <div class="jumbotron">
     <h1>{{ post.post_title }}</h1>
     <h2>{{ post.post_price }}</h2>
     <p>{{ post.post_descr }}</p>
-
+{% else %}
+<h1>post does not exist</h1>
+{% endif %}
   </div>
+
 {% endblock %}
