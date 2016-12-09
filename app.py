@@ -21,18 +21,27 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///brs.db'
 db = SQLAlchemy(app)
 admin = Admin(app, name='BRS Admin', template_mode='bootstrap3')
 
-#Create our database model
-#Create User table
+################################################################################
+## MODELS
+################################################################################
+
+##------------------------------------------------------------------------------
+## User Model
+##------------------------------------------------------------------------------
 class User(db.Model):
     __tablename__ = "Users"
     id = db.Column(db.Integer, primary_key=True)
     firstname = db.Column('Firstname', db.String(120), unique=False)
-    lastname = db.Column('Lastname', db.String(120))
+    lastname = db.Column('Lastname', db.String(120), unique=False)
     email = db.Column('email', db.String(120), unique=True)
     password = db.Column('password', db.String(15), unique=False)
     phone = db.Column('phone', db.Integer, unique=False)
+    balance = db.Column('balance', db.Integer, unique=False)
+    active = db.Column('active', db.Boolean, unique=False)
 
-
+    ############################################################################
+    ## CONSTRUCTOR
+    ############################################################################
     def __init__(self, email="", password="", firstname="", lastname="", phone=""):
         ''' '''
         self.firstname = firstname
@@ -40,8 +49,68 @@ class User(db.Model):
         self.email = email
         self.password = password
         self.phone = phone
+        self.balance = 0
+        # active is initially False
+        # user must be approved by superuser
+        self.active = False
 
-#Create Post table
+    ############################################################################
+    ## GETTERS
+    ############################################################################
+    def get_first_name(self):
+        return self.firstname
+
+    def get_last_name(self):
+        return self.lastname
+
+    def get_email(self):
+        return self.email
+
+    def get_phone(self):
+        return self.phone
+
+    def get_balance(self):
+        return self.balance
+
+    ############################################################################
+    ## SETTERS
+    ############################################################################
+    def set_email(self, email):
+        self.email = email
+
+    def set_phone(self, phone):
+        self.phone = phone
+
+    # unsure about this setter / may not be needed
+    def set_balance(self, balance):
+        self.balance = balance
+
+    def activate_user(self):
+        self.active = True
+
+    def suspend_user(self):
+        self.active = False
+
+    ############################################################################
+    ## OTHER METHODS
+    ############################################################################
+
+    # adding money to account
+    def deposit(self, amount):
+        self.balance += amount
+
+    # removing money from account
+    def withdraw(self, amount):
+        if amount > self.balance:
+            # handle error case
+            print("Insufficient Funds to perform this transaction")
+        else:
+            self.balance -= amount
+
+
+##------------------------------------------------------------------------------
+## Posts Model
+##------------------------------------------------------------------------------
 class Post(db.Model):
     __tablename__ = "Posts"
     id = db.Column(db.Integer, primary_key=True)
@@ -56,6 +125,18 @@ class Post(db.Model):
         self.post_price = post_price
         self.post_descr =  post_descr
 
+    ############################################################################
+    ## GETTERS
+    ############################################################################
+
+    ############################################################################
+    ## SETTERS
+    ############################################################################
+
+    ############################################################################
+    ## OTHER METHODS
+    ############################################################################
+
 # Need to add few more things:
 # buyer_id, (is_biddable, current_bid, time_limit), date_posted, is_reported, image
 
@@ -66,8 +147,16 @@ class Post(db.Model):
 # following conventions in that file
 # then run `$ python dummy.py` from your shell to commit those changes
 
+################################################################################
+## FLASK-ADMIN
+################################################################################
+
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Post, db.session))
+
+################################################################################
+## ROUTES
+################################################################################
 
 # Set "homepage" to index.html
 @app.route('/')
@@ -79,7 +168,7 @@ def index():
         #if logged_in, we should display show_entries
         return render_template('index.html')
 
-
+# Logging In
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -101,16 +190,19 @@ def login():
         return render_template('index.html',**data_dict)
     return render_template('login.html')
 
+# Logging Out
 @app.route('/logout')
 def logout():
     session['logged_in'] = False
     flash('SUCCESS: Logged Out!')
     return index()
 
+# Signing Up
 @app.route('/showSignUp', methods =['GET'])
 def showSignUp():
     return render_template('signup.html')
 
+# Success Message
 @app.route('/success', methods =['GET', 'POST'])
 def success():
     if request.method == 'POST':
@@ -141,7 +233,7 @@ def posted():
 if (__name__)=='__main__':
     app.run(host='localhost', port=5000, debug=True)
 
-#User profile pages accessible by /user/id
+# User profile pages accessible by /user/id
 @app.route('/user/<id>')
 #@login_required
 def user(id):
@@ -155,7 +247,10 @@ def post():
 
 @app.route('/showPosts')
 def show_entries():
-    return render_template('show_entries.html')
+
+    entries = Post.query.order_by(Post.post_posterid)
+    return render_template('show_entries.html', entries = entries)
+
 
 #Item listing accessable by /item/id
 @app.route('/item/<id>')
