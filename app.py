@@ -118,12 +118,13 @@ class Post(db.Model):
     post_title = db.Column('PostTitle', db.String(120), unique=False)
     post_price = db.Column('PostPrice', db.Integer, unique=False)
     post_descr = db.Column('PostDescription', db.String(500), unique=False)
+    post_tags = db.Column('PostTags', db.String(120), unique=False)
 
     def __init__(self, post_posterid=0, post_title="", post_price="", post_descr=""):
         self.post_posterid = post_posterid
         self.post_title = post_title
         self.post_price = post_price
-        self.post_descr =  post_descr
+        self.post_descr = post_descr
 
     ############################################################################
     ## GETTERS
