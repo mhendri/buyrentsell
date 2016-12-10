@@ -122,12 +122,15 @@ class Post(db.Model):
     price = db.Column('price', db.Numeric(12,2), unique=False)
     descr = db.Column('description', db.String(500), unique=False)
     date = db.Column('date', db.DateTime)
-    
-    def __init__(self, userid=0, title="", price="", descr=""):
+
+    def __init__(self, userid=0, title="", price="", descr="", date=None):
         self.userid = userid
         self.title = title
         self.price = price
         self.descr =  descr
+        if date is None:
+            date = datetime.utcnow()
+        self.date = date
 
     ############################################################################
     ## GETTERS
