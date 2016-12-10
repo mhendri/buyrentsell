@@ -124,13 +124,13 @@ class Post(db.Model):
     post_descr = db.Column('PostDescription', db.String(500), unique=False)
     post_tags = db.Column('PostTags', db.String(120), unique=False)
 
-    def __init__(self, post_posterid=0, post_title="", post_price="", post_descr=""):
+    def __init__(self, post_posterid=0, post_title="", post_price="", post_descr="", post_tags=""):
         self.post_posterid = post_posterid
         self.post_title = post_title
         self.post_price = post_price
         self.post_descr = post_descr
         self.post_tags = post_tags
-        
+
     userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"), unique = False)
     title = db.Column('title', db.String(120), unique=False)
     price = db.Column('price', db.Numeric(12,2), unique=False)
