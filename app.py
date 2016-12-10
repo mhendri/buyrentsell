@@ -128,6 +128,7 @@ class Post(db.Model):
     date = db.Column('date', db.DateTime)
     category = db.Column('category', db.String(120))
     isSold = db.Column('isSold', db.Boolean)
+    buyer = db.Column('buyer', db.String(120))
 
     ############################################################################
     ## CONSTRUCTOR
@@ -142,6 +143,7 @@ class Post(db.Model):
         self.date = date
         self.category = category
         self.isSold = False
+
 
     ############################################################################
     ## GETTERS
@@ -192,6 +194,23 @@ class Post(db.Model):
     ## OTHER METHODS
     ############################################################################
 
+##------------------------------------------------------------------------------
+## Flag Model
+##------------------------------------------------------------------------------
+class Flag(db.Model):
+    __tablename__ = "Flag"
+    flagid = db.Column(db.Integer, primary_key=True)
+    userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"), unique = False)
+    reason = db.Column('flag_reason', db.String(120), unique=False)
+
+############################################################################
+## CONSTRUCTOR
+############################################################################
+    def __init__(self,userid=None, reason=""):
+        self.userid = userid
+        self.reason = reason
+
+
 # Need to add few more things:
 # buyer_id, (is_biddable, current_bid, time_limit), date_posted, is_reported, image
 
@@ -208,6 +227,7 @@ class Post(db.Model):
 
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Post, db.session))
+admin.add_view(ModelView(Flag, db.session))
 
 ################################################################################
 ## ROUTES
