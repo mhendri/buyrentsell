@@ -25,16 +25,16 @@ db.session.add(user)
 # using python time object for date/time value in db field
 now = time.strftime('%Y-%m-%d %H:%M:%S')
 
-post = Post(None, 'Rubiks Cube', 13.99, "awesome toy", None, "toys")
+post = Post(None, 'Rubiks Cube', 13.99, "awesome toy", None, "toys", image= "http://www.goo.gl/ZJCcHQ")
 db.session.add(post)
 
-post = Post(None, 'Kitchen Table', 50.00, "Ikea table", None, "furniture")
+post = Post(None, 'Kitchen Table', 50.00, "Ikea table", None, "furniture", image= "http://www.goo.gl/MXX8WG")
 db.session.add(post)
 
-post = Post(None, 'MacBook Pro', 600.00, "lightly used computer", None, "computer")
+post = Post(None, 'MacBook Pro', 600.00, "lightly used computer", None, "computer", image= "http://www.goo.gl/x89NNm")
 db.session.add(post)
 
-post = Post(None, 'Drone', 100.00, "mini drone", None, "electronics")
+post = Post(None, 'Drone', 100.00, "mini drone", None, "electronics", image= "http://www.goo.gl/hBDKTe")
 db.session.add(post)
 
 

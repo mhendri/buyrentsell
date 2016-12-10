@@ -127,13 +127,14 @@ class Post(db.Model):
     descr = db.Column('description', db.String(500), unique=False)
     date = db.Column('date', db.DateTime)
     category = db.Column('category', db.String(120))
+    image = db.Column('image', db.String(120))
     isSold = db.Column('isSold', db.Boolean)
     buyer = db.Column('buyer', db.String(120))
 
     ############################################################################
     ## CONSTRUCTOR
     ############################################################################
-    def __init__(self, userid=0, title="", price="", descr="", date=None, category=None):
+    def __init__(self, userid=0, title="", price="", descr="", date=None, category=None, image=""):
         self.userid = userid
         self.title = title
         self.price = price
@@ -142,6 +143,7 @@ class Post(db.Model):
             date = datetime.utcnow()
         self.date = date
         self.category = category
+        self.image = image
         self.isSold = False
 
 
