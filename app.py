@@ -346,7 +346,8 @@ def item(id):
     if request.method == 'POST':
         buyerid = getUserID()
         sellerid = getPostID()
-        user = User.query.filter_by(buyerid).first()
+        user.balance -= getPrice()
+        user = User.update.filter_by(buyerid).first()
 
     item = Post.query.filter_by(id=id).first()
     return render_template('item.html', item=item)
