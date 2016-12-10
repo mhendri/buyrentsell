@@ -1,4 +1,12 @@
 from app import db, User
+import os
+
+# if there is a brs.db, delete it
+if os.path.exists('brs.db'):
+    os.remove('brs.db')
+
+# create databases
+db.create_all()
 
 user = User('akbar@example.com', 'password', 'Akbar', 'Mirza', '5555555555')
 db.session.add(user)
