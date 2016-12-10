@@ -129,3 +129,49 @@ padding-top: 2%;
 
 /* End CSS from Python Spot
 */
+
+/* Start CSS for Posts */
+.login-screen {
+  margin-bottom: 50px;
+}
+
+.posts {
+  /*border: 1px solid black;*/
+  margin-top: 200px;
+  margin-bottom: 50px;
+}
+
+.posts > .row {
+  margin-bottom: 50px;
+}
+
+.postbox {
+  border: 1px solid black;
+  padding: 10px;
+  -webkit-box-shadow: 5px 5px 10px 5px rgba(0,0,0,0.75);
+  -moz-box-shadow: 5px 5px 10px 5px rgba(0,0,0,0.75);
+  box-shadow: 5px 5px 10px 0px rgba(0,0,0,0.75);
+  border-radius: 5px;
+}
+
+.postbox img {
+  width: 100%;
+}
+
+.post-title, .post-price {
+  font-weight: bold;
+  text-align: right;
+}
+
+.post-title {
+  font-size: 24px;
+}
+
+.post-price {
+  font-size: 20px;
+}
+
+.post-price::before {
+  content: '$';
+}
+/* End CSS */
