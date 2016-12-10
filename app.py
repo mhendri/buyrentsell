@@ -6,6 +6,9 @@ from flask_admin.contrib.sqla import ModelView
 import os
 # from flask.ext.login import LoginManager
 
+# for datetime
+from datetime import datetime
+
 # Database Imports
 from sqlalchemy.orm import sessionmaker
 # from tabledef import *
@@ -118,7 +121,8 @@ class Post(db.Model):
     title = db.Column('title', db.String(120), unique=False)
     price = db.Column('price', db.Numeric(12,2), unique=False)
     descr = db.Column('description', db.String(500), unique=False)
-
+    date = db.Column('date', db.DateTime)
+    
     def __init__(self, userid=0, title="", price="", descr=""):
         self.userid = userid
         self.title = title
