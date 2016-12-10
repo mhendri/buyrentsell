@@ -142,19 +142,7 @@ class Post(db.Model):
             date = datetime.utcnow()
         self.date = date
 
-class Flag(db.Model):
-    __tablename__ = "Flag"
-    id = db.Column(db.Integer, primary_key=True)
-    userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"), unique = False)
-    reason = db.Column('flag_reason', db.String(120), unique=False)
-
-    def __init__(self,userid=None, reason=""):
-        self.userid = userid
-        self.reason = reason
-        self.category = category
-        self.isSold = False
-
-
+        
     ############################################################################
     ## GETTERS
     ############################################################################
@@ -203,6 +191,23 @@ class Flag(db.Model):
     ############################################################################
     ## OTHER METHODS
     ############################################################################
+
+##------------------------------------------------------------------------------
+## Flag Model
+##------------------------------------------------------------------------------
+class Flag(db.Model):
+    __tablename__ = "Flag"
+    id = db.Column(db.Integer, primary_key=True)
+    userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"), unique = False)
+    reason = db.Column('flag_reason', db.String(120), unique=False)
+
+############################################################################
+## CONSTRUCTOR
+############################################################################
+    def __init__(self,userid=None, reason=""):
+        self.userid = userid
+        self.reason = reason
+
 
 # Need to add few more things:
 # buyer_id, (is_biddable, current_bid, time_limit), date_posted, is_reported, image
