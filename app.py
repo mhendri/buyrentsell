@@ -128,6 +128,7 @@ class Post(db.Model):
     date = db.Column('date', db.DateTime)
     category = db.Column('category', db.String(120))
     isSold = db.Column('isSold', db.Boolean)
+    buyer = db.Column('buyer', db.String(120))
 
     ############################################################################
     ## CONSTRUCTOR
