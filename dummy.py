@@ -25,28 +25,28 @@ db.session.add(user)
 # using python time object for date/time value in db field
 now = time.strftime('%Y-%m-%d %H:%M:%S')
 
-post = Post(None, 'Rubiks Cube', 13.99, "awesome toy", None, "sports", image= "http://www.goo.gl/ZJCcHQ")
+post = Post(1, 'Rubiks Cube', 13.99, "awesome toy", None, "sports", image= "http://www.goo.gl/ZJCcHQ")
 db.session.add(post)
 
-post = Post(None, 'Kitchen Table', 50.00, "Ikea table", None, "furniture", image= "http://www.goo.gl/MXX8WG")
+post = Post(1, 'Kitchen Table', 50.00, "Ikea table", None, "furniture", image= "http://www.goo.gl/MXX8WG")
 db.session.add(post)
 
-post = Post(None, 'MacBook Pro', 600.00, "lightly used computer", None, "electronic", image= "http://www.goo.gl/x89NNm")
+post = Post(1, 'MacBook Pro', 600.00, "lightly used computer", None, "electronic", image= "http://www.goo.gl/x89NNm")
 db.session.add(post)
 
-post = Post(None, 'Drone', 100.00, "mini drone", None, "electronic", image= "http://www.goo.gl/hBDKTe")
+post = Post(1, 'Drone', 100.00, "mini drone", None, "electronic", image= "http://www.goo.gl/hBDKTe")
 db.session.add(post)
 
-post = Post(None, 'Basketball', 50.00, "NBA Baseketball", None, "sports", image="https://goo.gl/QcgX0p")
+post = Post(2, 'Basketball', 50.00, "NBA Baseketball", None, "sports", image="https://goo.gl/QcgX0p")
 db.session.add(post)
 
-post = Post(None, 'Dining Table', 100.00, 'New Dining Table from IKEA', None, 'furniture', image="https://goo.gl/E7shvm")
+post = Post(2, 'Dining Table', 100.00, 'New Dining Table from IKEA', None, 'furniture', image="https://goo.gl/E7shvm")
 db.session.add(post)
 
-post = Post(None, 'T-shirt', 25.00, 'Worn once', None, 'clothing', image = "https://goo.gl/nJHXBT")
+post = Post(2, 'T-shirt', 25.00, 'Worn once', None, 'clothing', image = "https://goo.gl/nJHXBT")
 db.session.add(post)
 
-post = Post(None, 'Refrigerator', 400.00, 'Used for 2 years and we are moving.', None, 'appliance', image = "https://goo.gl/SlfUdm")
+post = Post(2, 'Refrigerator', 400.00, 'Used for 2 years and we are moving.', None, 'appliance', image = "https://goo.gl/SlfUdm")
 db.session.add(post)
 
 

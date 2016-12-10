@@ -317,13 +317,13 @@ def posted():
         descr = request.form['descr']
         image = request.form['image']
         date = datetime.utcnow()
-        category = request.form['category']            
+        category = request.form['category']
         entry = Post(1,title, price, descr, date, category, image)
         db.session.add(entry)
         db.session.commit()
         flash('Item Posted!')
         return render_template('index.html')
-    
+
     return render_template('post.html')
 
 if (__name__)=='__main__':
@@ -341,8 +341,14 @@ def user(id):
 def post():
     return render_template('post.html')
 
-@app.route('/item/<id>')
+@app.route('/item/<id>', methods=['GET', 'POST'])
 def item(id):
+    if request.method == 'POST':
+        buyerid = getUserID()
+        sellerid = getPostID()
+        user.balance -= getPrice()
+        user = User.update.filter_by(buyerid).first()
+
     item = Post.query.filter_by(id=id).first()
     return render_template('item.html', item=item)
 
