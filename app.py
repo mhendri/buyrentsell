@@ -141,8 +141,10 @@ class Post(db.Model):
         if date is None:
             date = datetime.utcnow()
         self.date = date
+        self.category = category
+        self.isSold = False
 
-        
+
     ############################################################################
     ## GETTERS
     ############################################################################
@@ -197,7 +199,7 @@ class Post(db.Model):
 ##------------------------------------------------------------------------------
 class Flag(db.Model):
     __tablename__ = "Flag"
-    id = db.Column(db.Integer, primary_key=True)
+    flagid = db.Column(db.Integer, primary_key=True)
     userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"), unique = False)
     reason = db.Column('flag_reason', db.String(120), unique=False)
 
