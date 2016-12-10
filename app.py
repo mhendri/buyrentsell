@@ -114,16 +114,16 @@ class User(db.Model):
 class Post(db.Model):
     __tablename__ = "Posts"
     id = db.Column(db.Integer, primary_key=True)
-    post_posterid = db.Column('PosterID', db.Integer, unique = False)
-    post_title = db.Column('PostTitle', db.String(120), unique=False)
-    post_price = db.Column('PostPrice', db.Integer, unique=False)
-    post_descr = db.Column('PostDescription', db.String(500), unique=False)
+    userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"), unique = False)
+    title = db.Column('title', db.String(120), unique=False)
+    price = db.Column('price', db.Numeric(12,2), unique=False)
+    descr = db.Column('description', db.String(500), unique=False)
 
-    def __init__(self, post_posterid=0, post_title="", post_price="", post_descr=""):
-        self.post_posterid = post_posterid
-        self.post_title = post_title
-        self.post_price = post_price
-        self.post_descr =  post_descr
+    def __init__(self, userid=0, title="", price="", descr=""):
+        self.userid = userid
+        self.title = title
+        self.price = price
+        self.descr =  descr
 
     ############################################################################
     ## GETTERS
@@ -224,10 +224,10 @@ def success():
 @app.route('/posted', methods = ['GET', 'POST'])
 def posted():
     if request.method == 'POST':
-        post_title = request.form['post_title']
-        post_price = request.form['post_price']
-        post_descr = request.form['post_descr']
-        entry = Post(0,post_title, post_price, post_descr)
+        title = request.form['title']
+        price = request.form['price']
+        descr = request.form['descr']
+        entry = Post(1,title, price, descr)
         db.session.add(entry)
         db.session.commit()
         return render_template('success.html')
@@ -248,11 +248,17 @@ def user(id):
 def post():
     return render_template('post.html')
 
+@app.route('/item/<id>')
+def item(id):
+    item = Post.query.filter_by(id=id).first()
+    return render_template('item.html', item=item)
+
 @app.route('/showPosts')
 def show_entries():
 
-    entries = Post.query.order_by(Post.post_posterid)
+    entries = Post.query.order_by(Post.userid)
     return render_template('show_entries.html', entries = entries)
+
 
 
 '''
