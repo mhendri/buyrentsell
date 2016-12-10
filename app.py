@@ -127,6 +127,9 @@ class Post(db.Model):
     descr = db.Column('description', db.String(500), unique=False)
     date = db.Column('date', db.DateTime)
 
+    ############################################################################
+    ## CONSTRUCTOR
+    ############################################################################
     def __init__(self, userid=0, title="", price="", descr="", date=None):
         self.userid = userid
         self.title = title
@@ -135,7 +138,6 @@ class Post(db.Model):
         if date is None:
             date = datetime.utcnow()
         self.date = date
-
 
     ############################################################################
     ## GETTERS
@@ -161,6 +163,14 @@ class Post(db.Model):
     ############################################################################
     ## SETTERS
     ############################################################################
+    def setTitle(self, title):
+        self.title = title
+
+    def setPrice(self, price):
+        self.price = price
+
+    def setDesc(self, desc):
+        self.desc = desc
 
     ############################################################################
     ## OTHER METHODS
