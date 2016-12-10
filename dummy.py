@@ -21,6 +21,8 @@ db.session.add(user)
 user = User('test@test.com', 'test', 'test', 'test', '5555')
 db.session.add(user)
 
+# create dummy posts for post.db
+# using python time object for date/time value in db field
 now = time.strftime('%Y-%m-%d %H:%M:%S')
 
 post = Post(None, 'Rubiks Cube', 13.99, "awesome toy", None, "toys")
