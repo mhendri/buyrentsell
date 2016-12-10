@@ -282,7 +282,7 @@ def showSignUp():
     firstnum = int(random.random() * 10)
     secondnum = int(random.random() * 10)
     resultnum = firstnum + secondnum
-    return render_template('signup.html', firstnum = firstnum, secondnum = secondnum, resultnum = resultnum)
+    return render_template('signup.html', firstnum = firstnum, secondnum = secondnum)
 
 # Success Message
 @app.route('/success', methods =['GET', 'POST'])
@@ -298,8 +298,14 @@ def success():
             entry = User(email, password, firstname, lastname, phone)
             db.session.add(entry)
             db.session.commit()
-            return render_template('success.html')
-    return render_template('success.html')
+            flash('Sign up success! You will have access in 10mins. Thank you for your patients')
+            return render_template('index.html')
+
+    flash('Failed to sign up, Please try again.')
+    firstnum = int(random.random() * 10)
+    secondnum = int(random.random() * 10)
+    resultnum = firstnum + secondnum
+    return render_template('signup.html', firstnum = firstnum, secondnum = secondnum)
 
 @app.route('/posted', methods = ['GET', 'POST'])
 def posted():
@@ -310,8 +316,11 @@ def posted():
         entry = Post(1,title, price, descr)
         db.session.add(entry)
         db.session.commit()
-        return render_template('success.html')
-    return render_template('success.html')
+        flash('Item Posted!')
+        return render_template('index.html')
+    
+    flash('Try Again')
+    return render_template('post.html')
 
 if (__name__)=='__main__':
     app.run(host='localhost', port=5000, debug=True)

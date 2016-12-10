@@ -9,7 +9,7 @@
     <!-- Input for item name -->
     <div class="form-inline">
       <label for="title">Item Title:</label>
-      <input type="text" name="title" class="form-control" id="title" size = "100">
+      <input type="text" name="title" class="form-control" id="title" size = "100" required>
       </div>
     
     <br>
@@ -27,7 +27,7 @@
       <!-- Starting bid of auction -->
       <div class="form-group">
         <label for="price">Price:</label>
-        <input type="number" min="0" max="10000" step="any" name="price" size = "25" class="form-control" id="price">
+        <input type="number" min="0" max="10000" step="any" name="price" size = "25" class="form-control" id="price" required>
       </div>
     </div>
 
@@ -48,7 +48,7 @@
     <!-- Input description of the item -->
     <div class="form-group">
       <label for="descr">Description:</label>
-      <textarea class="form-control" name="descr" id="descr" cols="30" rows="10" placeholder="Description..."></textarea>
+      <textarea class="form-control" name="descr" id="descr" cols="30" rows="10" placeholder="Description..." required></textarea>
     </div>
 
     <!-- Submission buttons -->

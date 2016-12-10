@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
+  {% if error %}
+    {{error}}
+  {% endif %}
       <div class="jumbotron">
         <h1>Buy Rent Sell</h1>
           <form class="form-signin" action="success" method="post" id="btnSignUp">
@@ -19,7 +22,7 @@
           <label for="phoneNumber" class="sr-only">Phone Number</label>
           <input type="phone" name="phoneNumber" id="phoneNumber" class="form-control" placeholder="Phone" required autofocus>
           <br>
-          <p align = "center" for="captcha" class="firstnum secondnum resultnum">{{firstnum}} + {{secondnum}} =</p>
+          <p align = "center" for="captcha" class="firstnum secondnum">{{firstnum}} + {{secondnum}} =</p>
           <input type="captcha" name="captcha" id="captcha" class="form-control" placeholder="Captcha Answer" required autofocus>
           <br>
           <button type="submit" id="btnSignUp" class="btn btn-lg btn-primary btn-block" >Sign up</button>
