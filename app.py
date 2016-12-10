@@ -114,6 +114,20 @@ class User(db.Model):
 class Post(db.Model):
     __tablename__ = "Posts"
     id = db.Column(db.Integer, primary_key=True)
+
+    post_posterid = db.Column('PosterID', db.Integer, unique = False)
+    post_title = db.Column('PostTitle', db.String(120), unique=False)
+    post_price = db.Column('PostPrice', db.Integer, unique=False)
+    post_descr = db.Column('PostDescription', db.String(500), unique=False)
+    post_tags = db.Column('PostTags', db.String(120), unique=False)
+
+    def __init__(self, post_posterid=0, post_title="", post_price="", post_descr=""):
+        self.post_posterid = post_posterid
+        self.post_title = post_title
+        self.post_price = post_price
+        self.post_descr = post_descr
+        self.post_tags = post_tags
+        
     userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"), unique = False)
     title = db.Column('title', db.String(120), unique=False)
     price = db.Column('price', db.Numeric(12,2), unique=False)
@@ -124,6 +138,7 @@ class Post(db.Model):
         self.title = title
         self.price = price
         self.descr =  descr
+
 
     ############################################################################
     ## GETTERS
