@@ -140,6 +140,23 @@ class Post(db.Model):
     ############################################################################
     ## GETTERS
     ############################################################################
+    def getPostID(self):
+        return self.id
+
+    def getUserID(self):
+        return self.userid
+
+    def getTitle(self):
+        return self.title
+
+    def getPrice(self):
+        return self.price
+
+    def getDesc(self):
+        return self.desc
+
+    def getDate(self):
+        return self.date
 
     ############################################################################
     ## SETTERS
