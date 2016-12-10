@@ -164,6 +164,12 @@ class Post(db.Model):
     def getDate(self):
         return self.date
 
+    def getCategory(self):
+        return self.category
+
+    def getIsSold(self):
+        return self.isSold
+    
     ############################################################################
     ## SETTERS
     ############################################################################
