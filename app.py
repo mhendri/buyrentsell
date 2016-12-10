@@ -132,7 +132,7 @@ class Post(db.Model):
     ############################################################################
     ## CONSTRUCTOR
     ############################################################################
-    def __init__(self, userid=0, title="", price="", descr="", date=None):
+    def __init__(self, userid=0, title="", price="", descr="", date=None, category=None):
         self.userid = userid
         self.title = title
         self.price = price
@@ -140,6 +140,8 @@ class Post(db.Model):
         if date is None:
             date = datetime.utcnow()
         self.date = date
+        self.category = category
+        self.isSold = False
 
     ############################################################################
     ## GETTERS
