@@ -3,6 +3,8 @@ from flask import flash, redirect, render_template, request, session, abort, url
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+
+from forms import *
 import os
 # from flask.ext.login import LoginManager
 
@@ -290,3 +292,11 @@ def posting():
     flash('New entry was sucessfully posted')
     return redirect(url_for('show_entries'))
 '''
+
+@app.route('/contact')
+def contact():
+    form = ContactForm()
+    return render_template('contact.html', form = form)
+
+if __name__ == '__main__':
+    app.run(debug = True)
