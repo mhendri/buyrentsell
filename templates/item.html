@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-{% if post.userid %}
+{% if item.userid %}
   <div class="jumbotron">
-    <h1>{{ post.title }}</h1>
-    <h2>{{ post.price }}</h2>
-    <p>{{ post.descr }}</p>
+    <h1>{{ item.title }}</h1>
+    <h2>{{ item.price }}</h2>
+    <p>{{ item.descr }}</p>
 {% else %}
 <h1>post does not exist</h1>
 {% endif %}

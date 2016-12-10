@@ -245,11 +245,17 @@ def user(id):
 def post():
     return render_template('post.html')
 
+@app.route('/item/<id>')
+def item(id):
+    item = Post.query.filter_by(id=id).first()
+    return render_template('item.html', item=item)
+
 @app.route('/showPosts')
 def show_entries():
 
     entries = Post.query.order_by(Post.userid)
     return render_template('show_entries.html', entries = entries)
+
 
 
 '''
