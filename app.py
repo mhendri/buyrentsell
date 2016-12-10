@@ -277,7 +277,7 @@ def logout():
     flash('SUCCESS: Logged Out!')
     return index()
 
-# Signing Up
+# Signing up
 @app.route('/showSignUp', methods =['GET'])
 def showSignUp():
     global resultnum
@@ -349,7 +349,7 @@ def item(id):
 @app.route('/showPosts')
 def show_entries():
 
-    entries = Post.query.order_by(Post.userid)
+    entries = Post.query.order_by(Post.date.desc())
     return render_template('show_entries.html', entries = entries)
 
 
