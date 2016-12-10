@@ -3,6 +3,7 @@ from flask import flash, redirect, render_template, request, session, abort, url
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+import random
 import os
 # from flask.ext.login import LoginManager
 
@@ -23,6 +24,9 @@ app.secret_key = os.urandom(12)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///brs.db'
 db = SQLAlchemy(app)
 admin = Admin(app, name='BRS Admin', template_mode='bootstrap3')
+
+global resultnum
+resultnum = 0
 
 ################################################################################
 ## MODELS
@@ -211,12 +215,17 @@ def logout():
 # Signing Up
 @app.route('/showSignUp', methods =['GET'])
 def showSignUp():
-    return render_template('signup.html')
+    global resultnum
+    firstnum = int(random.random() * 10)
+    secondnum = int(random.random() * 10)
+    resultnum = firstnum + secondnum
+    return render_template('signup.html', firstnum = firstnum, secondnum = secondnum, resultnum = resultnum)
 
 # Success Message
 @app.route('/success', methods =['GET', 'POST'])
 def success():
-    if request.method == 'POST':
+    global resultnum
+    if request.method == 'POST' and int(request.form['captcha']) == int(resultnum):
         firstname = request.form['inputFirstName']
         lastname = request.form['inputLastName']
         email = request.form['inputEmail']
