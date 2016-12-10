@@ -64,6 +64,10 @@ class User(db.Model):
     ############################################################################
     ## GETTERS
     ############################################################################
+
+    def get_user_id(self):
+        return self.id
+
     def get_first_name(self):
         return self.firstname
 
@@ -344,11 +348,11 @@ def post():
 @app.route('/item/<id>', methods=['GET', 'POST'])
 def item(id):
     if request.method == 'POST':
-        buyerid = getUserID()
-        sellerid = getPostID()
-        user.balance -= getPrice()
-        user = User.update.filter_by(buyerid).first()
-
+        buyerid = User.get_user_id()
+        sellerid = Post.getPostID()
+        user = User.query.filter_by(buyerid).first()
+        user.balance -= Post.getPrice()
+        return "transaction success"
     item = Post.query.filter_by(id=id).first()
     return render_template('item.html', item=item)
 
