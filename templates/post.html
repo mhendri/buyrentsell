@@ -6,14 +6,14 @@
   <form class="form-post-item" action="posted" method="post" id="btn_post_item">
     <!-- Input for item name -->
     <div class="form-inline">
-      <label for="post_title" class="sr-only">Item:</label>
-      <input type="text" name="post_title" class="form-control" id="post_title" placeholder="Name of item...">
+      <label for="title" class="sr-only">Item:</label>
+      <input type="text" name="title" class="form-control" id="title" placeholder="Name of item...">
     </div>
 
     <!-- Input to post as either selling or renting an item -->
     <div class="radio">
-      <label class="radio-inline"><input type="radio" name="post_type">Sell</label>
-      <label class="radio-inline"><input type="radio" name="post_type">Rent</label>
+      <label class="radio-inline"><input type="radio" name="type">Sell</label>
+      <label class="radio-inline"><input type="radio" name="type">Rent</label>
     </div>
 
     <!-- Input for item auction -->
@@ -26,8 +26,8 @@
       </fieldset>
       <!-- Starting bid of auction -->
       <div class="form-group">
-        <label for="post_price">Price:</label>
-        <input type="number" name="post_price" class="form-control" id="post_price">
+        <label for="price">Price:</label>
+        <input type="number" min="0" max="10000" step="any" name="price" class="form-control" id="price">
       </div>
     </div>
 
@@ -43,8 +43,8 @@
 
     <!-- Input description of the item -->
     <div class="form-group">
-      <label for="post_descr">Desc:</label>
-      <textarea class="form-control" name="post_descr" id="post_descr" cols="30" rows="10" placeholder="Description..."></textarea>
+      <label for="descr">Desc:</label>
+      <textarea class="form-control" name="descr" id="descr" cols="30" rows="10" placeholder="Description..."></textarea>
     </div>
 
     <!-- Submission buttons -->
