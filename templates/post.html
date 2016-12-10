@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
+
 {% if session['logged_in'] %}
   <h1>Post</h1>
+
   <form class="form-post-item" action="posted" method="post" id="btn_post_item">
     <!-- Input for item name -->
     <div class="form-inline">
@@ -34,7 +36,7 @@
     <!-- Set duration of item listing -->
     <fieldset disabled>
     <div class="form-inline">
-      <label for="duration">Duration:</label>
+      <label for="duration">Duration(days):</label>
       <select class="form-control" id="duration">
         <option>1</option>
       </select>
@@ -49,8 +51,9 @@
 
     <!-- Submission buttons -->
     <div class="container">
-      <input type="button" class="btn btn-info" value="Cancel">
+
       <button type="submit" id="btn_post_item" class="btn btn-info">Submit</button>
+      <input type="button" class="btn btn-info" value="Cancel">
     </div>
   </form>
   {% else %}
