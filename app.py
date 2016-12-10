@@ -169,7 +169,7 @@ class Post(db.Model):
 
     def getIsSold(self):
         return self.isSold
-    
+
     ############################################################################
     ## SETTERS
     ############################################################################
@@ -181,6 +181,12 @@ class Post(db.Model):
 
     def setDesc(self, desc):
         self.desc = desc
+
+    def setCategory(self, category):
+        self.category = category
+
+    def markSold(self):
+        self.isSold = True
 
     ############################################################################
     ## OTHER METHODS
