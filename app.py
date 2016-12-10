@@ -315,13 +315,15 @@ def posted():
         title = request.form['title']
         price = request.form['price']
         descr = request.form['descr']
-        entry = Post(1,title, price, descr)
+        image = request.form['image']
+        date = datetime.utcnow()
+        category = request.form['category']            
+        entry = Post(1,title, price, descr, date, category, image)
         db.session.add(entry)
         db.session.commit()
         flash('Item Posted!')
         return render_template('index.html')
     
-    flash('Try Again')
     return render_template('post.html')
 
 if (__name__)=='__main__':
