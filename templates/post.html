@@ -15,9 +15,9 @@
     <br>
     <!-- Input to post as either selling or renting an item -->
     <div class = "radio">
-      <input type="radio" name="radio"> <b>Selling:</b> <br>
-      <input type="radio" name="radio"> <b>Renting:</b> <br>
-      <input type="radio" name="radio"> <b>Auctioning:</b> <br>  
+      <input type="radio" name="radio" id="sell"> <b>Selling:</b> <br>
+      <input type="radio" name="radio" id="rent"> <b>Renting:</b> <br>
+      <input type="radio" name="radio" id="auction"> <b>Auctioning:</b> <br>  
     </div>
 
     <br>
@@ -45,9 +45,9 @@
 
     <br>
 
-    <div class = "image">
-      <label for="image">Image: </label>
-      <input type="text" name="image" class="form-control" id="image" size = "60" required>
+    <div class = "form-inline">
+      <label for="image">Image:</label>
+      <input type="text" name="image" class="form-control" id="image" size = "110" required>
     </div>
 
 
@@ -55,7 +55,7 @@
       <div class = "category">
         <label for="category">Category: </label>
         <select name ="category">
-          <option value="select">Select Category</option>
+          <option value="select" >Select Category</option>
           <option value="electronic">Electronic</option>
           <option value="furniture">Furniture</option>
           <option value="clothing">Clothing</option>
