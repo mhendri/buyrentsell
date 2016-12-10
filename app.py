@@ -126,8 +126,13 @@ class Post(db.Model):
     price = db.Column('price', db.Numeric(12,2), unique=False)
     descr = db.Column('description', db.String(500), unique=False)
     date = db.Column('date', db.DateTime)
+    category = db.Column('category', db.String(120))
+    isSold = db.Column('isSold', db.Boolean)
 
-    def __init__(self, userid=None, title="", price="", descr="", date=None):
+    ############################################################################
+    ## CONSTRUCTOR
+    ############################################################################
+    def __init__(self, userid=0, title="", price="", descr="", date=None, category=None):
         self.userid = userid
         self.title = title
         self.price = price
@@ -145,15 +150,54 @@ class Flag(db.Model):
     def __init__(self,userid=None, reason=""):
         self.userid = userid
         self.reason = reason
+        self.category = category
+        self.isSold = False
 
 
     ############################################################################
     ## GETTERS
     ############################################################################
+    def getPostID(self):
+        return self.id
+
+    def getUserID(self):
+        return self.userid
+
+    def getTitle(self):
+        return self.title
+
+    def getPrice(self):
+        return self.price
+
+    def getDesc(self):
+        return self.desc
+
+    def getDate(self):
+        return self.date
+
+    def getCategory(self):
+        return self.category
+
+    def getIsSold(self):
+        return self.isSold
 
     ############################################################################
     ## SETTERS
     ############################################################################
+    def setTitle(self, title):
+        self.title = title
+
+    def setPrice(self, price):
+        self.price = price
+
+    def setDesc(self, desc):
+        self.desc = desc
+
+    def setCategory(self, category):
+        self.category = category
+
+    def markSold(self):
+        self.isSold = True
 
     ############################################################################
     ## OTHER METHODS
