@@ -1,5 +1,6 @@
-from app import db, User
+from app import db, User, Post
 import os
+import time
 
 # if there is a brs.db, delete it
 if os.path.exists('brs.db'):
@@ -19,8 +20,25 @@ db.session.add(user)
 
 user = User('test@test.com', 'test', 'test', 'test', '5555')
 db.session.add(user)
-# posts = Posts('Rubik\'s Cube', 13.99, False, "2016-12-05", False)
-# session.add(posts)
+
+# create dummy posts for post.db
+# using python time object for date/time value in db field
+now = time.strftime('%Y-%m-%d %H:%M:%S')
+
+post = Post(None, 'Rubiks Cube', 13.99, "awesome toy", None, "toys")
+db.session.add(post)
+
+post = Post(None, 'Kitchen Table', 50.00, "Ikea table", None, "furniture")
+db.session.add(post)
+
+post = Post(None, 'MacBook Pro', 600.00, "lightly used computer", None, "computer")
+db.session.add(post)
+
+post = Post(None, 'Drone', 100.00, "mini drone", None, "electronics")
+db.session.add(post)
+
+
+#def __init__(self, userid=0, title="", price="", descr="", date=None, category=None):
 
 # commit the record to the database
 db.session.commit()
