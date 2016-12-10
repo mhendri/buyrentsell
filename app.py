@@ -126,6 +126,8 @@ class Post(db.Model):
     price = db.Column('price', db.Numeric(12,2), unique=False)
     descr = db.Column('description', db.String(500), unique=False)
     date = db.Column('date', db.DateTime)
+    category = db.Column('category', db.String(120))
+    isSold = db.Column('isSold', db.Boolean)
 
     ############################################################################
     ## CONSTRUCTOR
