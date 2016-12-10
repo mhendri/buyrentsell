@@ -21,7 +21,7 @@
       {% if entry %}
       <div class="col-sm-4">
         <div class="postbox">
-          <img src="https://placehold.it/300" alt="" />
+          <img src="{{entry.image}}" alt=""  style="height: 300px"/>
           <p class="post-title">
             <a href="/item/{{ entry.id }}">{{ entry.title }}</a>
           </p>
