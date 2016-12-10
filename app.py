@@ -127,7 +127,7 @@ class Post(db.Model):
     descr = db.Column('description', db.String(500), unique=False)
     date = db.Column('date', db.DateTime)
 
-    def __init__(self, userid=0, title="", price="", descr="", date=None):
+    def __init__(self, userid=None, title="", price="", descr="", date=None):
         self.userid = userid
         self.title = title
         self.price = price
@@ -135,6 +135,16 @@ class Post(db.Model):
         if date is None:
             date = datetime.utcnow()
         self.date = date
+
+class Flag(db.Model):
+    __tablename__ = "Flag"
+    id = db.Column(db.Integer, primary_key=True)
+    userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"), unique = False)
+    reason = db.Column('flag_reason', db.String(120), unique=False)
+
+    def __init__(self,userid=None, reason=""):
+        self.userid = userid
+        self.reason = reason
 
 
     ############################################################################
@@ -165,6 +175,7 @@ class Post(db.Model):
 
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Post, db.session))
+admin.add_view(ModelView(Flag, db.session))
 
 ################################################################################
 ## ROUTES
