@@ -273,11 +273,11 @@ def login():
             session['logged_in'] = True
             session['current_user'] = result.email
             flash('SUCCESS: Logged In!')
-            data_dict = dict(username=POST_USERNAME)
+            current_user = session['current_user']
         else:
             flash('wrong password!')
             return render_template('login.html')
-        return render_template('index.html',**data_dict)
+        return render_template('index.html', username=current_user)
     return render_template('login.html')
 
 # Logging Out
