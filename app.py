@@ -289,16 +289,16 @@ def login():
                 User.password==POST_PASSWORD)
         result = query.first()
 
-        if result.active == False:
-            flash ('Account not yet active, please wait for admin')
-            return render_template('login.html')
-        elif result:
+        if result:
+            if result.active == False:
+                flash ('Account not yet active, please wait for admin')
+                return render_template('login.html')
             session['logged_in'] = True
             session['current_user'] = result.email
             flash('SUCCESS: Logged In!')
             current_user = session.get('current_user')
         else:
-            flash('wrong password!')
+            flash('The email address/password you provided were not found!')
             return render_template('login.html')
         return render_template('index.html', username=current_user)
     return render_template('login.html')
