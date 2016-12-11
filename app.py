@@ -117,7 +117,11 @@ class User(db.Model):
             print("Insufficient Funds to perform this transaction")
         else:
             self.balance -= amount
+            db.session.commit()
 
+    #
+    # def __repr__(self):
+    #     return dict(self)
 
 ##------------------------------------------------------------------------------
 ## Posts Model
@@ -261,11 +265,13 @@ def login():
         query = User.query.filter(User.email==POST_USERNAME,
                 User.password==POST_PASSWORD)
         result = query.first()
+
         if result.active == False:
             flash ('Account not yet active, please wait for admin')
             return render_template('login.html')
         elif result:
             session['logged_in'] = True
+            session['current_user'] = result.email
             flash('SUCCESS: Logged In!')
             data_dict = dict(username=POST_USERNAME)
         else:
@@ -345,14 +351,18 @@ def user(id):
 def post():
     return render_template('post.html')
 
+    query = User.query.filter(User.email==session['username'],
+            User.password==POST_PASSWORD)
+    result = query.first()
+
 @app.route('/item/<id>', methods=['GET', 'POST'])
 def item(id):
     if request.method == 'POST':
-        buyerid = User.get_user_id()
-        sellerid = Post.getPostID()
-        user = User.query.filter_by(buyerid).first()
-        user.balance -= Post.getPrice()
-        return "transaction success"
+        current_user = session['current_user']
+        query = User.query.filter(User.email==current_user)
+        buyer = query.first()
+        buyer.withdraw(100)
+        return str(buyer.balance)
     item = Post.query.filter_by(id=id).first()
     return render_template('item.html', item=item)
 
