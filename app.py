@@ -290,7 +290,7 @@ def login():
             session['logged_in'] = True
             session['current_user'] = result.email
             flash('SUCCESS: Logged In!')
-            current_user = session['current_user']
+            current_user = session.get('current_user')
         else:
             flash('wrong password!')
             return render_template('login.html')
