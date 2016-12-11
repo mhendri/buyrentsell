@@ -344,7 +344,8 @@ if (__name__)=='__main__':
 #@login_required
 def user(id):
     user = User.query.filter_by(id=id).first()
-    return render_template('user_profile.html', user=user)
+    post = Post.query.filter_by(userid=user.id)
+    return render_template('user_profile.html', user=user, post=post)
 
 #Rendering pages for testing purposes delete when finished
 @app.route('/post')
