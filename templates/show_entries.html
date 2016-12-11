@@ -35,10 +35,10 @@
 
   <div class="posts">
     <!-- Batch Line from http://stackoverflow.com/questions/17797921/jinja2-create-new-row-for-every-3-items -->
-    {% for entry_row in entries.filter_by(isSold=False) | batch(3) %}
+    {% for entry_row in entries | batch(3) %}
     <div class="row">
       {% for entry in entry_row %}
-      {% if not entry.isSold %}
+      {% if entry %}
       <div class="col-sm-4">
         <div class="postbox">
           <img src="{{entry.image}}" alt=""  style="height: 300px"/>
