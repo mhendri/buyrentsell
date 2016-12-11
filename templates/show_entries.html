@@ -38,7 +38,7 @@
     {% for entry_row in entries | batch(3) %}
     <div class="row">
       {% for entry in entry_row %}
-      {% if entry %}
+      {% if not entry.isSold %}
       <div class="col-sm-4">
         <div class="postbox">
           <img src="{{entry.image}}" alt=""  style="height: 300px"/>
