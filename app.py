@@ -126,9 +126,11 @@ class User(db.Model):
         if amount >= self.balance:
             # handle error case
             print("Insufficient Funds to perform this transaction")
+            return False
         else:
             self.balance -= amount
             db.session.commit()
+            return True
 
     #
     # def __repr__(self):
@@ -214,6 +216,10 @@ class Post(db.Model):
 
     def markSold(self):
         self.isSold = True
+        db.session.commit()
+
+    def updateBuyer(self, purchaser):
+        self.buyer = purchaser
         db.session.commit()
 
     ############################################################################
@@ -410,14 +416,19 @@ def item(id):
     if request.method == 'POST':
         query = User.query.filter(User.email==current_user)
         buyer = query.first()
-        buyer.withdraw(int(item.getPrice()))
-        # get seller
-        seller = User.query.filter(User.id==item.getUserID()).first()
-        # deposit money to seller
-        seller.deposit(int(item.getPrice()))
-        # mark item as sold
-        item.markSold()
-        return str(buyer.balance)
+        if buyer.withdraw(int(item.getPrice())) == True:
+            # get seller
+            seller = User.query.filter(User.id==item.getUserID()).first()
+            # deposit money to seller
+            seller.deposit(int(item.getPrice()))
+            # mark item as sold
+            item.markSold()
+            item.updateBuyer(buyer.email)
+            flash(item.title + ' succesfully purchased!')
+            return redirect(url_for('show_entries'))
+        else:
+            flash('Insufficient funds to purchase ' + item.title + '. Try selling some stuff! ')
+            return redirect(url_for('show_entries'))
     return render_template('item.html', item=item)
 
 @app.route('/showPosts', methods=['GET', 'POST'])
