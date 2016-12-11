@@ -379,8 +379,8 @@ def post():
             return render_template('index.html')
         else:
             return render_template('post.html', form=form)
-
-    return render_template('post.html', form=PostForm())
+    return render_template('post.html', form=PostForm(),
+                                username=session.get('current_user'))
 
 if (__name__)=='__main__':
     app.run(host='localhost', port=5000, debug=True)
@@ -391,18 +391,21 @@ if (__name__)=='__main__':
 def user(id):
     user = User.query.filter_by(id=id).first()
     post = Post.query.filter_by(userid=user.id)
+    # TODO: update so this form so that it only shows up on the current_user's
+    # profile
     if request.method == 'POST':
         deposit = request.form['deposit']
         withdraw = request.form['withdraw']
         # profile = User.query.filter_by(id=id).first()
         # profile.deposit(deposit)
         # profile.withdraw(withdraw)
-
-        return render_template('index.html')
+        return render_template('index.html', username=session.get('current_user'))
 
     user = User.query.filter_by(id=id).first()
     post = Post.query.filter_by(userid=user.id)
-    return render_template('user_profile.html', user=user, post=post)
+    return render_template('user_profile.html',
+                            username=session.get('current_user'),
+                            user=user, post=post)
 
 @app.route('/item/<id>', methods=['GET', 'POST'])
 def item(id):
@@ -422,7 +425,7 @@ def item(id):
         # mark item as sold
         item.markSold()
         return str(buyer.balance)
-    return render_template('item.html', item=item)
+    return render_template('item.html', username=session.get('current_user'), item=item)
 
 @app.route('/showPosts', methods=['GET', 'POST'])
 def show_entries():
@@ -431,6 +434,12 @@ def show_entries():
         flash('Filter: %s Selected!' % CATEGORY)
         entries = Post.query.filter(Post.category==CATEGORY)
         filtered = entries.order_by(Post.date.desc())
-        return render_template('show_entries.html', entries = filtered)
+        if not session.get('logged_in'):
+            return render_template('show_entries.html', entries=filtered)
+        return render_template('show_entries.html', entries=filtered,
+                                username=session.get('current_user'))
     entries = Post.query.order_by(Post.date.desc())
-    return render_template('show_entries.html', entries = entries)
+    if not session.get('logged_in'):
+        return render_template('show_entries.html', entries=entries)
+    return render_template('show_entries.html', entries=entries,
+                            username=session.get('current_user'))
