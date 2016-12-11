@@ -375,6 +375,8 @@ def item(id):
         seller = User.query.filter(User.id==item.getUserID()).first()
         # deposit money to seller
         seller.deposit(100)
+        # mark item as sold
+        item.markSold()
         return str(buyer.balance)
     return render_template('item.html', item=item)
 
