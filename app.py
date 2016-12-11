@@ -138,82 +138,87 @@ class User(db.Model):
 ## Posts Model
 ##------------------------------------------------------------------------------
 class Post(db.Model):
-	__tablename__ = "Posts"
-	id = db.Column(db.Integer, primary_key=True)
-	userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"), unique = False)
-	title = db.Column('title', db.String(120), unique=False)
-	price = db.Column('price', db.Numeric(12,2), unique=False)
-	descr = db.Column('description', db.String(500), unique=False)
-	date = db.Column('date', db.DateTime)
-	category = db.Column('category', db.String(120))
-	image = db.Column('image', db.String(120))
-	isSold = db.Column('isSold', db.Boolean)
-	buyer = db.Column('buyer', db.String(120))
+    __tablename__ = "Posts"
+    id = db.Column(db.Integer, primary_key=True)
+    userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"), unique = False)
+    title = db.Column('title', db.String(120), unique=False)
+    price = db.Column('price', db.Numeric(12,2), unique=False)
+    descr = db.Column('description', db.String(500), unique=False)
+    date = db.Column('date', db.DateTime)
+    category = db.Column('category', db.String(120))
+    image = db.Column('image', db.String(120))
+    isSold = db.Column('isSold', db.Boolean)
+    buyer = db.Column('buyer', db.String(120))
 
-	############################################################################
-	## CONSTRUCTOR
-	############################################################################
-	def __init__(self, userid=0, title="", price="", descr="", date=None, category=None, image=""):
-		self.userid = userid
-		self.title = title
-		self.price = price
-		self.descr =  descr
-		if date is None:
-			date = datetime.utcnow()
-		self.date = date
-		self.category = category
-		self.image = image
-		self.isSold = False
+    ############################################################################
+    ## CONSTRUCTOR
+    ############################################################################
+    def __init__(self, userid=0, title="", price="", descr="", date=None, category=None, image=""):
+        self.userid = userid
+        self.title = title
+        self.price = price
+        self.descr =  descr
+        if date is None:
+            date = datetime.utcnow()
+        self.date = date
+        self.category = category
+        self.image = image
+        self.isSold = False
 
 
-	############################################################################
-	## GETTERS
-	############################################################################
-	def getPostID(self):
-		return self.id
+    ############################################################################
+    ## GETTERS
+    ############################################################################
+    def getPostID(self):
+        return self.id
 
-	def getUserID(self):
-		return self.userid
+    def getUserID(self):
+        return self.userid
 
-	def getTitle(self):
-		return self.title
+    def getTitle(self):
+        return self.title
 
-	def getPrice(self):
-		return self.price
+    def getPrice(self):
+        return self.price
 
-	def getDesc(self):
-		return self.desc
+    def getDesc(self):
+        return self.desc
 
-	def getDate(self):
-		return self.date
+    def getDate(self):
+        return self.date
 
-	def getCategory(self):
-		return self.category
+    def getCategory(self):
+        return self.category
 
-	def getIsSold(self):
-		return self.isSold
+    def getIsSold(self):
+        return self.isSold
 
-	############################################################################
-	## SETTERS
-	############################################################################
-	def setTitle(self, title):
-		self.title = title
+    ############################################################################
+    ## SETTERS
+    ############################################################################
+    def setTitle(self, title):
+        self.title = title
+        db.session.commit()
 
-	def setPrice(self, price):
-		self.price = price
+    def setPrice(self, price):
+        self.price = price
+        db.session.commit()
 
-	def setDesc(self, desc):
-		self.desc = desc
+    def setDesc(self, desc):
+        self.desc = desc
+        db.session.commit()
 
-	def setCategory(self, category):
-		self.category = category
+    def setCategory(self, category):
+        self.category = category
+        db.session.commit()
 
-	def markSold(self):
-		self.isSold = True
+    def markSold(self):
+        self.isSold = True
+        db.session.commit()
 
-	############################################################################
-	## OTHER METHODS
-	############################################################################
+    ############################################################################
+    ## OTHER METHODS
+    ############################################################################
 
 ##------------------------------------------------------------------------------
 ## Flag Model
@@ -408,6 +413,8 @@ def item(id):
         seller = User.query.filter(User.id==item.getUserID()).first()
         # deposit money to seller
         seller.deposit(100)
+        # mark item as sold
+        item.markSold()
         return str(buyer.balance)
     return render_template('item.html', item=item)
 
