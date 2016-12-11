@@ -366,12 +366,16 @@ def item(id):
     item = Post.query.filter_by(id=id).first()
     return render_template('item.html', item=item)
 
-@app.route('/showPosts')
+@app.route('/showPosts', methods=['GET', 'POST'])
 def show_entries():
-
+    if request.method == 'POST':
+        CATEGORY = str(request.form['filter'])
+        flash('Filter: %s Selected!' % CATEGORY)
+        entries = Post.query.filter(Post.category==CATEGORY)
+        filtered = entries.order_by(Post.date.desc())
+        return render_template('show_entries.html', entries = filtered)
     entries = Post.query.order_by(Post.date.desc())
     return render_template('show_entries.html', entries = entries)
-
 
 
 '''
