@@ -3,35 +3,35 @@
 <div class="jumbotron">
 
 {% if session['logged_in'] %}
-  <h1>Post</h1>
+  <h1 align = "center">Post</h1>
 
   <form class="form-post-item" action="posted" method="post" id="btn_post_item">
     <!-- Input for item name -->
     <div class="form-inline">
-      <label for="title" class="sr-only">Item:</label>
-      <input type="text" name="title" class="form-control" id="title" placeholder="Name of item...">
+      <label for="title">Item Title:</label>
+      <input type="text" name="title" class="form-control" id="title" size = "100" required>
+      </div>
+    
+    <br>
+    <!-- Input to post as either selling or renting an item -->
+    <div class = "radio">
+      <input type="radio" name="radio" id="sell"> <b>Selling:</b> <br>
+      <input type="radio" name="radio" id="rent"> <b>Renting:</b> <br>
+      <input type="radio" name="radio" id="auction"> <b>Auctioning:</b> <br>  
     </div>
 
-    <!-- Input to post as either selling or renting an item -->
-    <div class="radio">
-      <label class="radio-inline"><input type="radio" name="type">Sell</label>
-      <label class="radio-inline"><input type="radio" name="type">Rent</label>
-    </div>
+    <br>
 
     <!-- Input for item auction -->
     <div class="form-inline">
-      <!-- Make item an auction checkbox -->
-      <fieldset disabled>
-      <div class="checkbox">
-        <label class="checkbox-inline"><input type="checkbox" value="">auction</label>
-      </div>
-      </fieldset>
       <!-- Starting bid of auction -->
       <div class="form-group">
         <label for="price">Price:</label>
-        <input type="number" min="0" max="10000" step="any" name="price" class="form-control" id="price">
+        <input type="number" min="0" max="10000" step="any" name="price" size = "25" class="form-control" id="price" required>
       </div>
     </div>
+
+    <br>
 
     <!-- Set duration of item listing -->
     <fieldset disabled>
@@ -43,16 +43,39 @@
     </div>
     </fieldset>
 
+    <br>
+
+    <div class = "form-inline">
+      <label for="image">Image:</label>
+      <input type="text" name="image" class="form-control" id="image" size = "110" required>
+    </div>
+
+
+    <br>
+      <div class = "category">
+        <label for="category">Category: </label>
+        <select name ="category">
+          <option value="select" >Select Category</option>
+          <option value="electronic">Electronic</option>
+          <option value="furniture">Furniture</option>
+          <option value="clothing">Clothing</option>
+          <option value="appliance">Appliance</option>
+          <option value="sports">Sports</option>
+        </select>
+      </div>  
+    <br>
+
     <!-- Input description of the item -->
     <div class="form-group">
-      <label for="descr">Desc:</label>
-      <textarea class="form-control" name="descr" id="descr" cols="30" rows="10" placeholder="Description..."></textarea>
+      <label for="descr">Description:</label>
+      <textarea class="form-control" name="descr" id="descr" cols="30" rows="10" placeholder="Description..." required></textarea>
     </div>
 
     <!-- Submission buttons -->
     <div class="container">
 
       <button type="submit" id="btn_post_item" class="btn btn-info">Submit</button>
+      <br>
       <input type="button" class="btn btn-info" value="Cancel">
     </div>
   </form>

@@ -40,12 +40,24 @@
         </li>
         {% else %}
         <li>
-          <a href="">Welcome {{current_user.username}}! </a>
+          <a href="">Welcome {{username}}! </a>
         </li>
         {% endif %}
       </ul>
     </div>
   </nav>
+
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <h3 align="center" style = "color:#3498db">{{ message }}</h3>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+{% block body %}{% endblock %}
+
 
   <!-- Content Block -->
   <div class="container">
