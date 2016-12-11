@@ -419,9 +419,11 @@ def item(id):
             seller.deposit(int(item.getPrice()))
             # mark item as sold
             item.markSold()
+            flash(item.title + ' succesfully purchased!')
             return redirect(url_for('show_entries'))
         else:
-            return "Insufficient funds"
+            flash('Insufficient funds to purchase ' + item.title + '. Try selling some stuff! ')
+            return redirect(url_for('show_entries'))
     return render_template('item.html', item=item)
 
 @app.route('/showPosts', methods=['GET', 'POST'])
