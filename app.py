@@ -383,34 +383,3 @@ def show_entries():
         return render_template('show_entries.html', entries = filtered)
     entries = Post.query.order_by(Post.date.desc())
     return render_template('show_entries.html', entries = entries)
-
-
-'''
-sample code from flaskr.app tutorial
-    #main page
-    db = get_db()
-    cur = db.execute('select title, text from entries order by id desc')
-    entries = cur.fetchall()
-    return render_template('show_entries.html', entries = entries)
-
-
-#my code
-    allpost = Post.query.filter_by(id).first()
-    return render_template('show_entries.html', allpost = allpost)
-
-
-
-#joseph's code
-@app.route('/add', methods=['POST'])
-def posting():
-    #adding entries
-    if not session.get('logged_in'):
-        print("not session.get('logged_in')")
-        abort(401)
-    db = get_db()
-    db.execute('insert into entries (title, text) values (?,?)',
-        [request.form['title'], request.form['text']])
-    db.commit()
-    flash('New entry was sucessfully posted')
-    return redirect(url_for('show_entries'))
-'''
