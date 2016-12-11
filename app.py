@@ -3,7 +3,11 @@ from flask import flash, redirect, render_template, request, session, abort, url
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+
+
+from forms import *
 import random
+
 import os
 # from flask.ext.login import LoginManager
 
@@ -20,6 +24,11 @@ from sqlalchemy.orm import sessionmaker
 app = Flask(__name__)
 # set the secret key
 app.secret_key = os.urandom(12)
+
+app.config['RECAPTCHA_USE_SSL'] = False
+app.config['RECAPTCHA_PUBLIC_KEY'] = '6LeYIbsSAAAAACRPIllxA7wvXjIE411PfdB2gt2J'
+app.config['RECAPTCHA_PRIVATE_KEY'] = '6LeYIbsSAAAAAJezaIq3Ft_hSTo0YtyeFG-JgRtu'
+app.config['RECAPTCHA_OPTIONS'] = {'theme': 'white'}
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///brs.db'
 db = SQLAlchemy(app)
@@ -129,98 +138,98 @@ class User(db.Model):
 ## Posts Model
 ##------------------------------------------------------------------------------
 class Post(db.Model):
-    __tablename__ = "Posts"
-    id = db.Column(db.Integer, primary_key=True)
-    userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"), unique = False)
-    title = db.Column('title', db.String(120), unique=False)
-    price = db.Column('price', db.Numeric(12,2), unique=False)
-    descr = db.Column('description', db.String(500), unique=False)
-    date = db.Column('date', db.DateTime)
-    category = db.Column('category', db.String(120))
-    image = db.Column('image', db.String(120))
-    isSold = db.Column('isSold', db.Boolean)
-    buyer = db.Column('buyer', db.String(120))
+	__tablename__ = "Posts"
+	id = db.Column(db.Integer, primary_key=True)
+	userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"), unique = False)
+	title = db.Column('title', db.String(120), unique=False)
+	price = db.Column('price', db.Numeric(12,2), unique=False)
+	descr = db.Column('description', db.String(500), unique=False)
+	date = db.Column('date', db.DateTime)
+	category = db.Column('category', db.String(120))
+	image = db.Column('image', db.String(120))
+	isSold = db.Column('isSold', db.Boolean)
+	buyer = db.Column('buyer', db.String(120))
 
-    ############################################################################
-    ## CONSTRUCTOR
-    ############################################################################
-    def __init__(self, userid=0, title="", price="", descr="", date=None, category=None, image=""):
-        self.userid = userid
-        self.title = title
-        self.price = price
-        self.descr =  descr
-        if date is None:
-            date = datetime.utcnow()
-        self.date = date
-        self.category = category
-        self.image = image
-        self.isSold = False
+	############################################################################
+	## CONSTRUCTOR
+	############################################################################
+	def __init__(self, userid=0, title="", price="", descr="", date=None, category=None, image=""):
+		self.userid = userid
+		self.title = title
+		self.price = price
+		self.descr =  descr
+		if date is None:
+			date = datetime.utcnow()
+		self.date = date
+		self.category = category
+		self.image = image
+		self.isSold = False
 
 
-    ############################################################################
-    ## GETTERS
-    ############################################################################
-    def getPostID(self):
-        return self.id
+	############################################################################
+	## GETTERS
+	############################################################################
+	def getPostID(self):
+		return self.id
 
-    def getUserID(self):
-        return self.userid
+	def getUserID(self):
+		return self.userid
 
-    def getTitle(self):
-        return self.title
+	def getTitle(self):
+		return self.title
 
-    def getPrice(self):
-        return self.price
+	def getPrice(self):
+		return self.price
 
-    def getDesc(self):
-        return self.desc
+	def getDesc(self):
+		return self.desc
 
-    def getDate(self):
-        return self.date
+	def getDate(self):
+		return self.date
 
-    def getCategory(self):
-        return self.category
+	def getCategory(self):
+		return self.category
 
-    def getIsSold(self):
-        return self.isSold
+	def getIsSold(self):
+		return self.isSold
 
-    ############################################################################
-    ## SETTERS
-    ############################################################################
-    def setTitle(self, title):
-        self.title = title
+	############################################################################
+	## SETTERS
+	############################################################################
+	def setTitle(self, title):
+		self.title = title
 
-    def setPrice(self, price):
-        self.price = price
+	def setPrice(self, price):
+		self.price = price
 
-    def setDesc(self, desc):
-        self.desc = desc
+	def setDesc(self, desc):
+		self.desc = desc
 
-    def setCategory(self, category):
-        self.category = category
+	def setCategory(self, category):
+		self.category = category
 
-    def markSold(self):
-        self.isSold = True
+	def markSold(self):
+		self.isSold = True
 
-    ############################################################################
-    ## OTHER METHODS
-    ############################################################################
+	############################################################################
+	## OTHER METHODS
+	############################################################################
 
 ##------------------------------------------------------------------------------
 ## Flag Model
 ##------------------------------------------------------------------------------
 class Flag(db.Model):
-    __tablename__ = "Flag"
-    flagid = db.Column(db.Integer, primary_key=True)
-    userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"), unique = False)
-    reason = db.Column('flag_reason', db.String(120), unique=False)
+	__tablename__ = "Flag"
+	flagid = db.Column(db.Integer, primary_key=True)
+	userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"), unique = False)
+	reason = db.Column('flag_reason', db.String(120), unique=False)
 
 ############################################################################
 ## CONSTRUCTOR
 ############################################################################
-    def __init__(self,userid=None, reason=""):
-        self.userid = userid
-        self.reason = reason
+	def __init__(self,userid=None, reason=""):
+		self.userid = userid
+		self.reason = reason
 
 
 # Need to add few more things:
@@ -249,11 +258,11 @@ admin.add_view(ModelView(Flag, db.session))
 @app.route('/')
 @app.route('/index')
 def index():
-    if not session.get('logged_in'):
-        return render_template('index.html')
-    else:
-        #if logged_in, we should display show_entries
-        return render_template('index.html')
+	if not session.get('logged_in'):
+		return render_template('index.html')
+	else:
+		#if logged_in, we should display show_entries
+		return render_template('index.html')
 
 # Logging In
 @app.route('/login', methods=['GET', 'POST'])
@@ -285,61 +294,90 @@ def login():
 # Logging Out
 @app.route('/logout')
 def logout():
-    session['logged_in'] = False
-    flash('SUCCESS: Logged Out!')
-    return index()
+	session['logged_in'] = False
+	flash('SUCCESS: Logged Out!')
+	return index()
 
-# Signing up
-@app.route('/showSignUp', methods =['GET'])
-def showSignUp():
-    global resultnum
-    firstnum = int(random.random() * 10)
-    secondnum = int(random.random() * 10)
-    resultnum = firstnum + secondnum
-    return render_template('signup.html', firstnum = firstnum, secondnum = secondnum)
+# # Signing Up
+# @app.route('/signup', methods =['GET', 'POST'])
+# def signup():
+# 	global resultnum
+# 	firstnum = int(random.random() * 10)
+# 	secondnum = int(random.random() * 10)
+# 	resultnum = firstnum + secondnum
+# 	form = SignupForm(request.form)
+# 	if request.method == 'POST' and int(request.form['captcha']) == int(resultnum):
+# 		if form.validate():
+# 			email_exist = User.query.filter_by(email=form.email.data).first()
+# 			if email_exist:
+# 				form.email.errors.append('Email already in use')
+# 				return render_template('signup.html', form=form, page_title = "Sign Up")
+# 			else:
+# 				firstname = form.firstname.data
+# 				lastname = form.lastname.data
+# 				email = form.email.data
+# 				password = form.password.data
+# 				phone = form.phone.data
+# 				entry = User(email, password, firstname, lastname, phone)
+# 				db.session.add(entry)
+# 				db.session.commit()
+# 				return render_template('success.html')
+# 		else:
+# 			firstnum = int(random.random() * 10)
+# 			secondnum = int(random.random() * 10)
+# 			resultnum = firstnum + secondnum
+# 			return render_template('signup.html', form=form)
+# 	return render_template('signup.html', form=SignupForm(), firstnum=firstnum, secondnum=secondnum)
 
-# Success Message
-@app.route('/success', methods =['GET', 'POST'])
-def success():
-    global resultnum
-    if request.method == 'POST' and int(request.form['captcha']) == int(resultnum):
-        firstname = request.form['inputFirstName']
-        lastname = request.form['inputLastName']
-        email = request.form['inputEmail']
-        password = request.form['inputPassword']
-        phone =  request.form['phoneNumber']
-        if not db.session.query(User).filter(User.email == email).count():
-            entry = User(email, password, firstname, lastname, phone)
-            db.session.add(entry)
-            db.session.commit()
-            flash('Sign up success! You will have access in 10mins. Thank you for your patients')
-            return render_template('index.html')
 
-    flash('Failed to sign up, Please try again.')
-    firstnum = int(random.random() * 10)
-    secondnum = int(random.random() * 10)
-    resultnum = firstnum + secondnum
-    return render_template('signup.html', firstnum = firstnum, secondnum = secondnum)
+# Signing Up
+@app.route('/signup', methods =['GET', 'POST'])
+def signup():
+	if request.method == 'POST':
+		form = SignupForm(request.form)
+		if form.validate():
+			email_exist = User.query.filter_by(email=form.email.data).first()
+			if email_exist:
+				form.email.errors.append('Email already in use')
+				return render_template('signup.html', form=form, page_title = "Sign Up")
+			else:
+				firstname = form.firstname.data
+				lastname = form.lastname.data
+				email = form.email.data
+				password = form.password.data
+				phone = form.phone.data
+				entry = User(email, password, firstname, lastname, phone)
+				db.session.add(entry)
+				db.session.commit()
+				flash('Sign up success! You will have access in 10mins. Thank you for your patients')
+				return render_template('index.html')
+		else:
+			return render_template('signup.html', form=form)
+	return render_template('signup.html', form=SignupForm())
 
-@app.route('/posted', methods = ['GET', 'POST'])
-def posted():
-    if request.method == 'POST':
-        title = request.form['title']
-        price = request.form['price']
-        descr = request.form['descr']
-        image = request.form['image']
-        date = datetime.utcnow()
-        category = request.form['category']
-        entry = Post(1,title, price, descr, date, category, image)
-        db.session.add(entry)
-        db.session.commit()
-        flash('Item Posted!')
-        return render_template('index.html')
+@app.route('/post', methods = ['GET', 'POST'])
+def post():
+	if request.method == 'POST':
+		form = PostForm(request.form)
+		if form.validate():
+			title = form.title.data
+			price = form.price.data
+			descr = form.descr.data
+			image = form.image.data
+			date = datetime.utcnow()
+			category = form.category.data
+			entry = Post(1,title, price, descr, date, category, image)
+			db.session.add(entry)
+			db.session.commit()
+			flash('Item Posted!')
+			return render_template('index.html')
+		else:
+			return render_template('post.html', form=form)
 
-    return render_template('post.html')
+	return render_template('post.html', form=PostForm())
 
 if (__name__)=='__main__':
-    app.run(host='localhost', port=5000, debug=True)
+	app.run(host='localhost', port=5000, debug=True)
 
 # User profile pages accessible by /user/id
 @app.route('/user/<id>')
@@ -349,10 +387,10 @@ def user(id):
     post = Post.query.filter_by(userid=user.id)
     return render_template('user_profile.html', user=user, post=post)
 
-#Rendering pages for testing purposes delete when finished
-@app.route('/post')
-def post():
-    return render_template('post.html')
+# #Rendering pages for testing purposes delete when finished
+# @app.route('/post')
+# def post():
+# 	return render_template('post.html')
 
     query = User.query.filter(User.email==session['username'],
             User.password==POST_PASSWORD)
@@ -387,30 +425,43 @@ def show_entries():
 
 '''
 sample code from flaskr.app tutorial
-    #main page
-    db = get_db()
-    cur = db.execute('select title, text from entries order by id desc')
-    entries = cur.fetchall()
-    return render_template('show_entries.html', entries = entries)
+	#main page
+	db = get_db()
+	cur = db.execute('select title, text from entries order by id desc')
+	entries = cur.fetchall()
+	return render_template('show_entries.html', entries = entries)
 
 
 #my code
-    allpost = Post.query.filter_by(id).first()
-    return render_template('show_entries.html', allpost = allpost)
+	allpost = Post.query.filter_by(id).first()
+	return render_template('show_entries.html', allpost = allpost)
 
 
 
 #joseph's code
 @app.route('/add', methods=['POST'])
 def posting():
-    #adding entries
-    if not session.get('logged_in'):
-        print("not session.get('logged_in')")
-        abort(401)
-    db = get_db()
-    db.execute('insert into entries (title, text) values (?,?)',
-        [request.form['title'], request.form['text']])
-    db.commit()
-    flash('New entry was sucessfully posted')
-    return redirect(url_for('show_entries'))
+	#adding entries
+	if not session.get('logged_in'):
+		print("not session.get('logged_in')")
+		abort(401)
+	db = get_db()
+	db.execute('insert into entries (title, text) values (?,?)',
+		[request.form['title'], request.form['text']])
+	db.commit()
+	flash('New entry was sucessfully posted')
+	return redirect(url_for('show_entries'))
 '''
+
+@app.route('/contact', methods = ['GET', 'POST'])
+def contact():
+	form = ContactForm()
+
+	if request.method == 'POST':
+		if (form.validate() == False):
+			flash('All fields are required.')
+			return render_template('contact.html', form = form)
+		else:
+			return render_template('success.html')
+	elif request.method == 'GET':
+		return render_template('contact.html', form = form)
