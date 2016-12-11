@@ -267,8 +267,8 @@ def index():
         return render_template('index.html')
     else:
         # if logged in, show index with username
-        return redirect(url_for('index',
-                        username=session.get('current_user')))
+        return render_template('index.html',
+                        username=session.get('current_user'))
 
 # Logging In
 @app.route('/login', methods=['GET', 'POST'])
