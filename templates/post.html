@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
+
+{% if session.logged_in %}
 <div class="jumbotron">
-
-
   <h1 align = "center">Post</h1>
   <form action="{{ url_for('post') }}" class="form-post-item" method="POST">
     {{ form.hidden_tag() }}
@@ -23,9 +23,10 @@
     {{ form.category }}
   <button type="submit" id="btn_post_item" class="btn btn-info">Submit</button>
   </form>
-
-
+{% else %}
   <h1>You need to be logged in to post!</h1>
+
+{%endif%}
 
 </div>
 {% endblock %}

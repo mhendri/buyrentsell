@@ -14,25 +14,20 @@
 		</div>
 	</div>
 
-	<form class="deposit_withdraw" method="post" id="deposit_withdraw">
+	<form class="deposit_withdraw" method="POST" id="deposit_withdraw">
+		{{ form.hidden_tag() }}
 		<div class="jumbotron">
-			<div align="center" class="form-inline">
-				<label for="deposit">Deposit Amount:</label>
-				<input type="text" id="deposit" max="1000" value="0">
+			
+			<div align="center" class="form-group">
+			  {{ form.deposit(placeholder="Deposit", class="form-inline") }}
 			</div>
 
-			<br>
-
-			<div align="center" class="form-inline">
-				<label for="withdraw">Withdraw Amount:</label>
-				<input type="text" id="withdraw" max="1000" value="0">
+			<div align="center" class="form-group">
+			  {{ form.withdraw(placeholder="Withdraw", class="form-inline") }}
 			</div>
 
-			<br>
 
-			<div align="center" class="form-inline">
-				<button type="submit" id="execute" class="btn btn-lg btn-primary btn-block" >Go</button>
-			</div>
+			<button type="submit" id="go" class="btn btn-lg btn-primary btn-block">Go</button>	
 	</form>
 		
 

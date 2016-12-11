@@ -391,17 +391,19 @@ def user(id):
     user = User.query.filter_by(id=id).first()
     post = Post.query.filter_by(userid=user.id)
     if request.method == 'POST':
-        deposit = request.form['deposit']
-        withdraw = request.form['withdraw']
-        # profile = User.query.filter_by(id=id).first()
-        # profile.deposit(deposit)
-        # profile.withdraw(withdraw) 
-        
-        return render_template('index.html')
+        form = ProfileForm(request.form)
+        if form.validate():
+            # deposit = form.deposit.data
+            # withdraw = form.withdraw.data
+            # user_profile = User.query.filter_by(User.id==id).first()
 
-    user = User.query.filter_by(id=id).first()
-    post = Post.query.filter_by(userid=user.id)
-    return render_template('user_profile.html', user=user, post=post)
+            # user_profile.deposit(deposit)
+            # user_profile.withdraw(withdraw) 
+            # flash("Done")
+            return render_template('user_profile.html', user=user,post=post,form=form)
+
+   
+    return render_template('user_profile.html', user=user, post=post, form=ProfileForm())
 
 @app.route('/item/<id>', methods=['GET', 'POST'])
 def item(id):
