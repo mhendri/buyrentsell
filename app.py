@@ -354,7 +354,7 @@ def signup():
 				entry = User(email, password, firstname, lastname, phone)
 				db.session.add(entry)
 				db.session.commit()
-				flash('Sign up success! You will have access in 10mins. Thank you for your patients')
+				flash('You have sucessfully signed up and will have access shortly! Thank you for your patience')
 				return render_template('index.html')
 		else:
 			return render_template('signup.html', form=form)
@@ -395,8 +395,8 @@ def user(id):
         withdraw = request.form['withdraw']
         # profile = User.query.filter_by(id=id).first()
         # profile.deposit(deposit)
-        # profile.withdraw(withdraw) 
-        
+        # profile.withdraw(withdraw)
+
         return render_template('index.html')
 
     user = User.query.filter_by(id=id).first()
@@ -410,11 +410,11 @@ def item(id):
     if request.method == 'POST':
         query = User.query.filter(User.email==current_user)
         buyer = query.first()
-        buyer.withdraw(100)
+        buyer.withdraw(int(item.getPrice()))
         # get seller
         seller = User.query.filter(User.id==item.getUserID()).first()
         # deposit money to seller
-        seller.deposit(100)
+        seller.deposit(int(item.getPrice()))
         # mark item as sold
         item.markSold()
         return str(buyer.balance)
