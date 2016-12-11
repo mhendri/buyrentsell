@@ -54,6 +54,8 @@ class User(db.Model):
     phone = db.Column('phone', db.Integer, unique=False)
     balance = db.Column('balance', db.Integer, unique=False)
     active = db.Column('active', db.Boolean, unique=False)
+    # authenticated for flask-login
+    authenticated = db.Column(db.Boolean, default=False)
 
     ############################################################################
     ## CONSTRUCTOR
@@ -70,13 +72,10 @@ class User(db.Model):
         # user must be approved by superuser
         self.active = False
 
+
     ############################################################################
     ## GETTERS
     ############################################################################
-
-    def get_user_id(self):
-        return self.id
-
     def get_first_name(self):
         return self.firstname
 
@@ -131,6 +130,22 @@ class User(db.Model):
             self.balance -= amount
             db.session.commit()
             return True
+
+    ############################################################################
+    ## Flask-Login Methods
+    ############################################################################
+    def is_active(self):
+        return self.active
+
+    def get_id(self):
+        return self.id
+
+    def is_authenticated(self):
+        return self.authenticated
+
+    def is_anonymous(self):
+        ''' Flase, as anonymous users aren't supported. '''
+        return False
 
     #
     # def __repr__(self):
