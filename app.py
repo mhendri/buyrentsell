@@ -218,6 +218,10 @@ class Post(db.Model):
         self.isSold = True
         db.session.commit()
 
+    def updateBuyer(self, purchaser):
+        self.buyer = purchaser
+        db.session.commit()
+
     ############################################################################
     ## OTHER METHODS
     ############################################################################
@@ -419,6 +423,7 @@ def item(id):
             seller.deposit(int(item.getPrice()))
             # mark item as sold
             item.markSold()
+            item.updateBuyer(buyer.email)
             flash(item.title + ' succesfully purchased!')
             return redirect(url_for('show_entries'))
         else:
