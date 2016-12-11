@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 
+<div class="jumbotron">
+{% if session['logged_in'] %}
+
 {% if session.logged_in %}
 <div class="jumbotron">
   <h1 align = "center">Post</h1>
@@ -24,9 +27,9 @@
   <button type="submit" id="btn_post_item" class="btn btn-info">Submit</button>
   </form>
 {% else %}
+
+
   <h1>You need to be logged in to post!</h1>
-
-{%endif%}
-
+{% endif %}
 </div>
 {% endblock %}
