@@ -1,6 +1,8 @@
 from flask_wtf import Form, RecaptchaField
 from wtforms import TextField, IntegerField, TextAreaField, SubmitField, RadioField, SelectField, PasswordField, DecimalField
 
+from wtforms.fields.html5 import EmailField
+
 from wtforms import validators, ValidationError
 
 class SignupForm(Form):
@@ -20,3 +22,9 @@ class PostForm(Form):
 	image = TextField("Image", [validators.Required("Please upload an image")])
 	category = SelectField("Select Category", choices=[("Electronic", "Electronic"), ("Furniture", "Furniture"), ("Clothing", "Clothing"), ("Appliance", "Appliance"), ("Sports", "Sports")])
 	submit = SubmitField("Send")
+
+class LoginForm(Form):
+	email = EmailField("Email", [validators.Required()])
+	password = PasswordField("Password", [validators.Required()])
+	recaptcha = RecaptchaField()
+	submit = SubmitField("Log In")
