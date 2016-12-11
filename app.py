@@ -242,6 +242,11 @@ class Flag(db.Model):
         self.userid = userid
         self.reason = reason
 
+    def report_user(self, reason, userid):
+        self.reason = reason
+        self.userid = userid
+        db.session.commit()
+
 
 # Need to add few more things:
 # buyer_id, (is_biddable, current_bid, time_limit), date_posted, is_reported, image
@@ -422,3 +427,12 @@ def show_entries():
         return render_template('show_entries.html', entries=entries)
     return render_template('show_entries.html', entries=entries,
                             username=session.get('current_user'))
+
+@app.route('/item/<id>/reportUser', methods=['GET', 'POST'])
+def reportUser(id):
+    item = Post.query.filter_by(id=id).first()
+    if request.method == 'POST':
+        seller = User.query.filter(User.id==item.getUserID()).first()
+        Flag.report_user("mean",seller.userid)
+        return "user reported"
+    return render_template('report_user.html')

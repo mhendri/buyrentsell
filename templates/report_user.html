@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2> Report User </h2>
+<form action="" method="POST" id="reportUser">
+<div style="padding-top:20px" class = "radio">
+  <input type="radio" name="reason" value="illegal" style="vertical-align: middle"> <b>Illegal Item</b> <br>
+  <input type="radio" name="reason" value="harassment" style="vertical-align: middle"> <b>Harassment</b> <br>
+  <input type="radio" name="reason" value="nopay" style="vertical-align: middle"> <b>No payment</b> <br>
+<input type="submit" value="report" class="btn">
+</div>
+</form>
+{% endblock %}
