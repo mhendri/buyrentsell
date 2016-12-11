@@ -1,26 +1,45 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="jumbotron">
-{% if user.id %}
-	<!-- Display the username, currently parameter is unknown -->
-	<h1>{{ user.email }}</h1>
-	<h1><small>Rating:</small><!-- { user.rating } --></h2>
+	<div class="jumbotron">
+	{% if user.id %}
+		<!-- Display the username, currently parameter is unknown -->
+		<h1 align="center">{{ user.email }}</h1>
+		<h2 align="center">Rating:</h2>
 
-	<!-- Display the user inputted user description -->
-	<div id="description">
-    <h2>Description</h2>
-		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+		<!-- Display the user inputted user description -->
+		<div id="description">
+	    <h2>Description</h2>
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+		</div>
+
+	  {% else %}
+	  <h1>User does not exist!</h1>
+	  {% endif %}
 	</div>
 
 
-	<!-- TODO:
-	View description
-	View rating
-	View postings
-	View joindate
-	-->
-  {% else %}
-  <h1>User does not exist!</h1>
-  {% endif %}
-</div>
+	<div class="posts">
+	    <!-- Batch Line from http://stackoverflow.com/questions/17797921/jinja2-create-new-row-for-every-3-items -->
+	    {% for entry_row in post | batch(3) %}
+	    <div class="row">
+	      {% for entry in entry_row %}
+	      {% if entry %}
+	      <div class="col-sm-4">
+	        <div class="postbox">
+	          <img src="{{entry.image}}" alt=""  style="height: 300px"/>
+	          <p class="post-title">
+	            <a align="center" href="/item/{{ entry.id }}">{{ entry.title }}</a>
+	          </p>
+	          <p align="center" class="post-price">{{ entry.price | safe }}</p>
+	        </div>
+	      </div>
+	      {% endif %}
+	      {% endfor %}
+	</div>
+
+    {% else %}
+      <em>No entries here so far</em>
+    {% endfor %}
+  </div>
+
 {% endblock %}
