@@ -368,18 +368,20 @@ def user(id):
     # TODO: update so this form so that it only shows up on the current_user's
     # profile
     if request.method == 'POST':
-        deposit = request.form['deposit']
-        withdraw = request.form['withdraw']
-        # profile = User.query.filter_by(id=id).first()
-        # profile.deposit(deposit)
-        # profile.withdraw(withdraw)
-        return render_template('index.html', username=session.get('current_user'))
 
-    user = User.query.filter_by(id=id).first()
-    post = Post.query.filter_by(userid=user.id)
-    return render_template('user_profile.html',
-                            username=session.get('current_user'),
-                            user=user, post=post)
+        form = ProfileForm(request.form)
+        if form.validate():
+            # deposit = form.deposit.data
+            # withdraw = form.withdraw.data
+            # user_profile = User.query.filter_by(User.id==id).first()
+
+            # user_profile.deposit(deposit)
+            # user_profile.withdraw(withdraw) 
+            # flash("Done")
+            return render_template('user_profile.html', user=user,post=post,form=form)
+
+   return render_template('user_profile.html', user=user, post=post, form=ProfileForm())
+
 
 @app.route('/item/<id>', methods=['GET', 'POST'])
 def item(id):
