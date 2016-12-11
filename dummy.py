@@ -18,6 +18,9 @@ db.session.add(user)
 user = User('joseph@example.com', 'savage', 'Joseph', 'Park', '5555555555')
 db.session.add(user)
 
+user = User('edwin@example.com', 'glnerds', 'Edwin', 'Zhou', '5555555555')
+db.session.add(user)
+
 user = User('test@test.com', 'test', 'test', 'test', '5555')
 db.session.add(user)
 
