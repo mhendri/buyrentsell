@@ -189,18 +189,23 @@ class Post(db.Model):
     ############################################################################
     def setTitle(self, title):
         self.title = title
+        db.session.commit()
 
     def setPrice(self, price):
         self.price = price
+        db.session.commit()
 
     def setDesc(self, desc):
         self.desc = desc
+        db.session.commit()
 
     def setCategory(self, category):
         self.category = category
+        db.session.commit()
 
     def markSold(self):
         self.isSold = True
+        db.session.commit()
 
     ############################################################################
     ## OTHER METHODS
