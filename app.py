@@ -266,8 +266,9 @@ def index():
     if not session.get('logged_in'):
         return render_template('index.html')
     else:
-        #if logged_in, we should display show_entries
-        return render_template('index.html')
+        # if logged in, show index with username
+        return redirect(url_for('index',
+                        username=session.get('current_user')))
 
 # Logging In
 @app.route('/login', methods=['GET', 'POST'])
