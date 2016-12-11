@@ -11,10 +11,14 @@ db.create_all()
 
 # 1
 user = User('akbar@example.com', 'password', 'Akbar', 'Mirza', '5555555555')
+user.activate_user()
+user.deposit(100)
 db.session.add(user)
 
 # 2
 user = User('mike@example.com', 'mikespass', 'Michael', 'Hendrickson', '5555555555')
+user.activate_user()
+user.deposit(500)
 db.session.add(user)
 
 # 3
