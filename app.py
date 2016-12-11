@@ -112,7 +112,7 @@ class User(db.Model):
 
     # removing money from account
     def withdraw(self, amount):
-        if amount > self.balance:
+        if amount >= self.balance:
             # handle error case
             print("Insufficient Funds to perform this transaction")
         else:
