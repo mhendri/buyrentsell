@@ -13,6 +13,7 @@
     </div>
   </div>
 -->
+<form action="/showPosts" method="POST">
   <div class="col-xs-12 login-screen">
     <div class="app-title">
       <h2>Filter</h2>
@@ -20,16 +21,17 @@
     <div class="login-form">
       <div class="control-group">
         <div class = "radio">
-          <input type="radio" name="radio" value="appliance" style="vertical-align: middle"> <b>Appliances</b> <br>
-          <input type="radio" name="radio" value="clothing" style="vertical-align: middle"> <b>Clothings</b> <br>
-          <input type="radio" name="radio" value="electroinc" style="vertical-align: middle"> <b>Electronics</b> <br>  
-          <input type="radio" name="radio" value="furniture" style="vertical-align: middle"> <b>Furnitures</b> <br>
-          <input type="radio" name="radio" value="sports" style="vertical-align: middle"> <b>Sports</b> <br>
+          <input type="radio" name="filter" value="appliance" style="vertical-align: middle"> <b>Appliances</b> <br>
+          <input type="radio" name="filter" value="clothing" style="vertical-align: middle"> <b>Clothings</b> <br>
+          <input type="radio" name="filter" value="electronic" style="vertical-align: middle"> <b>Electronics</b> <br>
+          <input type="radio" name="filter" value="furniture" style="vertical-align: middle"> <b>Furnitures</b> <br>
+          <input type="radio" name="filter" value="sports" style="vertical-align: middle"> <b>Sports</b> <br>
         </div>
         <input type="submit" value="Go" class="btn">
       </div>
     </div>
   </div>
+</form>
 
   <div class="posts">
     <!-- Batch Line from http://stackoverflow.com/questions/17797921/jinja2-create-new-row-for-every-3-items -->
