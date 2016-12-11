@@ -347,22 +347,26 @@ def signup():
 			return render_template('signup.html', form=form)
 	return render_template('signup.html', form=SignupForm())
 
-@app.route('/posted', methods = ['GET', 'POST'])
-def posted():
+@app.route('/post', methods = ['GET', 'POST'])
+def post():
 	if request.method == 'POST':
-		title = request.form['title']
-		price = request.form['price']
-		descr = request.form['descr']
-		image = request.form['image']
-		date = datetime.utcnow()
-		category = request.form['category']
-		entry = Post(1,title, price, descr, date, category, image)
-		db.session.add(entry)
-		db.session.commit()
-		flash('Item Posted!')
-		return render_template('index.html')
+		form = PostForm(request.form)
+		if form.validate():
+			title = form.title.data
+			price = form.price.data
+			descr = form.descr.data
+			image = form.image.data
+			date = datetime.utcnow()
+			category = form.category.data
+			entry = Post(1,title, price, descr, date, category, image)
+			db.session.add(entry)
+			db.session.commit()
+			flash('Item Posted!')
+			return render_template('index.html')
+		else:
+			return render_template('post.html', form=form)
 
-	return render_template('post.html')
+	return render_template('post.html', form=PostForm())
 
 if (__name__)=='__main__':
 	app.run(host='localhost', port=5000, debug=True)
@@ -374,10 +378,10 @@ def user(id):
 	user = User.query.filter_by(id=id).first()
 	return render_template('user_profile.html', user=user)
 
-#Rendering pages for testing purposes delete when finished
-@app.route('/post')
-def post():
-	return render_template('post.html')
+# #Rendering pages for testing purposes delete when finished
+# @app.route('/post')
+# def post():
+# 	return render_template('post.html')
 
 @app.route('/item/<id>', methods=['GET', 'POST'])
 def item(id):
