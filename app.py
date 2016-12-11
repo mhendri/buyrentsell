@@ -242,10 +242,10 @@ class Flag(db.Model):
         self.userid = userid
         self.reason = reason
 
-    def report_user(self, reason, userid):
-        self.reason = reason
-        self.userid = userid
-        db.session.commit()
+    # def report_user(self, reason, userid):
+    #     self.reason = reason
+    #     self.userid = userid
+    #     db.session.commit()
 
 
 # Need to add few more things:
@@ -433,6 +433,8 @@ def reportUser(id):
     item = Post.query.filter_by(id=id).first()
     if request.method == 'POST':
         seller = User.query.filter(User.id==item.getUserID()).first()
-        Flag.report_user("mean",seller.userid)
+        flag = Flag(seller.id, "mean")
+        db.session.add(flag)
+        db.session.commit()
         return "user reported"
     return render_template('report_user.html')
