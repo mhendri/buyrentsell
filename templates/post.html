@@ -2,85 +2,30 @@
 {% block content %}
 <div class="jumbotron">
 
-{% if session['logged_in'] %}
+
   <h1 align = "center">Post</h1>
+  <form action="{{ url_for('post') }}" class="form-post-item" method="POST">
+    {{ form.hidden_tag() }}
 
-  <form class="form-post-item" action="posted" method="post" id="btn_post_item">
-    <!-- Input for item name -->
-    <div class="form-inline">
-      <label for="title">Item Title:</label>
-      <input type="text" name="title" class="form-control" id="title" size = "100" required>
-      </div>
-    
-    <br>
-    <!-- Input to post as either selling or renting an item -->
-    <div class = "radio">
-      <input type="radio" name="radio" id="sell"> <b>Selling:</b> <br>
-      <input type="radio" name="radio" id="rent"> <b>Renting:</b> <br>
-      <input type="radio" name="radio" id="auction"> <b>Auctioning:</b> <br>  
-    </div>
-
-    <br>
-
-    <!-- Input for item auction -->
-    <div class="form-inline">
-      <!-- Starting bid of auction -->
-      <div class="form-group">
-        <label for="price">Price:</label>
-        <input type="number" min="0" max="10000" step="any" name="price" size = "25" class="form-control" id="price" required>
-      </div>
-    </div>
-
-    <br>
-
-    <!-- Set duration of item listing -->
-    <fieldset disabled>
-    <div class="form-inline">
-      <label for="duration">Duration(days):</label>
-      <select class="form-control" id="duration">
-        <option>1</option>
-      </select>
-    </div>
-    </fieldset>
-
-    <br>
-
-    <div class = "form-inline">
-      <label for="image">Image:</label>
-      <input type="text" name="image" class="form-control" id="image" size = "110" required>
-    </div>
-
-
-    <br>
-      <div class = "category">
-        <label for="category">Category: </label>
-        <select name ="category">
-          <option value="select" >Select Category</option>
-          <option value="electronic">Electronic</option>
-          <option value="furniture">Furniture</option>
-          <option value="clothing">Clothing</option>
-          <option value="appliance">Appliance</option>
-          <option value="sports">Sports</option>
-        </select>
-      </div>  
-    <br>
-
-    <!-- Input description of the item -->
     <div class="form-group">
-      <label for="descr">Description:</label>
-      <textarea class="form-control" name="descr" id="descr" cols="30" rows="10" placeholder="Description..." required></textarea>
+      {{ form.title(placeholder="Title", class="form-inline") }}
+    </div>
+    <div class="form-group">
+      {{ form.price(placeholder="Price", class="form-inline") }}
     </div>
 
-    <!-- Submission buttons -->
-    <div class="container">
+    {{ form.descr(placeholder="Description", cols="50", rows="10") }}
 
-      <button type="submit" id="btn_post_item" class="btn btn-info">Submit</button>
-      <br>
-      <input type="button" class="btn btn-info" value="Cancel">
+    <div class="form-group">
+      {{ form.image(placeholder="Image", class="form-inline") }}
     </div>
+    {{ form.category.label }}
+    {{ form.category }}
+  <button type="submit" id="btn_post_item" class="btn btn-info">Submit</button>
   </form>
-  {% else %}
+
+
   <h1>You need to be logged in to post!</h1>
-  {% endif %}
+
 </div>
 {% endblock %}
