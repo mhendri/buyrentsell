@@ -109,6 +109,8 @@ class User(db.Model):
     # adding money to account
     def deposit(self, amount):
         self.balance += amount
+        # commit deposit to database
+        db.session.commit()
 
     # removing money from account
     def withdraw(self, amount):
@@ -357,13 +359,17 @@ def post():
 
 @app.route('/item/<id>', methods=['GET', 'POST'])
 def item(id):
+    item = Post.query.filter_by(id=id).first()
+    current_user = session['current_user']
     if request.method == 'POST':
-        current_user = session['current_user']
         query = User.query.filter(User.email==current_user)
         buyer = query.first()
         buyer.withdraw(100)
+        # get seller
+        seller = User.query.filter(User.id==item.getUserID()).first()
+        # deposit money to seller
+        seller.deposit(100)
         return str(buyer.balance)
-    item = Post.query.filter_by(id=id).first()
     return render_template('item.html', item=item)
 
 @app.route('/showPosts', methods=['GET', 'POST'])
