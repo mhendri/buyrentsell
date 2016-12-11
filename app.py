@@ -385,21 +385,23 @@ if (__name__)=='__main__':
 	app.run(host='localhost', port=5000, debug=True)
 
 # User profile pages accessible by /user/id
-@app.route('/user/<id>')
+@app.route('/user/<id>', methods=['GET', 'POST'])
 #@login_required
 def user(id):
     user = User.query.filter_by(id=id).first()
     post = Post.query.filter_by(userid=user.id)
+    if request.method == 'POST':
+        deposit = request.form['deposit']
+        withdraw = request.form['withdraw']
+        # profile = User.query.filter_by(id=id).first()
+        # profile.deposit(deposit)
+        # profile.withdraw(withdraw) 
+        
+        return render_template('index.html')
+
+    user = User.query.filter_by(id=id).first()
+    post = Post.query.filter_by(userid=user.id)
     return render_template('user_profile.html', user=user, post=post)
-
-# #Rendering pages for testing purposes delete when finished
-# @app.route('/post')
-# def post():
-# 	return render_template('post.html')
-
-    query = User.query.filter(User.email==session['username'],
-            User.password==POST_PASSWORD)
-    result = query.first()
 
 @app.route('/item/<id>', methods=['GET', 'POST'])
 def item(id):
