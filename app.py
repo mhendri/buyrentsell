@@ -406,8 +406,11 @@ def user(id):
 @app.route('/item/<id>', methods=['GET', 'POST'])
 def item(id):
     item = Post.query.filter_by(id=id).first()
-    current_user = session['current_user']
+    current_user = session.get('current_user')
     if request.method == 'POST':
+        if not session.get('logged_in'):
+            flash('ERROR: You must be logged in to buy an item!')
+            return render_template('item.html', item=item)
         query = User.query.filter(User.email==current_user)
         buyer = query.first()
         buyer.withdraw(int(item.getPrice()))
