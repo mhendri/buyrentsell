@@ -45,88 +45,94 @@ resultnum = 0
 ## User Model
 ##------------------------------------------------------------------------------
 class User(db.Model):
-	__tablename__ = "Users"
-	id = db.Column(db.Integer, primary_key=True)
-	firstname = db.Column('Firstname', db.String(120), unique=False)
-	lastname = db.Column('Lastname', db.String(120), unique=False)
-	email = db.Column('email', db.String(120), unique=True)
-	password = db.Column('password', db.String(15), unique=False)
-	phone = db.Column('phone', db.Integer, unique=False)
-	balance = db.Column('balance', db.Integer, unique=False)
-	active = db.Column('active', db.Boolean, unique=False)
+    __tablename__ = "Users"
+    id = db.Column(db.Integer, primary_key=True)
+    firstname = db.Column('Firstname', db.String(120), unique=False)
+    lastname = db.Column('Lastname', db.String(120), unique=False)
+    email = db.Column('email', db.String(120), unique=True)
+    password = db.Column('password', db.String(15), unique=False)
+    phone = db.Column('phone', db.Integer, unique=False)
+    balance = db.Column('balance', db.Integer, unique=False)
+    active = db.Column('active', db.Boolean, unique=False)
 
-	############################################################################
-	## CONSTRUCTOR
-	############################################################################
-	def __init__(self, email="", password="", firstname="", lastname="", phone=""):
-		''' '''
-		self.firstname = firstname
-		self.lastname = lastname
-		self.email = email
-		self.password = password
-		self.phone = phone
-		self.balance = 0
-		# active is initially False
-		# user must be approved by superuser
-		self.active = False
+    ############################################################################
+    ## CONSTRUCTOR
+    ############################################################################
+    def __init__(self, email="", password="", firstname="", lastname="", phone=""):
+        ''' '''
+        self.firstname = firstname
+        self.lastname = lastname
+        self.email = email
+        self.password = password
+        self.phone = phone
+        self.balance = 0
+        # active is initially False
+        # user must be approved by superuser
+        self.active = False
 
-	############################################################################
-	## GETTERS
-	############################################################################
+    ############################################################################
+    ## GETTERS
+    ############################################################################
 
-	def get_user_id(self):
-		return self.id
+    def get_user_id(self):
+        return self.id
 
-	def get_first_name(self):
-		return self.firstname
+    def get_first_name(self):
+        return self.firstname
 
-	def get_last_name(self):
-		return self.lastname
+    def get_last_name(self):
+        return self.lastname
 
-	def get_email(self):
-		return self.email
+    def get_email(self):
+        return self.email
 
-	def get_phone(self):
-		return self.phone
+    def get_phone(self):
+        return self.phone
 
-	def get_balance(self):
-		return self.balance
+    def get_balance(self):
+        return self.balance
 
-	############################################################################
-	## SETTERS
-	############################################################################
-	def set_email(self, email):
-		self.email = email
+    ############################################################################
+    ## SETTERS
+    ############################################################################
+    def set_email(self, email):
+        self.email = email
 
-	def set_phone(self, phone):
-		self.phone = phone
+    def set_phone(self, phone):
+        self.phone = phone
 
-	# unsure about this setter / may not be needed
-	def set_balance(self, balance):
-		self.balance = balance
+    # unsure about this setter / may not be needed
+    def set_balance(self, balance):
+        self.balance = balance
 
-	def activate_user(self):
-		self.active = True
+    def activate_user(self):
+        self.active = True
 
-	def suspend_user(self):
-		self.active = False
+    def suspend_user(self):
+        self.active = False
 
-	############################################################################
-	## OTHER METHODS
-	############################################################################
+    ############################################################################
+    ## OTHER METHODS
+    ############################################################################
 
-	# adding money to account
-	def deposit(self, amount):
-		self.balance += amount
+    # adding money to account
+    def deposit(self, amount):
+        self.balance += amount
+        # commit deposit to database
+        db.session.commit()
 
-	# removing money from account
-	def withdraw(self, amount):
-		if amount > self.balance:
-			# handle error case
-			print("Insufficient Funds to perform this transaction")
-		else:
-			self.balance -= amount
+    # removing money from account
+    def withdraw(self, amount):
+        if amount >= self.balance:
+            # handle error case
+            print("Insufficient Funds to perform this transaction")
+        else:
+            self.balance -= amount
+            db.session.commit()
 
+    #
+    # def __repr__(self):
+    #     return dict(self)
 
 ##------------------------------------------------------------------------------
 ## Posts Model
@@ -261,27 +267,29 @@ def index():
 # Logging In
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-	if request.method == 'POST':
-		POST_USERNAME = str(request.form['email'])
-		POST_PASSWORD = str(request.form['password'])
+    if request.method == 'POST':
+        POST_USERNAME = str(request.form['email'])
+        POST_PASSWORD = str(request.form['password'])
 
-		# Session = sessionmaker(bind=engine)
-		# s = db.session
-		query = User.query.filter(User.email==POST_USERNAME,
-				User.password==POST_PASSWORD)
-		result = query.first()
-		if result.active == False:
-			flash ('Account not yet active, please wait for admin')
-			return render_template('login.html')
-		elif result:
-			session['logged_in'] = True
-			flash('SUCCESS: Logged In!')
-			data_dict = dict(username=POST_USERNAME)
-		else:
-			flash('wrong password!')
-			return render_template('login.html')
-		return render_template('index.html',**data_dict)
-	return render_template('login.html')
+        # Session = sessionmaker(bind=engine)
+        # s = db.session
+        query = User.query.filter(User.email==POST_USERNAME,
+                User.password==POST_PASSWORD)
+        result = query.first()
+
+        if result.active == False:
+            flash ('Account not yet active, please wait for admin')
+            return render_template('login.html')
+        elif result:
+            session['logged_in'] = True
+            session['current_user'] = result.email
+            flash('SUCCESS: Logged In!')
+            current_user = session['current_user']
+        else:
+            flash('wrong password!')
+            return render_template('login.html')
+        return render_template('index.html', username=current_user)
+    return render_template('login.html')
 
 # Logging Out
 @app.route('/logout')
@@ -375,30 +383,44 @@ if (__name__)=='__main__':
 @app.route('/user/<id>')
 #@login_required
 def user(id):
-	user = User.query.filter_by(id=id).first()
-	return render_template('user_profile.html', user=user)
+    user = User.query.filter_by(id=id).first()
+    post = Post.query.filter_by(userid=user.id)
+    return render_template('user_profile.html', user=user, post=post)
 
 # #Rendering pages for testing purposes delete when finished
 # @app.route('/post')
 # def post():
 # 	return render_template('post.html')
 
+    query = User.query.filter(User.email==session['username'],
+            User.password==POST_PASSWORD)
+    result = query.first()
+
 @app.route('/item/<id>', methods=['GET', 'POST'])
 def item(id):
-	if request.method == 'POST':
-		buyerid = User.get_user_id()
-		sellerid = Post.getPostID()
-		user = User.query.filter_by(buyerid).first()
-		user.balance -= Post.getPrice()
-		return "transaction success"
-	item = Post.query.filter_by(id=id).first()
-	return render_template('item.html', item=item)
+    item = Post.query.filter_by(id=id).first()
+    current_user = session['current_user']
+    if request.method == 'POST':
+        query = User.query.filter(User.email==current_user)
+        buyer = query.first()
+        buyer.withdraw(100)
+        # get seller
+        seller = User.query.filter(User.id==item.getUserID()).first()
+        # deposit money to seller
+        seller.deposit(100)
+        return str(buyer.balance)
+    return render_template('item.html', item=item)
 
-@app.route('/showPosts')
+@app.route('/showPosts', methods=['GET', 'POST'])
 def show_entries():
-	entries = Post.query.order_by(Post.date.desc())
-	return render_template('show_entries.html', entries = entries)
-
+    if request.method == 'POST':
+        CATEGORY = str(request.form['filter'])
+        flash('Filter: %s Selected!' % CATEGORY)
+        entries = Post.query.filter(Post.category==CATEGORY)
+        filtered = entries.order_by(Post.date.desc())
+        return render_template('show_entries.html', entries = filtered)
+    entries = Post.query.order_by(Post.date.desc())
+    return render_template('show_entries.html', entries = entries)
 
 
 '''
