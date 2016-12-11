@@ -126,9 +126,11 @@ class User(db.Model):
         if amount >= self.balance:
             # handle error case
             print("Insufficient Funds to perform this transaction")
+            return False
         else:
             self.balance -= amount
             db.session.commit()
+            return True
 
     #
     # def __repr__(self):
@@ -216,6 +218,10 @@ class Post(db.Model):
         self.isSold = True
         db.session.commit()
 
+    def updateBuyer(self, purchaser):
+        self.buyer = purchaser
+        db.session.commit()
+
     ############################################################################
     ## OTHER METHODS
     ############################################################################
@@ -224,17 +230,17 @@ class Post(db.Model):
 ## Flag Model
 ##------------------------------------------------------------------------------
 class Flag(db.Model):
-	__tablename__ = "Flag"
-	flagid = db.Column(db.Integer, primary_key=True)
-	userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"), unique = False)
-	reason = db.Column('flag_reason', db.String(120), unique=False)
+    __tablename__ = "Flag"
+    flagid = db.Column(db.Integer, primary_key=True)
+    userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"), unique = False)
+    reason = db.Column('flag_reason', db.String(120), unique=False)
 
-############################################################################
-## CONSTRUCTOR
-############################################################################
-	def __init__(self,userid=None, reason=""):
-		self.userid = userid
-		self.reason = reason
+    ############################################################################
+    ## CONSTRUCTOR
+    ############################################################################
+    def __init__(self,userid=None, reason=""):
+        self.userid = userid
+        self.reason = reason
 
 
 # Need to add few more things:
@@ -263,11 +269,12 @@ admin.add_view(ModelView(Flag, db.session))
 @app.route('/')
 @app.route('/index')
 def index():
-	if not session.get('logged_in'):
-		return render_template('index.html')
-	else:
-		#if logged_in, we should display show_entries
-		return render_template('index.html')
+    if not session.get('logged_in'):
+        return render_template('index.html')
+    else:
+        # if logged in, show index with username
+        return render_template('index.html',
+                        username=session.get('current_user'))
 
 # Logging In
 @app.route('/login', methods=['GET', 'POST'])
@@ -289,7 +296,7 @@ def login():
             session['logged_in'] = True
             session['current_user'] = result.email
             flash('SUCCESS: Logged In!')
-            current_user = session['current_user']
+            current_user = session.get('current_user')
         else:
             flash('wrong password!')
             return render_template('login.html')
@@ -299,90 +306,90 @@ def login():
 # Logging Out
 @app.route('/logout')
 def logout():
-	session['logged_in'] = False
-	flash('SUCCESS: Logged Out!')
-	return index()
+    session['logged_in'] = False
+    flash('SUCCESS: Logged Out!')
+    return index()
 
 # # Signing Up
 # @app.route('/signup', methods =['GET', 'POST'])
 # def signup():
-# 	global resultnum
-# 	firstnum = int(random.random() * 10)
-# 	secondnum = int(random.random() * 10)
-# 	resultnum = firstnum + secondnum
-# 	form = SignupForm(request.form)
-# 	if request.method == 'POST' and int(request.form['captcha']) == int(resultnum):
-# 		if form.validate():
-# 			email_exist = User.query.filter_by(email=form.email.data).first()
-# 			if email_exist:
-# 				form.email.errors.append('Email already in use')
-# 				return render_template('signup.html', form=form, page_title = "Sign Up")
-# 			else:
-# 				firstname = form.firstname.data
-# 				lastname = form.lastname.data
-# 				email = form.email.data
-# 				password = form.password.data
-# 				phone = form.phone.data
-# 				entry = User(email, password, firstname, lastname, phone)
-# 				db.session.add(entry)
-# 				db.session.commit()
-# 				return render_template('success.html')
-# 		else:
-# 			firstnum = int(random.random() * 10)
-# 			secondnum = int(random.random() * 10)
-# 			resultnum = firstnum + secondnum
-# 			return render_template('signup.html', form=form)
-# 	return render_template('signup.html', form=SignupForm(), firstnum=firstnum, secondnum=secondnum)
+#     global resultnum
+#     firstnum = int(random.random() * 10)
+#     secondnum = int(random.random() * 10)
+#     resultnum = firstnum + secondnum
+#     form = SignupForm(request.form)
+#     if request.method == 'POST' and int(request.form['captcha']) == int(resultnum):
+#         if form.validate():
+#             email_exist = User.query.filter_by(email=form.email.data).first()
+#             if email_exist:
+#                 form.email.errors.append('Email already in use')
+#                 return render_template('signup.html', form=form, page_title = "Sign Up")
+#             else:
+#                 firstname = form.firstname.data
+#                 lastname = form.lastname.data
+#                 email = form.email.data
+#                 password = form.password.data
+#                 phone = form.phone.data
+#                 entry = User(email, password, firstname, lastname, phone)
+#                 db.session.add(entry)
+#                 db.session.commit()
+#                 return render_template('success.html')
+#         else:
+#             firstnum = int(random.random() * 10)
+#             secondnum = int(random.random() * 10)
+#             resultnum = firstnum + secondnum
+#             return render_template('signup.html', form=form)
+#     return render_template('signup.html', form=SignupForm(), firstnum=firstnum, secondnum=secondnum)
 
 
 # Signing Up
 @app.route('/signup', methods =['GET', 'POST'])
 def signup():
-	if request.method == 'POST':
-		form = SignupForm(request.form)
-		if form.validate():
-			email_exist = User.query.filter_by(email=form.email.data).first()
-			if email_exist:
-				form.email.errors.append('Email already in use')
-				return render_template('signup.html', form=form, page_title = "Sign Up")
-			else:
-				firstname = form.firstname.data
-				lastname = form.lastname.data
-				email = form.email.data
-				password = form.password.data
-				phone = form.phone.data
-				entry = User(email, password, firstname, lastname, phone)
-				db.session.add(entry)
-				db.session.commit()
-				flash('You have sucessfully signed up and will have access shortly! Thank you for your patience')
-				return render_template('index.html')
-		else:
-			return render_template('signup.html', form=form)
-	return render_template('signup.html', form=SignupForm())
+    if request.method == 'POST':
+        form = SignupForm(request.form)
+        if form.validate():
+            email_exist = User.query.filter_by(email=form.email.data).first()
+            if email_exist:
+                form.email.errors.append('Email already in use')
+                return render_template('signup.html', form=form, page_title = "Sign Up")
+            else:
+                firstname = form.firstname.data
+                lastname = form.lastname.data
+                email = form.email.data
+                password = form.password.data
+                phone = form.phone.data
+                entry = User(email, password, firstname, lastname, phone)
+                db.session.add(entry)
+                db.session.commit()
+                flash('You have sucessfully signed up and will have access shortly! Thank you for your patience')
+                return render_template('index.html')
+        else:
+            return render_template('signup.html', form=form)
+    return render_template('signup.html', form=SignupForm())
 
 @app.route('/post', methods = ['GET', 'POST'])
 def post():
-	if request.method == 'POST':
-		form = PostForm(request.form)
-		if form.validate():
-			title = form.title.data
-			price = form.price.data
-			descr = form.descr.data
-			image = form.image.data
-			date = datetime.utcnow()
-			category = form.category.data
-			entry = Post(1,title, price, descr, date, category, image)
-			db.session.add(entry)
-			db.session.commit()
-			flash('Item Posted!')
-			return render_template('index.html')
-		else:
-			return render_template('post.html', form=form)
-
-	return render_template('post.html', form=PostForm())
+    if request.method == 'POST':
+        form = PostForm(request.form)
+        if form.validate():
+            title = form.title.data
+            price = form.price.data
+            descr = form.descr.data
+            image = form.image.data
+            date = datetime.utcnow()
+            category = form.category.data
+            entry = Post(1,title, price, descr, date, category, image)
+            db.session.add(entry)
+            db.session.commit()
+            flash('Item Posted!')
+            return render_template('index.html')
+        else:
+            return render_template('post.html', form=form)
+    return render_template('post.html', form=PostForm(),
+                                username=session.get('current_user'))
 
 if (__name__)=='__main__':
-	app.run(host='localhost', port=5000, debug=True)
+    app.run(host='localhost', port=5000, debug=True)
 
 # User profile pages accessible by /user/id
 @app.route('/user/<id>', methods=['GET', 'POST'])
@@ -390,35 +397,46 @@ if (__name__)=='__main__':
 def user(id):
     user = User.query.filter_by(id=id).first()
     post = Post.query.filter_by(userid=user.id)
+    # TODO: update so this form so that it only shows up on the current_user's
+    # profile
     if request.method == 'POST':
         deposit = request.form['deposit']
         withdraw = request.form['withdraw']
         # profile = User.query.filter_by(id=id).first()
         # profile.deposit(deposit)
         # profile.withdraw(withdraw)
-
-        return render_template('index.html')
+        return render_template('index.html', username=session.get('current_user'))
 
     user = User.query.filter_by(id=id).first()
     post = Post.query.filter_by(userid=user.id)
-    return render_template('user_profile.html', user=user, post=post)
+    return render_template('user_profile.html',
+                            username=session.get('current_user'),
+                            user=user, post=post)
 
 @app.route('/item/<id>', methods=['GET', 'POST'])
 def item(id):
     item = Post.query.filter_by(id=id).first()
-    current_user = session['current_user']
+    current_user = session.get('current_user')
     if request.method == 'POST':
+        if not session.get('logged_in'):
+            flash('ERROR: You must be logged in to buy an item!')
+            return render_template('item.html', item=item)
         query = User.query.filter(User.email==current_user)
         buyer = query.first()
-        buyer.withdraw(int(item.getPrice()))
-        # get seller
-        seller = User.query.filter(User.id==item.getUserID()).first()
-        # deposit money to seller
-        seller.deposit(int(item.getPrice()))
-        # mark item as sold
-        item.markSold()
-        return str(buyer.balance)
-    return render_template('item.html', item=item)
+        if buyer.withdraw(int(item.getPrice())) == True:
+            # get seller
+            seller = User.query.filter(User.id==item.getUserID()).first()
+            # deposit money to seller
+            seller.deposit(int(item.getPrice()))
+            # mark item as sold
+            item.markSold()
+            item.updateBuyer(buyer.email)
+            flash(item.title + ' succesfully purchased!')
+            return redirect(url_for('show_entries'))
+        else:
+            flash('Insufficient funds to purchase ' + item.title + '. Try selling some stuff! ')
+            return redirect(url_for('show_entries'))
+    return render_template('item.html', username=session.get('current_user'), item=item)
 
 @app.route('/showPosts', methods=['GET', 'POST'])
 def show_entries():
@@ -427,6 +445,12 @@ def show_entries():
         flash('Filter: %s Selected!' % CATEGORY)
         entries = Post.query.filter(Post.category==CATEGORY)
         filtered = entries.order_by(Post.date.desc())
-        return render_template('show_entries.html', entries = filtered)
+        if not session.get('logged_in'):
+            return render_template('show_entries.html', entries=filtered)
+        return render_template('show_entries.html', entries=filtered,
+                                username=session.get('current_user'))
     entries = Post.query.order_by(Post.date.desc())
-    return render_template('show_entries.html', entries = entries)
+    if not session.get('logged_in'):
+        return render_template('show_entries.html', entries=entries)
+    return render_template('show_entries.html', entries=entries,
+                            username=session.get('current_user'))
