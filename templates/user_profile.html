@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+
 	<div class="jumbotron">
 	{% if user.id %}
 		<!-- Display the username, currently parameter is unknown -->
@@ -11,19 +12,39 @@
 	    <h2>Description</h2>
 			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 		</div>
-
-	  {% else %}
-	  <h1>User does not exist!</h1>
-	  {% endif %}
 	</div>
 
+	<form class="deposit_withdraw" method="post" id="deposit_withdraw">
+		<div class="jumbotron">
+			<div align="center" class="form-inline">
+				<label for="deposit">Deposit Amount:</label>
+				<input type="text" id="deposit" max="1000" value="0">
+			</div>
+
+			<br>
+
+			<div align="center" class="form-inline">
+				<label for="withdraw">Withdraw Amount:</label>
+				<input type="text" id="withdraw" max="1000" value="0">
+			</div>
+
+			<br>
+
+			<div align="center" class="form-inline">
+				<button type="submit" id="execute" class="btn btn-lg btn-primary btn-block" >Go</button>
+			</div>
+	</form>
+		
+
+
+	</div>
 
 	<div class="posts">
-	    <!-- Batch Line from http://stackoverflow.com/questions/17797921/jinja2-create-new-row-for-every-3-items -->
-	    {% for entry_row in post | batch(3) %}
+    <!-- Batch Line from http://stackoverflow.com/questions/17797921/jinja2-create-new-row-for-every-3-items -->
+    {% for entry_row in post | batch(3) %}
 	    <div class="row">
 	      {% for entry in entry_row %}
-	      {% if entry %}
+	      {% if not entry.isSold %}
 	      <div class="col-sm-4">
 	        <div class="postbox">
 	          <img src="{{entry.image}}" alt=""  style="height: 300px"/>
@@ -35,11 +56,15 @@
 	      </div>
 	      {% endif %}
 	      {% endfor %}
-	</div>
-
+	    </div>
     {% else %}
       <em>No entries here so far</em>
     {% endfor %}
-  </div>
+  	</div>
+
+	{% else %}
+	<h1>User does not exist!</h1>
+	{% endif %}
+
 
 {% endblock %}

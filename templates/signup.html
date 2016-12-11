@@ -1,31 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
-  {% if error %}
-    {{error}}
-  {% endif %}
-      <div class="jumbotron">
-        <h1>Buy Rent Sell</h1>
-          <form class="form-signin" action="success" method="post" id="btnSignUp">
+{% if error %}
+  {{error}}
+{% endif %}
+	<div class="jumbotron">
+		<h1>Buy Rent Sell</h1>
+		<form action="{{ url_for('signup') }}" class="form-signin" method="POST">
+		{{ form.hidden_tag() }}
 
-          <label for="inputFirstName" class="sr-only">First Name</label>
-          <input type="name" name="inputFirstName" id="inputFirstName" class="form-control" placeholder="First Name" required autofocus>
-          <br>
-          <label for="inputLastName" class="sr-only">Last Name</label>
-          <input type="name" name="inputLastName" id="inputLastName" class="form-control" placeholder="Last Name" required autofocus>
-          <br>
-          <label for="inputEmail" class="sr-only">Email address</label>
-          <input type="email" name="inputEmail" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-          <br>
-          <label for="inputPassword" class="sr-only">Password</label>
-          <input type="password" name="inputPassword" id="inputPassword" class="form-control" placeholder="Password" required>
-          <br>
-          <label for="phoneNumber" class="sr-only">Phone Number</label>
-          <input type="phone" name="phoneNumber" id="phoneNumber" class="form-control" placeholder="Phone" required autofocus>
-          <br>
-          <p align = "center" for="captcha" class="firstnum secondnum">{{firstnum}} + {{secondnum}} =</p>
-          <input type="captcha" name="captcha" id="captcha" class="form-control" placeholder="Captcha Answer" required autofocus>
-          <br>
-          <button type="submit" id="btnSignUp" class="btn btn-lg btn-primary btn-block" >Sign up</button>
-        </form>
-      </div>
+		<div class="form-group {%if form.email.errors%} has-error {% endif %}">
+
+		{{ form.firstname(placeholder="First Name", class="form-control") }}
+
+		{{ form.lastname(placeholder="Last Name", class="form-control") }}
+
+		{{ form.email(placeholder="Email", class="form-control") }}
+		{{ form.email.errors[0] }}
+
+		{{ form.password(placeholder="Password", class="form-control") }}
+
+		{{ form.phone(placeholder="Phone", class="form-control") }}
+
+		{{ form.recaptcha }}
+
+<!--     <br>
+    <p align = "center" for="captcha" class="firstnum secondnum">{{firstnum}} + {{secondnum}} =</p>
+    <input type="captcha" name="captcha" id="captcha" class="form-control" placeholder="Captcha Answer" required autofocus>
+    <br> -->
+
+		<p class="col-sm-5 help-block">
+		<button type="submit" id="btnSignUp" class="btn btn-lg btn-primary btn-block" >Sign up</button>
+		</form>
+	</div>
 {% endblock %}
