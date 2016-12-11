@@ -4,9 +4,15 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
+
 from forms import *
+import random
+
 import os
 # from flask.ext.login import LoginManager
+
+# for datetime
+from datetime import datetime
 
 # Database Imports
 from sqlalchemy.orm import sessionmaker
@@ -19,9 +25,17 @@ app = Flask(__name__)
 # set the secret key
 app.secret_key = os.urandom(12)
 
+app.config['RECAPTCHA_USE_SSL'] = False
+app.config['RECAPTCHA_PUBLIC_KEY'] = '6LeYIbsSAAAAACRPIllxA7wvXjIE411PfdB2gt2J'
+app.config['RECAPTCHA_PRIVATE_KEY'] = '6LeYIbsSAAAAAJezaIq3Ft_hSTo0YtyeFG-JgRtu'
+app.config['RECAPTCHA_OPTIONS'] = {'theme': 'white'}
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///brs.db'
 db = SQLAlchemy(app)
 admin = Admin(app, name='BRS Admin', template_mode='bootstrap3')
+
+global resultnum
+resultnum = 0
 
 ################################################################################
 ## MODELS
@@ -59,6 +73,10 @@ class User(db.Model):
 	############################################################################
 	## GETTERS
 	############################################################################
+
+	def get_user_id(self):
+		return self.id
+
 	def get_first_name(self):
 		return self.firstname
 
@@ -120,24 +138,93 @@ class Post(db.Model):
 	title = db.Column('title', db.String(120), unique=False)
 	price = db.Column('price', db.Numeric(12,2), unique=False)
 	descr = db.Column('description', db.String(500), unique=False)
+	date = db.Column('date', db.DateTime)
+	category = db.Column('category', db.String(120))
+	image = db.Column('image', db.String(120))
+	isSold = db.Column('isSold', db.Boolean)
+	buyer = db.Column('buyer', db.String(120))
 
-	def __init__(self, userid=0, title="", price="", descr=""):
+	############################################################################
+	## CONSTRUCTOR
+	############################################################################
+	def __init__(self, userid=0, title="", price="", descr="", date=None, category=None, image=""):
 		self.userid = userid
 		self.title = title
 		self.price = price
 		self.descr =  descr
+		if date is None:
+			date = datetime.utcnow()
+		self.date = date
+		self.category = category
+		self.image = image
+		self.isSold = False
+
 
 	############################################################################
 	## GETTERS
 	############################################################################
+	def getPostID(self):
+		return self.id
+
+	def getUserID(self):
+		return self.userid
+
+	def getTitle(self):
+		return self.title
+
+	def getPrice(self):
+		return self.price
+
+	def getDesc(self):
+		return self.desc
+
+	def getDate(self):
+		return self.date
+
+	def getCategory(self):
+		return self.category
+
+	def getIsSold(self):
+		return self.isSold
 
 	############################################################################
 	## SETTERS
 	############################################################################
+	def setTitle(self, title):
+		self.title = title
+
+	def setPrice(self, price):
+		self.price = price
+
+	def setDesc(self, desc):
+		self.desc = desc
+
+	def setCategory(self, category):
+		self.category = category
+
+	def markSold(self):
+		self.isSold = True
 
 	############################################################################
 	## OTHER METHODS
 	############################################################################
+
+##------------------------------------------------------------------------------
+## Flag Model
+##------------------------------------------------------------------------------
+class Flag(db.Model):
+	__tablename__ = "Flag"
+	flagid = db.Column(db.Integer, primary_key=True)
+	userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"), unique = False)
+	reason = db.Column('flag_reason', db.String(120), unique=False)
+
+############################################################################
+## CONSTRUCTOR
+############################################################################
+	def __init__(self,userid=None, reason=""):
+		self.userid = userid
+		self.reason = reason
+
 
 # Need to add few more things:
 # buyer_id, (is_biddable, current_bid, time_limit), date_posted, is_reported, image
@@ -155,6 +242,7 @@ class Post(db.Model):
 
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Post, db.session))
+admin.add_view(ModelView(Flag, db.session))
 
 ################################################################################
 ## ROUTES
@@ -202,6 +290,38 @@ def logout():
 	flash('SUCCESS: Logged Out!')
 	return index()
 
+# # Signing Up
+# @app.route('/signup', methods =['GET', 'POST'])
+# def signup():
+# 	global resultnum
+# 	firstnum = int(random.random() * 10)
+# 	secondnum = int(random.random() * 10)
+# 	resultnum = firstnum + secondnum
+# 	form = SignupForm(request.form)
+# 	if request.method == 'POST' and int(request.form['captcha']) == int(resultnum):
+# 		if form.validate():
+# 			email_exist = User.query.filter_by(email=form.email.data).first()
+# 			if email_exist:
+# 				form.email.errors.append('Email already in use')
+# 				return render_template('signup.html', form=form, page_title = "Sign Up")
+# 			else:
+# 				firstname = form.firstname.data
+# 				lastname = form.lastname.data
+# 				email = form.email.data
+# 				password = form.password.data
+# 				phone = form.phone.data
+# 				entry = User(email, password, firstname, lastname, phone)
+# 				db.session.add(entry)
+# 				db.session.commit()
+# 				return render_template('success.html')
+# 		else:
+# 			firstnum = int(random.random() * 10)
+# 			secondnum = int(random.random() * 10)
+# 			resultnum = firstnum + secondnum
+# 			return render_template('signup.html', form=form)
+# 	return render_template('signup.html', form=SignupForm(), firstnum=firstnum, secondnum=secondnum)
+
+
 # Signing Up
 @app.route('/signup', methods =['GET', 'POST'])
 def signup():
@@ -221,26 +341,11 @@ def signup():
 				entry = User(email, password, firstname, lastname, phone)
 				db.session.add(entry)
 				db.session.commit()
-				return render_template('success.html')
+				flash('Sign up success! You will have access in 10mins. Thank you for your patients')
+				return render_template('index.html')
 		else:
 			return render_template('signup.html', form=form)
 	return render_template('signup.html', form=SignupForm())
-
-# # Success Message
-# @app.route('/success', methods =['GET', 'POST'])
-# def success():
-# 	if request.method == 'POST':
-# 		firstname = request.form['inputFirstName']
-# 		lastname = request.form['inputLastName']
-# 		email = request.form['inputEmail']
-# 		password = request.form['inputPassword']
-# 		phone =  request.form['phoneNumber']
-# 		if not db.session.query(User).filter(User.email == email).count():
-# 			entry = User(email, password, firstname, lastname, phone)
-# 			db.session.add(entry)
-# 			db.session.commit()
-# 			return render_template('success.html')
-# 	return render_template('success.html')
 
 @app.route('/posted', methods = ['GET', 'POST'])
 def posted():
@@ -248,11 +353,16 @@ def posted():
 		title = request.form['title']
 		price = request.form['price']
 		descr = request.form['descr']
-		entry = Post(1,title, price, descr)
+		image = request.form['image']
+		date = datetime.utcnow()
+		category = request.form['category']
+		entry = Post(1,title, price, descr, date, category, image)
 		db.session.add(entry)
 		db.session.commit()
-		return render_template('success.html')
-	return render_template('success.html')
+		flash('Item Posted!')
+		return render_template('index.html')
+
+	return render_template('post.html')
 
 if (__name__)=='__main__':
 	app.run(host='localhost', port=5000, debug=True)
@@ -269,15 +379,20 @@ def user(id):
 def post():
 	return render_template('post.html')
 
-@app.route('/item/<id>')
+@app.route('/item/<id>', methods=['GET', 'POST'])
 def item(id):
+	if request.method == 'POST':
+		buyerid = User.get_user_id()
+		sellerid = Post.getPostID()
+		user = User.query.filter_by(buyerid).first()
+		user.balance -= Post.getPrice()
+		return "transaction success"
 	item = Post.query.filter_by(id=id).first()
 	return render_template('item.html', item=item)
 
 @app.route('/showPosts')
 def show_entries():
-
-	entries = Post.query.order_by(Post.userid)
+	entries = Post.query.order_by(Post.date.desc())
 	return render_template('show_entries.html', entries = entries)
 
 

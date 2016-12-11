@@ -1,4 +1,4 @@
-from flask_wtf import Form
+from flask_wtf import Form, RecaptchaField
 from wtforms import TextField, IntegerField, TextAreaField, SubmitField, RadioField, SelectField, PasswordField
 
 from wtforms import validators, ValidationError
@@ -11,3 +11,4 @@ class SignupForm(Form):
 	password = PasswordField("Passsword", [validators.Required("Please enter a password.")])
 	phone = IntegerField("Phone", [validators.Required("Please enter a phone number.")])
 	submit = SubmitField("Send")
+	recaptcha = RecaptchaField()
