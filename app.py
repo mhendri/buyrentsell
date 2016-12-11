@@ -277,6 +277,15 @@ admin.add_view(ModelView(Post, db.session))
 admin.add_view(ModelView(Flag, db.session))
 
 ################################################################################
+## FLASK-LOGIN
+################################################################################
+#!py
+@login_manager.user_loader
+def user_loader(user_id):
+    ''' Given *user_id*, return the associated User object. '''
+    return User.query.get(user_id)
+
+################################################################################
 ## ROUTES
 ################################################################################
 
