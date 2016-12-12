@@ -29,16 +29,19 @@
       <ul class="nav navbar-nav navbar-right">
         {% if current_user.is_authenticated %}
         <li>
-          <a href="">Welcome {{ current_user.email }}! </a>
+          <a href="/user/{{ current_user.id }}">Welcome {{ current_user.email }}! </a>
+        </li>
+        <li>
+          <a href="/logout">Logout</a>
         </li>
         {% else %}
         <li>
-          <a href="signup">
+          <a href="/signup">
             <span class="glyphicon glyphicon-user"></span> Sign Up
           </a>
         </li>
         <li>
-          <a href="login">
+          <a href="/login">
             <span class="glyphicon glyphicon-log-in"></span> Login
           </a>
         </li>
