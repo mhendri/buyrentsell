@@ -5,6 +5,7 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
 
+
 from forms import *
 import random
 
@@ -370,24 +371,23 @@ if (__name__)=='__main__':
 @app.route('/user/<id>', methods=['GET', 'POST'])
 #@login_required
 def user(id):
+    
     user = User.query.filter_by(id=id).first()
     post = Post.query.filter_by(userid=user.id)
     # TODO: update so this form so that it only shows up on the current_user's
     # profile
     if request.method == 'POST':
-
         form = ProfileForm(request.form)
         if form.validate():
             # deposit = form.deposit.data
             # withdraw = form.withdraw.data
-            # user_profile = User.query.filter_by(User.id==id).first()
+            
+            # user.deposit(int(deposit))
+            # user.withdraw(int(withdraw)) 
+            # # flash("Done")
+            return redirect(url_for('index.html'))
 
-            # user_profile.deposit(deposit)
-            # user_profile.withdraw(withdraw) 
-            # flash("Done")
-            return render_template('user_profile.html', user=user,post=post,form=form)
-
-   return render_template('user_profile.html', user=user, post=post, form=ProfileForm())
+    return render_template('user_profile.html', user=user, post=post, form=ProfileForm())
 
 
 @app.route('/item/<id>', methods=['GET', 'POST'])
