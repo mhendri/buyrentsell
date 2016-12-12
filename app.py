@@ -3,7 +3,7 @@ from flask import flash, redirect, render_template, request, session, abort, url
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
-import flask_login
+from flask_login import LoginManager, login_user, login_required, current_user
 
 
 from forms import *
@@ -31,7 +31,7 @@ db = SQLAlchemy(app)
 admin = Admin(app, name='BRS Admin', template_mode='bootstrap3')
 
 # Flask-Login Login Manager
-lm = flask_login.LoginManager()
+lm = LoginManager()
 lm.init_app(app)
 lm.login_view = 'login'
 
@@ -316,13 +316,13 @@ def login():
             user.authenticated = True
             db.session.add(user)
             db.session.commit()
-            flask_login.login_user(user, True)
+            login_user(user, True)
             flash('SUCCESS: Logged In!')
             next = request.args.get('next')
 
             # # is_safe_url should check if the url is safe for redirects.
             # # See http://flask.pocoo.org/snippets/62/ for an example.
-            # if not flask_login.is_safe_url(next):
+            # if not is_safe_url(next):
             #     return abort(400)
 
             return redirect(next or url_for('index'))
@@ -333,12 +333,13 @@ def login():
 
 # NOTE: example of login required route
 # @app.route('/protected')
-# @flask_login.login_required
+# @login_required
 # def protected():
-#     return 'Logged in as: ' + flask_login.current_user.firstname
+#     return 'Logged in as: ' + current_user.firstname
 
 # Logging Out
 @app.route('/logout')
+@login_required
 def logout():
     session['logged_in'] = False
     flash('SUCCESS: Logged Out!')
