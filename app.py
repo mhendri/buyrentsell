@@ -374,6 +374,7 @@ def signup():
     return render_template('signup.html', form=SignupForm())
 
 @app.route('/post', methods = ['GET', 'POST'])
+@login_required
 def post():
     if request.method == 'POST':
         form = PostForm(request.form)
@@ -397,7 +398,6 @@ def post():
 
 # User profile pages accessible by /user/id
 @app.route('/user/<id>', methods=['GET', 'POST'])
-#@login_required
 def user(id):
 
     user = User.query.filter_by(id=id).first()
@@ -458,7 +458,9 @@ def show_entries():
         return render_template('show_entries.html', entries=entries)
     return render_template('show_entries.html', entries=entries)
 
+# NOTE: may want to make this logged_in only
 @app.route('/item/<id>/reportUser', methods=['GET', 'POST'])
+@login_required
 def reportUser(id):
     item = Post.query.filter_by(id=id).first()
     if request.method == 'POST':
