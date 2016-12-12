@@ -331,10 +331,11 @@ def login():
             return render_template('login.html')
     return render_template('login.html')
 
-@app.route('/protected')
-@flask_login.login_required
-def protected():
-    return 'Logged in as: ' + flask_login.current_user.firstname
+# NOTE: example of login required route
+# @app.route('/protected')
+# @flask_login.login_required
+# def protected():
+#     return 'Logged in as: ' + flask_login.current_user.firstname
 
 # Logging Out
 @app.route('/logout')
