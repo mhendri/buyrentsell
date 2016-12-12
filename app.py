@@ -174,7 +174,7 @@ class Post(db.Model):
     buyer = db.Column('buyer', db.String(120))
     buyerrated = db.Column('buyerrated', db.Boolean)
     sellerrated = db.Column('sellerrated', db.Boolean)
-
+    like = db.Column('like', db.Integer)
     ############################################################################
     ## CONSTRUCTOR
     ############################################################################
@@ -191,6 +191,7 @@ class Post(db.Model):
         self.isSold = False
         self.buyerrated = False
         self.sellerrated = False
+        self.like = 0
 
     # TODO: Need to add few more things:
     # buyer_id, (is_biddable, current_bid, time_limit), date_posted, is_reported, image
@@ -256,11 +257,15 @@ class Post(db.Model):
     def buyerRated(self):
         self.buyerrated = True
         db.session.commit()
-
-
+        
     def sellerRated(self):
         self.sellerrated = True
         db.session.commit()
+        
+    def updateLike(self):
+        self.like += 1
+        db.session.commit()
+
     ############################################################################
     ## OTHER METHODS
     ############################################################################
@@ -565,3 +570,16 @@ def rateSeller(id):
             flash('failed to rate')
             return render_template('rate_user.html', form=form, item=item, seller=seller, buyer=buyer)
     return render_template('rate_user.html', form=RateForm(), item=item, seller=seller, buyer=buyer)
+ 
+@app.route('/item/<id>/liked', methods=['GET', 'POST'])
+@login_required
+def likePost(id):
+    item = Post.query.filter_by(id=id).first()
+    item_userid = User.query.filter_by(id=item.userid).first()
+
+    if request.method == 'POST':
+        item.updateLike()
+        flash("You liked it")
+        return render_template('item.html', item=item, item_userid=item_userid)
+
+    return render_template('item.html', item=item, item_userid=item_userid)

@@ -5,13 +5,23 @@
     <h1>{{ item.title }}</h1>
     <h2>Posted by: <a href="/user/{{ item_userid.id }}">{{ item_userid.email }}</a></h2>
     <h2>Price: ${{ item.price }}</h2>
-    <div style="float:right" > 
-      <img src="{{item.image}}" style="height:300px;">
+    <h3>Likes: {{item.like}}</h3>
 
-      <form action="/item/{{ item.id }}/reportUser" method="GET" id="reportUser">
+    <div style="float:right" > 
+    <img src="{{item.image}}" style="height:300px;">
+
+    <form action="/item/{{ item.id }}/reportUser" method="GET" id="reportUser">
         <button style ="float:left" type="submit" id="reportUser" class=" btn-danger btn-sm btn-primary ">report user</button>
+
       </form>
+
+    <form action="/item/{{ item.id }}/liked" method="POST" id="like">
+        <button style = "float:right" type="submit" id="like" class="btn-success btn-sm btn-primary">like</button> 
+    </form>
+    
     </div>
+
+  
     <h3>Description: {{ item.descr }}</h3>
     <h4>Date Posted: {{item.date}}</h4>
 
