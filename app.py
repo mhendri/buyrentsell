@@ -170,7 +170,7 @@ class Post(db.Model):
     image = db.Column('image', db.String(120))
     isSold = db.Column('isSold', db.Boolean)
     buyer = db.Column('buyer', db.String(120))
-
+    like = db.Column('like', db.Integer)
     ############################################################################
     ## CONSTRUCTOR
     ############################################################################
@@ -185,6 +185,7 @@ class Post(db.Model):
         self.category = category
         self.image = image
         self.isSold = False
+        self.like = 0
 
     # TODO: Need to add few more things:
     # buyer_id, (is_biddable, current_bid, time_limit), date_posted, is_reported, image
@@ -242,6 +243,10 @@ class Post(db.Model):
 
     def updateBuyer(self, purchaser):
         self.buyer = purchaser
+        db.session.commit()
+
+    def updateLike(self):
+        self.like += 1
         db.session.commit()
 
     ############################################################################
@@ -476,3 +481,16 @@ def reportUser(id):
         flash('Your flagging of '+ seller.email + ' is under review!')
         return redirect(url_for('show_entries'))
     return render_template('report_user.html')
+
+@app.route('/item/<id>/liked', methods=['GET', 'POST'])
+@login_required
+def likePost(id):
+    item = Post.query.filter_by(id=id).first()
+    item_userid = User.query.filter_by(id=item.userid).first()
+
+    if request.method == 'POST':
+        item.updateLike()
+        flash("You liked it")
+        return render_template('item.html', item=item, item_userid=item_userid)
+
+    return render_template('item.html', item=item, item_userid=item_userid)
