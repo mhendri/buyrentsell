@@ -419,6 +419,7 @@ def user(id):
 @app.route('/item/<id>', methods=['GET', 'POST'])
 def item(id):
     item = Post.query.filter_by(id=id).first()
+    item_userid = User.query.filter_by(id=item.userid).first()
     current_user = session.get('current_user')
     if request.method == 'POST':
         if not session.get('logged_in'):
@@ -439,7 +440,7 @@ def item(id):
         else:
             flash('Insufficient funds to purchase ' + item.title + '. Try selling some stuff! ')
             return redirect(url_for('show_entries'))
-    return render_template('item.html', username=session.get('current_user'), item=item)
+    return render_template('item.html', username=session.get('current_user'), item=item, item_userid=item_userid)
 
 @app.route('/showPosts', methods=['GET', 'POST'])
 def show_entries():
