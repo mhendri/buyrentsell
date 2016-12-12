@@ -97,19 +97,24 @@ class User(db.Model):
     ############################################################################
     def set_email(self, email):
         self.email = email
+        db.session.commit()
 
     def set_phone(self, phone):
         self.phone = phone
+        db.session.commit()
 
     # unsure about this setter / may not be needed
     def set_balance(self, balance):
         self.balance = balance
+        db.session.commit()
 
     def activate_user(self):
         self.active = True
+        db.session.commit()
 
     def suspend_user(self):
         self.active = False
+        db.session.commit()
 
     ############################################################################
     ## OTHER METHODS
