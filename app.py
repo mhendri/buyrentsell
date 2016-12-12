@@ -10,17 +10,12 @@ from forms import *
 import random
 
 import os
-# from flask.ext.login import LoginManager
 
 # for datetime
 from datetime import datetime
 
 # Database Imports
 from sqlalchemy.orm import sessionmaker
-# from tabledef import *
-
-# # create enginer for database
-# engine = create_engine('sqlite:///brs.db', echo=True)
 
 app = Flask(__name__)
 # set the secret key
@@ -414,7 +409,7 @@ def post():
 @app.route('/user/<id>', methods=['GET', 'POST'])
 #@login_required
 def user(id):
-    
+
     user = User.query.filter_by(id=id).first()
     post = Post.query.filter_by(userid=user.id)
     # TODO: update so this form so that it only shows up on the current_user's
@@ -424,9 +419,9 @@ def user(id):
         if form.validate():
             # deposit = form.deposit.data
             # withdraw = form.withdraw.data
-            
+
             # user.deposit(int(deposit))
-            # user.withdraw(int(withdraw)) 
+            # user.withdraw(int(withdraw))
             # # flash("Done")
             return redirect(url_for('index.html'))
 
