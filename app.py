@@ -271,7 +271,7 @@ class Post(db.Model):
 class Flag(db.Model):
     __tablename__ = "Flag"
     flagid = db.Column(db.Integer, primary_key=True)
-    userid = db.Column('userid', db.String(120), db.ForeignKey("Users.id"), unique = False)
+    userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"), unique = False)
     email = db.Column('email', db.String(120), unique=False)
     reason = db.Column('flag_reason', db.String(120), unique=False)
 
