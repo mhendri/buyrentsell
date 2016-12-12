@@ -3,7 +3,7 @@ from flask import flash, redirect, render_template, request, session, abort, url
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
-from flask_login import LoginManager, login_user, login_required, current_user
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
 
 from forms import *
@@ -341,9 +341,9 @@ def login():
 @app.route('/logout')
 @login_required
 def logout():
-    session['logged_in'] = False
+    logout_user()
     flash('SUCCESS: Logged Out!')
-    return index()
+    return redirect(url_for('index'))
 
 # Signing Up
 @app.route('/signup', methods =['GET', 'POST'])
