@@ -371,7 +371,7 @@ if (__name__)=='__main__':
 @app.route('/user/<id>', methods=['GET', 'POST'])
 #@login_required
 def user(id):
-    
+
     user = User.query.filter_by(id=id).first()
     post = Post.query.filter_by(userid=user.id)
     # TODO: update so this form so that it only shows up on the current_user's
@@ -381,9 +381,9 @@ def user(id):
         if form.validate():
             # deposit = form.deposit.data
             # withdraw = form.withdraw.data
-            
+
             # user.deposit(int(deposit))
-            # user.withdraw(int(withdraw)) 
+            # user.withdraw(int(withdraw))
             # # flash("Done")
             return redirect(url_for('index.html'))
 
@@ -441,6 +441,10 @@ def reportUser(id):
         flag = Flag(seller.id, seller.email, reason)
         db.session.add(flag)
         db.session.commit()
+        check_ban = Flag.query.filter(User.id==seller.id)
+        if check_ban.count() > 2:
+            seller.active = False
+            db.session.commit()
         flash('Your flagging of '+ seller.email + ' is under review!')
         return redirect(url_for('show_entries'))
     return render_template('report_user.html')
