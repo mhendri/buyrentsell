@@ -375,13 +375,14 @@ def post():
     if request.method == 'POST':
         form = PostForm(request.form)
         if form.validate():
+            userid = current_user.email
             title = form.title.data
             price = form.price.data
             descr = form.descr.data
             image = form.image.data
             date = datetime.utcnow()
             category = form.category.data
-            entry = Post(1,title, price, descr, date, category, image)
+            entry = Post(userid,title, price, descr, date, category, image)
             db.session.add(entry)
             db.session.commit()
             flash('Item Posted!')
@@ -408,7 +409,7 @@ def user(id):
             withdraw = form.withdraw.data
             user_profile = User.query.filter(User.id==user.id).first()
             user_profile.deposit(int(deposit))
-            user_profile.withdraw(int(withdraw)) 
+            user_profile.withdraw(int(withdraw))
             flash("Done")
             return render_template('index.html')
         else:
