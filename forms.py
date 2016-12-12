@@ -1,12 +1,14 @@
 from flask_wtf import Form, RecaptchaField
 from wtforms import TextField, IntegerField, TextAreaField, SubmitField, RadioField, SelectField, PasswordField, DecimalField
 
+from wtforms.fields.html5 import EmailField
+
 from wtforms import validators, ValidationError
 
 class SignupForm(Form):
 	firstname = TextField("First Name", [validators.Required("Please enter your first name.")])
 	lastname = TextField("Last Name", [validators.Required("Please enter your last name.")])
-	email = TextField("Email",[validators.Required("Please enter your email address."),
+	email = TextField("Email", [validators.Required("Please enter your email address."),
 		validators.Email("Please enter your email address")])
 	password = PasswordField("Passsword", [validators.Required("Please enter a password.")])
 	phone = IntegerField("Phone", [validators.Required("Please enter a phone number.")])
@@ -20,6 +22,12 @@ class PostForm(Form):
 	image = TextField("Image", [validators.Required("Please upload an image")])
 	category = SelectField("Select Category", choices=[("Electronic", "Electronic"), ("Furniture", "Furniture"), ("Clothing", "Clothing"), ("Appliance", "Appliance"), ("Sports", "Sports")])
 	submit = SubmitField("Send")
+
+class LoginForm(Form):
+	email = EmailField("Email", [validators.Required()])
+	password = PasswordField("Password", [validators.Required()])
+	recaptcha = RecaptchaField()
+	submit = SubmitField("Log In")
 
 class ProfileForm(Form):
 	deposit = DecimalField('Deposit', [validators.Required("Please enter deposit amount.")])

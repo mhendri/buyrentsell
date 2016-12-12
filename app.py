@@ -360,6 +360,7 @@ def post():
             flash('Item Posted!')
             return render_template('index.html')
         else:
+            flash('Item failed to post')
             return render_template('post.html', form=form)
     return render_template('post.html', form=PostForm(),
                                 username=session.get('current_user'))
