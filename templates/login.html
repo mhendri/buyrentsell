@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-  {% if session['logged_in'] %}
+  {% if current_user.is_authenticated %}
     <p>You're logged in already!</p>
     <a href="/logout">Sign Out</a>
   {% else %}
