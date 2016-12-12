@@ -269,6 +269,25 @@ class Flag(db.Model):
     #     self.userid = userid
     #     db.session.commit()
 
+##------------------------------------------------------------------------------
+## Rate Model
+##------------------------------------------------------------------------------
+class Rate(db.Model):
+    __tablename__ = "Rate"
+    id = db.Column('id', db.Integer, primary_key = True)
+    userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"))
+    rating = db.Column('rating', db.Numeric(3,2), unique = False)
+    comment = db.Column('comment', db.String(120), unique = False)
+
+    ############################################################################
+    ## CONSTRUCTOR
+    ############################################################################
+    def __init__(self, userid, rating, comment)
+        self.userid = userid
+        self.rating = rating
+        self.comment = comment
+
+
 ################################################################################
 ## FLASK-ADMIN
 ################################################################################
@@ -276,6 +295,7 @@ class Flag(db.Model):
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Post, db.session))
 admin.add_view(ModelView(Flag, db.session))
+admin.add_view(ModelView(Rate, db.session))
 
 ################################################################################
 ## FLASK-LOGIN
@@ -419,12 +439,12 @@ def user(id):
 def item(id):
     item = Post.query.filter_by(id=id).first()
     item_userid = User.query.filter_by(id=item.userid).first()
-    current_user = session.get('current_user')
+    # current_user = session.get('current_user')
     if request.method == 'POST':
-        if not session.get('logged_in'):
+        if not current_user.is_authenticated:
             flash('ERROR: You must be logged in to buy an item!')
             return render_template('item.html', item=item, item_userid=item_userid)
-        query = User.query.filter(User.email==current_user)
+        query = User.query.filter(User.id==current_user.id)
         buyer = query.first()
         if buyer.withdraw(int(item.getPrice())) == True:
             # get seller
