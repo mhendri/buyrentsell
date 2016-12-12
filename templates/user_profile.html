@@ -6,7 +6,7 @@
 		<!-- Display the username, currently parameter is unknown -->
 		<h1 align="center">{{ user.email }}</h1>
 		<h2 align="center">Rating:</h2>
-
+		
 		<!-- Display the user inputted user description -->
 		<div id="description">
 	    <h2>Description</h2>
@@ -17,6 +17,10 @@
 	<form class="deposit_withdraw" method="POST" id="deposit_withdraw">
 		{{ form.hidden_tag() }}
 		<div class="jumbotron">
+
+			<div align="center">
+				<h2 align="center">Current Balance: {{user.balance}}</h2>
+			</div>
 			
 			<div align="center" class="form-group">
 			  {{ form.deposit(placeholder="Deposit", class="form-control") }}
