@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="jumbotron">
+    <form action="" method="POST">
+    {% for subfield in form.rating %}
+    <tr>
+      <td>
+        {{ subfield }}
+        {{ subfield.label }}
+      </td>
+    </tr>
+    {% endfor %}
+    </form>
+
+
+  </div>
+
+{% endblock %}

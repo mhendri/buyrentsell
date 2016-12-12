@@ -19,6 +19,11 @@
       <button style ="float:left" type="submit" id="buyItem" class="btn btn-lg btn-primary btn-block">Buy Now</button>
       {% endif %}
     </form>
+    {% if item.isSold and item.userid == current_user.id %}
+      <form action="/item/{{ item.id }}/rateUser">
+        <button type="submit">Rate Buyer</button>
+      </form>
+    {% endif %}
     {% else %}
     <h1>This post does not exist!</h1>
     {% endif %}

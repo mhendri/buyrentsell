@@ -501,6 +501,10 @@ def reportUser(id):
     return render_template('report_user.html')
 
 @app.route('/item/<id>/rateUser', methods=['GET', 'POST'])
-@login_required
+# @login_required
 def rateUser(id):
-
+    form = RateForm(request.form)
+    item = Post.query.filter_by(id=id).first()
+    if form.validate():
+        return render_template('rate_user.html', form=form)
+    return render_template('rate_user.html', form=RateForm())
