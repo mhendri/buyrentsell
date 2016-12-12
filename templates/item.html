@@ -5,7 +5,9 @@
     <h1>{{ item.title }}</h1>
     <h2>Posted by: <a href="/user/{{ item_userid.id }}">{{ item_userid.email }}</a></h2>
     <h2>Price: ${{ item.price }}</h2>
-    <div style="float:right" > <img src="{{item.image}}" style="height:300px;">
+    <div style="float:right" > 
+      <img src="{{item.image}}" style="height:300px;">
+
       <form action="/item/{{ item.id }}/reportUser" method="GET" id="reportUser">
         <button style ="float:left" type="submit" id="reportUser" class=" btn-danger btn-sm btn-primary ">report user</button>
       </form>
@@ -16,10 +18,14 @@
     <br>
     
     <form action="/item/{{ item.id }}" method="POST" id="buyItem">
+      {% if item.userid == current_user.id %}
+      <button style ="float:left" type="submit" id="buyItem" class="btn btn-lg btn-primary btn-block">Remove Item</button>
+      {% else %}
       <button style ="float:left" type="submit" id="buyItem" class="btn btn-lg btn-primary btn-block">Buy Now</button>
+      {% endif %}
     </form>
     {% else %}
-    <h1>post does not exist</h1>
+    <h1>This post does not exist!</h1>
     {% endif %}
   </div>
 {% endblock %}

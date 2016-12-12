@@ -8,9 +8,9 @@
 		<h1 align="center">{{ user.firstname }} {{ user.lastname }}</h1>
 		<h2 align="center">{{ user.email }}</h2>
 		<h3 align="center">Rating:</h3>
-
 	</div>
 
+	{% if current_user.email == user.email %}
 	<form class="deposit_withdraw" method="POST" id="deposit_withdraw">
 		{{ form.hidden_tag() }}
 		<div class="jumbotron">
@@ -18,7 +18,7 @@
 			<div align="center">
 				<h2 align="center">Current Balance: ${{user.balance}}</h2>
 			</div>
-			
+
 			<div align="center" class="form-group">
 			  {{ form.deposit(placeholder="Deposit", class="form-control") }}
 			</div>
@@ -27,20 +27,18 @@
 			  {{ form.withdraw(placeholder="Withdraw", class="form-control") }}
 			</div>
 
-
-			<button type="submit" id="go" class="btn btn-lg btn-primary btn-block">Go</button>	
+			<button type="submit" id="go" class="btn btn-lg btn-primary btn-block">Go</button>
+		</div>
 	</form>
-		
+	{% endif %}
 
-
-	</div>
 
 	<div class="posts">
+		<h3>Posts Owned By {{ user.firstname }}</h3>
     <!-- Batch Line from http://stackoverflow.com/questions/17797921/jinja2-create-new-row-for-every-3-items -->
     {% for entry_row in post | batch(3) %}
 	    <div class="row">
 	      {% for entry in entry_row %}
-	      {% if not entry.isSold %}
 	      <div class="col-sm-4">
 	        <div class="postbox">
 	          <img src="{{entry.image}}" alt=""  style="height: 300px"/>
@@ -50,11 +48,10 @@
 	          <p align="center" class="post-price">{{ entry.price | safe }}</p>
 	        </div>
 	      </div>
-	      {% endif %}
 	      {% endfor %}
 	    </div>
     {% else %}
-      <em>No entries here so far</em>
+      <em>No entries here so far...</em>
     {% endfor %}
   	</div>
 

@@ -374,6 +374,7 @@ def signup():
     return render_template('signup.html', form=SignupForm())
 
 @app.route('/post', methods = ['GET', 'POST'])
+@login_required
 def post():
     if request.method == 'POST':
         form = PostForm(request.form)
@@ -397,7 +398,6 @@ def post():
 
 # User profile pages accessible by /user/id
 @app.route('/user/<id>', methods=['GET', 'POST'])
-#@login_required
 def user(id):
 
     user = User.query.filter_by(id=id).first()
@@ -422,13 +422,11 @@ def user(id):
 def item(id):
     item = Post.query.filter_by(id=id).first()
     item_userid = User.query.filter_by(id=item.userid).first()
-    current_user = session.get('current_user')
     if request.method == 'POST':
-        if not session.get('logged_in'):
+        if not current_user.is_authenticated:
             flash('ERROR: You must be logged in to buy an item!')
             return render_template('item.html', item=item, item_userid=item_userid)
-        query = User.query.filter(User.email==current_user)
-        buyer = query.first()
+        buyer = current_user
         if buyer.withdraw(int(item.getPrice())) == True:
             # get seller
             seller = User.query.filter(User.id==item.getUserID()).first()
@@ -451,16 +449,18 @@ def show_entries():
         flash('Filter: %s Selected!' % CATEGORY)
         entries = Post.query.filter(Post.category==CATEGORY)
         filtered = entries.order_by(Post.date.desc())
-        if not session.get('logged_in'):
+        if not current_user.is_authenticated:
             return render_template('show_entries.html', entries=filtered)
         return render_template('show_entries.html', entries=filtered,
                                 )
     entries = Post.query.order_by(Post.date.desc())
-    if not session.get('logged_in'):
+    if not current_user.is_authenticated:
         return render_template('show_entries.html', entries=entries)
     return render_template('show_entries.html', entries=entries)
 
+# NOTE: may want to make this logged_in only
 @app.route('/item/<id>/reportUser', methods=['GET', 'POST'])
+@login_required
 def reportUser(id):
     item = Post.query.filter_by(id=id).first()
     if request.method == 'POST':
