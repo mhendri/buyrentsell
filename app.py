@@ -375,13 +375,14 @@ def post():
     if request.method == 'POST':
         form = PostForm(request.form)
         if form.validate():
+            userid = current_user.email
             title = form.title.data
             price = form.price.data
             descr = form.descr.data
             image = form.image.data
             date = datetime.utcnow()
             category = form.category.data
-            entry = Post(1,title, price, descr, date, category, image)
+            entry = Post(userid,title, price, descr, date, category, image)
             db.session.add(entry)
             db.session.commit()
             flash('Item Posted!')
@@ -408,7 +409,7 @@ def user(id):
             withdraw = form.withdraw.data
             user_profile = User.query.filter(User.id==user.id).first()
             user_profile.deposit(int(deposit))
-            user_profile.withdraw(int(withdraw)) 
+            user_profile.withdraw(int(withdraw))
             flash("Done")
             return render_template('index.html')
         else:
@@ -418,6 +419,7 @@ def user(id):
 @app.route('/item/<id>', methods=['GET', 'POST'])
 def item(id):
     item = Post.query.filter_by(id=id).first()
+    item_userid = User.query.filter_by(id=item.userid).first()
     current_user = session.get('current_user')
     if request.method == 'POST':
         if not session.get('logged_in'):
@@ -438,7 +440,7 @@ def item(id):
         else:
             flash('Insufficient funds to purchase ' + item.title + '. Try selling some stuff! ')
             return redirect(url_for('show_entries'))
-    return render_template('item.html', username=session.get('current_user'), item=item)
+    return render_template('item.html', username=session.get('current_user'), item=item, item_userid=item_userid)
 
 @app.route('/showPosts', methods=['GET', 'POST'])
 def show_entries():
