@@ -22,6 +22,6 @@ class PostForm(Form):
 	submit = SubmitField("Send")
 
 class ProfileForm(Form):
-	deposit = DecimalField('Deposit', [validators.Required("Please enter deposit amount.")])
-	withdraw = DecimalField('Withdraw', [validators.Required("Please enter withdraw amount.")])
-	submit = SelectField("Send")
+	deposit = TextField('Deposit', [validators.Required("Please enter deposit amount.")])
+	withdraw = TextField('Withdraw', [validators.Required("Please enter withdraw amount.")])
+	submit = SubmitField("Send")

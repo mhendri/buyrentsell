@@ -379,13 +379,15 @@ def user(id):
     if request.method == 'POST':
         form = ProfileForm(request.form)
         if form.validate():
-            # deposit = form.deposit.data
-            # withdraw = form.withdraw.data
-            
-            # user.deposit(int(deposit))
-            # user.withdraw(int(withdraw)) 
-            # # flash("Done")
-            return redirect(url_for('index.html'))
+            deposit = form.deposit.data
+            withdraw = form.withdraw.data
+            user_profile = User.query.filter(User.id==user.id).first()
+            user_profile.deposit(int(deposit))
+            user_profile.withdraw(int(withdraw)) 
+            flash("Done")
+            return render_template('index.html')
+        else:
+            flash("Try again")
 
     return render_template('user_profile.html', user=user, post=post, form=ProfileForm())
 
