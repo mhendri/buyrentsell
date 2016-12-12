@@ -2,14 +2,23 @@
 {% block content %}
   <div class="jumbotron">
     <form action="" method="POST">
-    {% for subfield in form.rating %}
-    <tr>
-      <td>
-        {{ subfield }}
-        {{ subfield.label }}
-      </td>
-    </tr>
-    {% endfor %}
+
+    {{ form.csrf_token() }}
+<!--       {% for subfield in form.rating %}
+      <tr>
+        <td>
+          {{ subfield }}
+          {{ subfield.label }}
+        </td>
+      </tr>
+      {% endfor %} -->
+
+      {{ form.rating }}
+
+      {{ form.comment.label }}
+      {{ form.comment }}
+
+      {{ form.submit }}
     </form>
 
 

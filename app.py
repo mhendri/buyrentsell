@@ -170,6 +170,8 @@ class Post(db.Model):
     image = db.Column('image', db.String(120))
     isSold = db.Column('isSold', db.Boolean)
     buyer = db.Column('buyer', db.String(120))
+    buyerrated = db.Column('buyerrated', db.Boolean)
+    sellerrated = db.Column('sellerrated', db.Boolean)
 
     ############################################################################
     ## CONSTRUCTOR
@@ -185,6 +187,8 @@ class Post(db.Model):
         self.category = category
         self.image = image
         self.isSold = False
+        self.buyerrated = False
+        self.sellerrated = False
 
     # TODO: Need to add few more things:
     # buyer_id, (is_biddable, current_bid, time_limit), date_posted, is_reported, image
@@ -244,6 +248,14 @@ class Post(db.Model):
         self.buyer = purchaser
         db.session.commit()
 
+    def buyerRated(self):
+        self.buyerrated = True
+        db.session.commit()
+
+
+    def sellerRated(self):
+        self.sellerrated = True
+        db.session.commit()
     ############################################################################
     ## OTHER METHODS
     ############################################################################
@@ -500,11 +512,23 @@ def reportUser(id):
         return redirect(url_for('show_entries'))
     return render_template('report_user.html')
 
-@app.route('/item/<id>/rateUser', methods=['GET', 'POST'])
+@app.route('/item/<id>/rateBuyer', methods=['GET', 'POST'])
 # @login_required
-def rateUser(id):
-    form = RateForm(request.form)
+def rateBuyer(id):
     item = Post.query.filter_by(id=id).first()
-    if form.validate():
-        return render_template('rate_user.html', form=form)
-    return render_template('rate_user.html', form=RateForm())
+    if request.method == 'POST':
+        form = RateForm(request.form)
+        if form.validate():
+            rating = form.rating.data
+            comment = form.comment.data
+            entry = Rate(item.buyer, rating, comment)
+            item.buyerRated()
+            db.session.add(entry)
+            db.session.commit()
+            flash('item.buyer successfully rated!')
+            return redirect('/index')
+        else:
+            print(form.errors)
+            flash('failed to rate!')
+            return render_template('rate_user.html', form=form, item=item)
+    return render_template('rate_user.html', form=RateForm(), item=item)
