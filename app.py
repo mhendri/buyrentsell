@@ -387,6 +387,7 @@ def post():
             flash('Item Posted!')
             return render_template('index.html')
         else:
+            flash('Item failed to post')
             return render_template('post.html', form=form)
     return render_template('post.html', form=PostForm(),
                                 username=session.get('current_user'))
@@ -464,6 +465,10 @@ def reportUser(id):
         flag = Flag(seller.id, seller.email, reason)
         db.session.add(flag)
         db.session.commit()
+        check_ban = Flag.query.filter(User.id==seller.id)
+        if check_ban.count() > 2:
+            seller.active = False
+            db.session.commit()
         flash('Your flagging of '+ seller.email + ' is under review!')
         return redirect(url_for('show_entries'))
     return render_template('report_user.html')
