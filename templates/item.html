@@ -12,7 +12,11 @@
     </div>
     <p>{{ item.descr }}</p>
     <form action="/item/{{ item.id }}" method="POST" id="buyItem">
+      {% if item.userid == current_user.id %}
+      <button style ="float:left" type="submit" id="buyItem" class="btn btn-lg btn-primary btn-block">Remove Item</button>
+      {% else %}
       <button style ="float:left" type="submit" id="buyItem" class="btn btn-lg btn-primary btn-block">Buy Now</button>
+      {% endif %}
     </form>
     {% else %}
     <h1>post does not exist</h1>
