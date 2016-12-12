@@ -311,38 +311,37 @@ def user_loader(id):
 @app.route('/')
 @app.route('/index')
 def index():
-    if not session.get('logged_in'):
-        return render_template('index.html')
-    else:
-        # if logged in, show index with username
-        return render_template('index.html',
-                        username=session.get('current_user'))
+    return render_template('index.html', title="Home")
 
 # Logging In
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        POST_USERNAME = str(request.form['email'])
-        POST_PASSWORD = str(request.form['password'])
+        email = str(request.form['email'])
+        password = str(request.form['password'])
+        query = User.query.filter(User.email==email, User.password==password)
+        user = query.first()
 
-        # Session = sessionmaker(bind=engine)
-        # s = db.session
-        query = User.query.filter(User.email==POST_USERNAME,
-                User.password==POST_PASSWORD)
-        result = query.first()
-
-        if result:
-            if result.active == False:
+        if user:
+            if not user.is_active():
                 flash ('Account not yet active, please wait for admin')
                 return render_template('login.html')
-            session['logged_in'] = True
-            session['current_user'] = result.email
+            user.authenticated = True
+            db.session.add(user)
+            db.session.commit()
+            flask_login.login_user(user, True)
             flash('SUCCESS: Logged In!')
-            current_user = session.get('current_user')
+            next = request.args.get('next')
+
+            # # is_safe_url should check if the url is safe for redirects.
+            # # See http://flask.pocoo.org/snippets/62/ for an example.
+            # if not flask_login.is_safe_url(next):
+            #     return abort(400)
+
+            return redirect(next or url_for('index'))
         else:
             flash('The email address/password you provided were not found!')
             return render_template('login.html')
-        return render_template('index.html', username=current_user)
     return render_template('login.html')
 
 @app.route('/protected')
