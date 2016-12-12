@@ -4,13 +4,17 @@
     {% if item.userid %}
     <h1>{{ item.title }}</h1>
     <h2>Posted by: <a href="/user/{{ item_userid.id }}">{{ item_userid.email }}</a></h2>
-    <h2>{{ item.price }}</h2>
+    <h2>Price: ${{ item.price }}</h2>
     <div style="float:right" > <img src="{{item.image}}" style="height:300px;">
       <form action="/item/{{ item.id }}/reportUser" method="GET" id="reportUser">
         <button style ="float:left" type="submit" id="reportUser" class=" btn-danger btn-sm btn-primary ">report user</button>
       </form>
     </div>
-    <p>{{ item.descr }}</p>
+    <h3>Description: {{ item.descr }}</h3>
+    <h4>Date Posted: {{item.date}}</h4>
+
+    <br>
+    
     <form action="/item/{{ item.id }}" method="POST" id="buyItem">
       <button style ="float:left" type="submit" id="buyItem" class="btn btn-lg btn-primary btn-block">Buy Now</button>
     </form>
