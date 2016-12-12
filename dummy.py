@@ -33,6 +33,10 @@ db.session.add(user)
 user = User('test@test.com', 'test', 'test', 'test', '5555')
 db.session.add(user)
 
+#6
+user = User('tracy@example.com', 'dresser', 'Tracy', 'Miller', '5555')
+db.session.add(user)
+
 # create dummy posts for post.db
 # using python time object for date/time value in db field
 now = time.strftime('%Y-%m-%d %H:%M:%S')

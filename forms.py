@@ -28,3 +28,8 @@ class LoginForm(Form):
 	password = PasswordField("Password", [validators.Required()])
 	recaptcha = RecaptchaField()
 	submit = SubmitField("Log In")
+
+class ProfileForm(Form):
+	deposit = DecimalField('Deposit', [validators.Required("Please enter deposit amount.")])
+	withdraw = DecimalField('Withdraw', [validators.Required("Please enter withdraw amount.")])
+	submit = SelectField("Send")
