@@ -30,6 +30,6 @@ class LoginForm(Form):
 	submit = SubmitField("Log In")
 
 class ProfileForm(Form):
-	deposit = DecimalField('Deposit', [validators.Required("Please enter deposit amount.")])
-	withdraw = DecimalField('Withdraw', [validators.Required("Please enter withdraw amount.")])
-	submit = SelectField("Send")
+	deposit = TextField('Deposit', [validators.Required("Please enter deposit amount.")])
+	withdraw = TextField('Withdraw', [validators.Required("Please enter withdraw amount.")])
+	submit = SubmitField("Send")
