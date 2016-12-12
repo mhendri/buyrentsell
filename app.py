@@ -403,9 +403,6 @@ def post():
     return render_template('post.html', form=PostForm(),
                                 username=session.get('current_user'))
 
-# if (__name__)=='__main__':
-#     app.run(host='localhost', port=5000, debug=True)
-
 # User profile pages accessible by /user/id
 @app.route('/user/<id>', methods=['GET', 'POST'])
 #@login_required
