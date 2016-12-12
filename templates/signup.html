@@ -8,24 +8,36 @@
 		<form action="{{ url_for('signup') }}" class="form-signin" method="POST">
 		{{ form.hidden_tag() }}
 
-		<div class="form-group {%if form.email.errors%} has-error {% endif %}">
+		<div class="{%if form.firstname.errors %} has-error {% endif %}">
+			{{ form.firstname(placeholder="First Name", class="form-control") }}
+			{{ form.firstname.errors[0] }}
+		</div>
 
-		{{ form.firstname(placeholder="First Name", class="form-control") }}
-
+		<div class="{%if form.lastname.errors %} has-error {% endif %}">
 		{{ form.lastname(placeholder="Last Name", class="form-control") }}
+		{{ form.lastname.errors[0] }}
+		</div>
 
-		{{ form.email(placeholder="Email", class="form-control") }}
-		{{ form.email.errors[0] }}
+		<div class="{%if form.email.errors%} has-error {% endif %}">
+			{{ form.email(placeholder="Email", class="form-control") }}
+			{{ form.email.errors[0] }}
+		</div>
 
+		<div class="{%if form.password.errors %} has-error {% endif %}">
 		{{ form.password(placeholder="Password", class="form-control") }}
+		{{ form.password.errors[0] }}
+		</div>
 
+		<div class="{%if form.phone.errors %} has-error {% endif %}">
 		{{ form.phone(placeholder="Phone", class="form-control") }}
+		{{ form.phone.errors[0] }}
+		</div>
 
 		{{ form.recaptcha }}
 
 
-		<p class="col-sm-5 help-block">
-		<button type="submit" id="btnSignUp" class="btn btn-lg btn-primary btn-block" >Sign up</button>
+		{{ form.submit(class="btn btn-lg btn-primary btn-block") }}
+
 		</form>
 	</div>
 {% endblock %}
