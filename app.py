@@ -153,10 +153,6 @@ class User(db.Model):
         ''' False, as anonymous users aren't supported. '''
         return False
 
-    #
-    # def __repr__(self):
-    #     return dict(self)
-
 ##------------------------------------------------------------------------------
 ## Posts Model
 ##------------------------------------------------------------------------------
@@ -187,6 +183,9 @@ class Post(db.Model):
         self.category = category
         self.image = image
         self.isSold = False
+
+    # TODO: Need to add few more things:
+    # buyer_id, (is_biddable, current_bid, time_limit), date_posted, is_reported, image
 
 
     ############################################################################
@@ -270,17 +269,6 @@ class Flag(db.Model):
     #     self.userid = userid
     #     db.session.commit()
 
-
-# Need to add few more things:
-# buyer_id, (is_biddable, current_bid, time_limit), date_posted, is_reported, image
-
-# Create Database
-# db.create_all()
-
-# to add mock data, add entries to dummy.py
-# following conventions in that file
-# then run `$ python dummy.py` from your shell to commit those changes
-
 ################################################################################
 ## FLASK-ADMIN
 ################################################################################
@@ -297,15 +285,6 @@ admin.add_view(ModelView(Flag, db.session))
 def user_loader(id):
     ''' Given *od*, return the associated User object. '''
     return User.query.filter(User.id==id).first()
-
-# @lm.request_loader
-# def request_loader(request):
-#     email = request.form.get('email')
-#     user = User.query.filter(User.email==email).first()
-#
-#     user.is_authenticated = request.form['password'] == user.password
-#
-#     return user
 
 # @lm.unauthorized_handler
 # def unauthorized_handler():
@@ -431,7 +410,6 @@ def user(id):
             return redirect(url_for('index.html'))
 
     return render_template('user_profile.html', user=user, post=post, form=ProfileForm())
-
 
 @app.route('/item/<id>', methods=['GET', 'POST'])
 def item(id):
