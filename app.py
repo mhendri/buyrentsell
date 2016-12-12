@@ -233,14 +233,21 @@ class Flag(db.Model):
     __tablename__ = "Flag"
     flagid = db.Column(db.Integer, primary_key=True)
     userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"), unique = False)
+    email = db.Column('email', db.String(120), unique=False)
     reason = db.Column('flag_reason', db.String(120), unique=False)
 
     ############################################################################
     ## CONSTRUCTOR
     ############################################################################
-    def __init__(self,userid=None, reason=""):
+    def __init__(self,userid, email, reason=""):
         self.userid = userid
+        self.email = email
         self.reason = reason
+
+    # def report_user(self, reason, userid):
+    #     self.reason = reason
+    #     self.userid = userid
+    #     db.session.commit()
 
 
 # Need to add few more things:
@@ -424,3 +431,16 @@ def show_entries():
         return render_template('show_entries.html', entries=entries)
     return render_template('show_entries.html', entries=entries,
                             username=session.get('current_user'))
+
+@app.route('/item/<id>/reportUser', methods=['GET', 'POST'])
+def reportUser(id):
+    item = Post.query.filter_by(id=id).first()
+    if request.method == 'POST':
+        seller = User.query.filter(User.id==item.getUserID()).first()
+        reason = request.form['reason']
+        flag = Flag(seller.id, seller.email, reason)
+        db.session.add(flag)
+        db.session.commit()
+        flash('Your flagging of '+ seller.email + ' is under review!')
+        return redirect(url_for('show_entries'))
+    return render_template('report_user.html')
