@@ -439,7 +439,7 @@ def user(id):
     user = User.query.filter_by(id=id).first()
     post = Post.query.filter_by(userid=user.id)
     # rates = Rate.query.filter_by(userid=user.email).all()
-    rating = Rate.query.with_entities(func.avg(Rate.rating).label('average').filter(Rate.userid=user.email))
+    rating = Rate.query.filter_by(userid=user.email).value(func.avg(Rate.rating))
 
 
     # TODO: update so this form so that it only shows up on the current_user's
