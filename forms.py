@@ -21,7 +21,7 @@ class PostForm(Form):
 	price = DecimalField("Price", [validators.Required("Please enter a starting price.")])
 	descr = TextAreaField("Description", [validators.Required("Please enter a description.")])
 	image = TextField("Image", [validators.Required("Please upload an image")])
-	category = SelectField("Select Category", choices=[("Electronic", "Electronic"), ("Furniture", "Furniture"), ("Clothing", "Clothing"), ("Appliance", "Appliance"), ("Sports", "Sports")])
+	category = SelectField("Select Category", choices=[("electronic", "Electronic"), ("furniture", "Furniture"), ("clothing", "Clothing"), ("appliance", "Appliance"), ("sports", "Sports")])
 	submit = SubmitField("Send")
 
 class LoginForm(Form):
