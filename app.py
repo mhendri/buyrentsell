@@ -266,7 +266,7 @@ class Post(db.Model):
 class Flag(db.Model):
     __tablename__ = "Flag"
     flagid = db.Column(db.Integer, primary_key=True)
-    userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"), unique = False)
+    userid = db.Column('userid', db.String(120), db.ForeignKey("Users.id"), unique = False)
     email = db.Column('email', db.String(120), unique=False)
     reason = db.Column('flag_reason', db.String(120), unique=False)
 
@@ -289,7 +289,7 @@ class Flag(db.Model):
 class Rate(db.Model):
     __tablename__ = "Rate"
     id = db.Column('id', db.Integer, primary_key = True)
-    userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"))
+    userid = db.Column('userid', db.Integer, db.ForeignKey("Users.email"))
     rating = db.Column('rating', db.Numeric(3,2), unique = False)
     comment = db.Column('comment', db.String(120), unique = False)
 
@@ -454,11 +454,12 @@ def user(id):
 def item(id):
     item = Post.query.filter_by(id=id).first()
     item_userid = User.query.filter_by(id=item.userid).first()
-
+    buyer = User.query.filter_by(email=item.buyer).first();
+    seller = User.query.filter_by(id=item.userid).first()
     if request.method == 'POST':
         if not current_user.is_authenticated:
             flash('ERROR: You must be logged in to buy an item!')
-            return render_template('item.html', item=item, item_userid=item_userid)
+            return render_template('item.html', item=item, item_userid=item_userid, seller=seller, buyer=buyer)
 
         buyer = current_user
 
@@ -475,7 +476,7 @@ def item(id):
         else:
             flash('Insufficient funds to purchase ' + item.title + '. Try selling some stuff! ')
             return redirect(url_for('show_entries'))
-    return render_template('item.html', item=item, item_userid=item_userid)
+    return render_template('item.html', item=item, item_userid=item_userid, seller=seller, buyer=buyer)
 
 @app.route('/showPosts', methods=['GET', 'POST'])
 def show_entries():
@@ -516,6 +517,8 @@ def reportUser(id):
 # @login_required
 def rateBuyer(id):
     item = Post.query.filter_by(id=id).first()
+    buyer = User.query.filter_by(email=item.buyer).first();
+    seller = User.query.filter_by(id=item.userid).first()
     if request.method == 'POST':
         form = RateForm(request.form)
         if form.validate():
@@ -525,10 +528,32 @@ def rateBuyer(id):
             item.buyerRated()
             db.session.add(entry)
             db.session.commit()
-            flash('item.buyer successfully rated!')
+            flash(item.buyer + ' successfully rated!')
             return redirect('/index')
         else:
             print(form.errors)
             flash('failed to rate!')
-            return render_template('rate_user.html', form=form, item=item)
-    return render_template('rate_user.html', form=RateForm(), item=item)
+            return render_template('rate_user.html', form=form, item=item, seller=seller, buyer=buyer)
+    return render_template('rate_user.html', form=RateForm(), item=item, seller=seller, buyer=buyer)
+
+@app.route('/item/<id>/rateSeller', methods=['GET', 'POST'])
+def rateSeller(id):
+    item = Post.query.filter_by(id=id).first()
+    buyer = User.query.filter_by(email=item.buyer).first();
+    seller = User.query.filter_by(id=item.userid).first()
+    if request.method == 'POST':
+        form = RateForm(request.form)
+        if form.validate():
+            rating = form.rating.data
+            comment = form.comment.data
+            entry = Rate(seller.email, rating, comment)
+            item.sellerRated()
+            db.session.add(entry)
+            db.session.commit()
+            flash(seller.email + ' successfully rated!')
+            return redirect('/index')
+        else:
+            print(form.errors)
+            flash('failed to rate')
+            return render_template('rate_user.html', form=form, item=item, seller=seller, buyer=buyer)
+    return render_template('rate_user.html', form=RateForm(), item=item, seller=seller, buyer=buyer)

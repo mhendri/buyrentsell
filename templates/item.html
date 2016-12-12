@@ -19,9 +19,9 @@
       <button style ="float:left" type="submit" id="buyItem" class="btn btn-lg btn-primary btn-block">Buy Now</button>
       {% endif %}
     </form>
+
     {% if item.isSold and item.userid == current_user.id %}
       {% if not item.buyerrated %}
-
         <form action="/item/{{ item.id }}/rateBuyer">
           <button type="submit" class="btn btn-lg btn-primary btn-block">Rate Buyer</button>
         </form>
@@ -29,8 +29,20 @@
         <p>You've already rated the buyer!</p>
       {% endif %}
     {% endif %}
+
+    {% if item.isSold and buyer.id == current_user.id %}
+      {% if not item.sellerrated %}
+        <form action="/item/{{ item.id }}/rateSeller">
+          <button type="submit" class="btn btn-lg btn-primary btn-block">Rate Seller</button>
+        </form>
+      {% else %}
+        <p>You've already rated the seller!</p>
+      {% endif %}
+    {% endif %}
+
+
     {% else %}
-    <h1>This post does not exist!</h1>
+      <h1>This post does not exist!</h1>
     {% endif %}
   </div>
 {% endblock %}
