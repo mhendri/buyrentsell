@@ -5,6 +5,7 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 import flask_login
 
+
 from forms import *
 import random
 
@@ -253,14 +254,21 @@ class Flag(db.Model):
     __tablename__ = "Flag"
     flagid = db.Column(db.Integer, primary_key=True)
     userid = db.Column('userid', db.Integer, db.ForeignKey("Users.id"), unique = False)
+    email = db.Column('email', db.String(120), unique=False)
     reason = db.Column('flag_reason', db.String(120), unique=False)
 
     ############################################################################
     ## CONSTRUCTOR
     ############################################################################
-    def __init__(self,userid=None, reason=""):
+    def __init__(self,userid, email, reason=""):
         self.userid = userid
+        self.email = email
         self.reason = reason
+
+    # def report_user(self, reason, userid):
+    #     self.reason = reason
+    #     self.userid = userid
+    #     db.session.commit()
 
 
 # Need to add few more things:
@@ -406,23 +414,24 @@ def post():
 @app.route('/user/<id>', methods=['GET', 'POST'])
 #@login_required
 def user(id):
+    
     user = User.query.filter_by(id=id).first()
     post = Post.query.filter_by(userid=user.id)
     # TODO: update so this form so that it only shows up on the current_user's
     # profile
     if request.method == 'POST':
-        deposit = request.form['deposit']
-        withdraw = request.form['withdraw']
-        # profile = User.query.filter_by(id=id).first()
-        # profile.deposit(deposit)
-        # profile.withdraw(withdraw)
-        return render_template('index.html', username=session.get('current_user'))
+        form = ProfileForm(request.form)
+        if form.validate():
+            # deposit = form.deposit.data
+            # withdraw = form.withdraw.data
+            
+            # user.deposit(int(deposit))
+            # user.withdraw(int(withdraw)) 
+            # # flash("Done")
+            return redirect(url_for('index.html'))
 
-    user = User.query.filter_by(id=id).first()
-    post = Post.query.filter_by(userid=user.id)
-    return render_template('user_profile.html',
-                            username=session.get('current_user'),
-                            user=user, post=post)
+    return render_template('user_profile.html', user=user, post=post, form=ProfileForm())
+
 
 @app.route('/item/<id>', methods=['GET', 'POST'])
 def item(id):
@@ -465,3 +474,16 @@ def show_entries():
         return render_template('show_entries.html', entries=entries)
     return render_template('show_entries.html', entries=entries,
                             username=session.get('current_user'))
+
+@app.route('/item/<id>/reportUser', methods=['GET', 'POST'])
+def reportUser(id):
+    item = Post.query.filter_by(id=id).first()
+    if request.method == 'POST':
+        seller = User.query.filter(User.id==item.getUserID()).first()
+        reason = request.form['reason']
+        flag = Flag(seller.id, seller.email, reason)
+        db.session.add(flag)
+        db.session.commit()
+        flash('Your flagging of '+ seller.email + ' is under review!')
+        return redirect(url_for('show_entries'))
+    return render_template('report_user.html')
