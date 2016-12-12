@@ -5,6 +5,8 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
+from sqlalchemy import func
+
 
 from forms import *
 import random
@@ -431,9 +433,12 @@ def post():
 # User profile pages accessible by /user/id
 @app.route('/user/<id>', methods=['GET', 'POST'])
 def user(id):
-
     user = User.query.filter_by(id=id).first()
     post = Post.query.filter_by(userid=user.id)
+    # rates = Rate.query.filter_by(userid=user.email).all()
+    rating = Rate.query.with_entities(func.avg(Rate.rating).label('average').filter(Rate.userid=user.email))
+
+
     # TODO: update so this form so that it only shows up on the current_user's
     # profile
     if request.method == 'POST':
@@ -448,7 +453,7 @@ def user(id):
             return render_template('index.html')
         else:
             flash("Try again")
-    return render_template('user_profile.html', user=user, post=post, form=ProfileForm())
+    return render_template('user_profile.html', user=user, post=post, rating=rating, form=ProfileForm())
 
 @app.route('/item/<id>', methods=['GET', 'POST'])
 def item(id):
