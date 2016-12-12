@@ -1,13 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2> Report User </h2>
+<div class="jumbotron">
+<h2 style="color:#d9534f"> Report User </h2>
 <form action="" method="POST" id="reportUser">
 <div style="padding-top:20px" class = "radio">
-  <input type="radio" name="reason" value="illegal" style="vertical-align: middle"> <b>Illegal Item</b> <br>
+  <input type="radio" name="reason" value="illegalitem" style="vertical-align: middle"> <b>Illegal Item</b> <br>
   <input type="radio" name="reason" value="harassment" style="vertical-align: middle"> <b>Harassment</b> <br>
-  <input type="radio" name="reason" value="nopay" style="vertical-align: middle"> <b>No Payment</b> <br>
-<input type="submit" value="report" class="btn">
+  <input type="radio" name="reason" value="nopayment" style="vertical-align: middle"> <b>No payment</b> <br>
+  <input type="radio" name="reason" value="scam" style="vertical-align: middle"> <b>Scam</b> <br>
+  <input type="radio" name="reason" value="matchdescription" style="vertical-align: middle"> <b>Product Doesn't Match Description</b> <br>
+  <br>
+<input type="submit" value="report" class="btn btn-danger">
 </div>
 </form>
+</div>
+
 {% endblock %}
