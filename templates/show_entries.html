@@ -46,6 +46,15 @@
           <p class="post-title">
             <a align="center" href="/item/{{ entry.id }}">{{ entry.title }}</a>
           </p>
+          <p class="post-seller">
+            <a align="center" href="/user/{{ entry.userid }}"> Posted By:
+              {% if entry.userid == current_user.id %}
+                Me
+              {% else %}
+                {{ entry.getUserEmail() }}
+              {% endif %}
+            </a>
+          </p>
           <p align="center" class="post-price">{{ entry.price | safe }}</p>
         </div>
       </div>
