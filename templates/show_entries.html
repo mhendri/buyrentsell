@@ -47,6 +47,7 @@
             <a align="center" href="/item/{{ entry.id }}">{{ entry.title }}</a>
           </p>
           <p align="center" class="post-price">{{ entry.price | safe }}</p>
+          <p align="right" > <b> {{ entry.like | safe }} Likes </b> </p>
         </div>
       </div>
       {% endif %}
