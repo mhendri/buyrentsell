@@ -34,6 +34,7 @@
 
 
 	<div class="posts">
+		<h3>Posts Owned By {{ user.firstname }}</h3>
     <!-- Batch Line from http://stackoverflow.com/questions/17797921/jinja2-create-new-row-for-every-3-items -->
     {% for entry_row in post | batch(3) %}
 	    <div class="row">
@@ -50,7 +51,7 @@
 	      {% endfor %}
 	    </div>
     {% else %}
-      <em>No entries here so far</em>
+      <em>No entries here so far...</em>
     {% endfor %}
   	</div>
 
