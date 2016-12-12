@@ -12,6 +12,7 @@ class SignupForm(Form):
 		validators.Email("Please enter your email address")])
 	password = PasswordField("Passsword", [validators.Required("Please enter a password.")])
 	phone = IntegerField("Phone", [validators.Required("Please enter a phone number.")])
+	image = TextField("Image", [validators.Required("Please upload an image")])
 	submit = SubmitField("Send")
 	recaptcha = RecaptchaField()
 
