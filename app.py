@@ -199,6 +199,9 @@ class Post(db.Model):
     def getUserID(self):
         return self.userid
 
+    def getUserEmail(self):
+        return User.query.filter_by(id=self.userid).first().get_email()
+
     def getTitle(self):
         return self.title
 

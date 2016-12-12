@@ -174,4 +174,9 @@ padding-top: 2%;
 .post-price::before {
   content: '$';
 }
+
+.post-seller {
+  font-size: 12px;
+  text-align: right;
+}
 /* End CSS */
