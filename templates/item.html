@@ -3,6 +3,7 @@
 {% if item.userid %}
   <div style="overflow: auto" class="jumbotron">
     <h1>{{ item.title }}</h1>
+    <h2>Posted by: {{ item.userid }}</h2>
     <h2>{{ item.price }}</h2>
     <div style="float:right" > <img src="{{item.image}}" style="height:300px;">
       <form action="/item/{{ item.id }}/reportUser" method="GET" id="reportUser">
@@ -11,7 +12,7 @@
     </div>
     <p>{{ item.descr }}</p>
     <form action="/item/{{ item.id }}" method="POST" id="buyItem">
-    <button style ="float:left" type="submit" id="buyItem" class="btn btn-lg btn-primary btn-block">Buy (one click)</button>
+    <button style ="float:left" type="submit" id="buyItem" class="btn btn-lg btn-primary btn-block">Buy Now</button>
   </form>
 
 

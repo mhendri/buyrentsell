@@ -387,6 +387,7 @@ def post():
             flash('Item Posted!')
             return render_template('index.html')
         else:
+            flash('Item failed to post')
             return render_template('post.html', form=form)
     return render_template('post.html', form=PostForm(),
                                 username=session.get('current_user'))
@@ -403,14 +404,15 @@ def user(id):
     if request.method == 'POST':
         form = ProfileForm(request.form)
         if form.validate():
-            # deposit = form.deposit.data
-            # withdraw = form.withdraw.data
-
-            # user.deposit(int(deposit))
-            # user.withdraw(int(withdraw))
-            # # flash("Done")
-            return redirect(url_for('index.html'))
-
+            deposit = form.deposit.data
+            withdraw = form.withdraw.data
+            user_profile = User.query.filter(User.id==user.id).first()
+            user_profile.deposit(int(deposit))
+            user_profile.withdraw(int(withdraw)) 
+            flash("Done")
+            return render_template('index.html')
+        else:
+            flash("Try again")
     return render_template('user_profile.html', user=user, post=post, form=ProfileForm())
 
 @app.route('/item/<id>', methods=['GET', 'POST'])
@@ -464,6 +466,10 @@ def reportUser(id):
         flag = Flag(seller.id, seller.email, reason)
         db.session.add(flag)
         db.session.commit()
+        check_ban = Flag.query.filter(User.id==seller.id)
+        if check_ban.count() > 2:
+            seller.active = False
+            db.session.commit()
         flash('Your flagging of '+ seller.email + ' is under review!')
         return redirect(url_for('show_entries'))
     return render_template('report_user.html')
