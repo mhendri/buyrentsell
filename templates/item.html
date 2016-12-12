@@ -5,7 +5,7 @@
     <h1>{{ item.title }}</h1>
     <h2>{{ item.price }}</h2>
     <div style="float:right" > <img src="{{item.image}}" style="height:300px;">
-      <form action="/item/{{ item.id }}/reportUser" method="POST" id="reportUser">
+      <form action="/item/{{ item.id }}/reportUser" method="GET" id="reportUser">
       <button style ="float:left" type="submit" id="reportUser" class=" btn-danger btn-sm btn-primary ">report user</button>
       </form>
     </div>
