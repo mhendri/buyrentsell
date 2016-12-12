@@ -390,8 +390,7 @@ def post():
         else:
             flash('Item failed to post')
             return render_template('post.html', form=form)
-    return render_template('post.html', form=PostForm(),
-                                username=session.get('current_user'))
+    return render_template('post.html', form=PostForm())
 
 # User profile pages accessible by /user/id
 @app.route('/user/<id>', methods=['GET', 'POST'])
@@ -424,7 +423,7 @@ def item(id):
     if request.method == 'POST':
         if not session.get('logged_in'):
             flash('ERROR: You must be logged in to buy an item!')
-            return render_template('item.html', item=item)
+            return render_template('item.html', item=item, item_userid=item_userid)
         query = User.query.filter(User.email==current_user)
         buyer = query.first()
         if buyer.withdraw(int(item.getPrice())) == True:
@@ -440,7 +439,7 @@ def item(id):
         else:
             flash('Insufficient funds to purchase ' + item.title + '. Try selling some stuff! ')
             return redirect(url_for('show_entries'))
-    return render_template('item.html', username=session.get('current_user'), item=item, item_userid=item_userid)
+    return render_template('item.html', item=item, item_userid=item_userid)
 
 @app.route('/showPosts', methods=['GET', 'POST'])
 def show_entries():
@@ -452,12 +451,11 @@ def show_entries():
         if not session.get('logged_in'):
             return render_template('show_entries.html', entries=filtered)
         return render_template('show_entries.html', entries=filtered,
-                                username=session.get('current_user'))
+                                )
     entries = Post.query.order_by(Post.date.desc())
     if not session.get('logged_in'):
         return render_template('show_entries.html', entries=entries)
-    return render_template('show_entries.html', entries=entries,
-                            username=session.get('current_user'))
+    return render_template('show_entries.html', entries=entries)
 
 @app.route('/item/<id>/reportUser', methods=['GET', 'POST'])
 def reportUser(id):
