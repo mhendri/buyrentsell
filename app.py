@@ -5,6 +5,8 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
+from sqlalchemy import func
+
 
 from forms import *
 import random
@@ -172,6 +174,8 @@ class Post(db.Model):
     image = db.Column('image', db.String(120))
     isSold = db.Column('isSold', db.Boolean)
     buyer = db.Column('buyer', db.String(120))
+    buyerrated = db.Column('buyerrated', db.Boolean)
+    sellerrated = db.Column('sellerrated', db.Boolean)
     like = db.Column('like', db.Integer)
     ############################################################################
     ## CONSTRUCTOR
@@ -187,6 +191,8 @@ class Post(db.Model):
         self.category = category
         self.image = image
         self.isSold = False
+        self.buyerrated = False
+        self.sellerrated = False
         self.like = 0
 
     # TODO: Need to add few more things:
@@ -250,6 +256,14 @@ class Post(db.Model):
         self.buyer = purchaser
         db.session.commit()
 
+    def buyerRated(self):
+        self.buyerrated = True
+        db.session.commit()
+        
+    def sellerRated(self):
+        self.sellerrated = True
+        db.session.commit()
+        
     def updateLike(self):
         self.like += 1
         db.session.commit()
@@ -281,6 +295,25 @@ class Flag(db.Model):
     #     self.userid = userid
     #     db.session.commit()
 
+##------------------------------------------------------------------------------
+## Rate Model
+##------------------------------------------------------------------------------
+class Rate(db.Model):
+    __tablename__ = "Rate"
+    id = db.Column('id', db.Integer, primary_key = True)
+    userid = db.Column('userid', db.Integer, db.ForeignKey("Users.email"))
+    rating = db.Column('rating', db.Numeric(3,2), unique = False)
+    comment = db.Column('comment', db.String(120), unique = False)
+
+    ############################################################################
+    ## CONSTRUCTOR
+    ############################################################################
+    def __init__(self, userid, rating, comment):
+        self.userid = userid
+        self.rating = rating
+        self.comment = comment
+
+
 ################################################################################
 ## FLASK-ADMIN
 ################################################################################
@@ -288,6 +321,7 @@ class Flag(db.Model):
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Post, db.session))
 admin.add_view(ModelView(Flag, db.session))
+admin.add_view(ModelView(Rate, db.session))
 
 ################################################################################
 ## FLASK-LOGIN
@@ -389,7 +423,7 @@ def post():
     if request.method == 'POST':
         form = PostForm(request.form)
         if form.validate():
-            userid = current_user.email
+            userid = current_user.id
             title = form.title.data
             price = form.price.data
             descr = form.descr.data
@@ -409,9 +443,12 @@ def post():
 # User profile pages accessible by /user/id
 @app.route('/user/<id>', methods=['GET', 'POST'])
 def user(id):
-
     user = User.query.filter_by(id=id).first()
     post = Post.query.filter_by(userid=user.id)
+    # rates = Rate.query.filter_by(userid=user.email).all()
+    rating = Rate.query.filter_by(userid=user.email).value(func.avg(Rate.rating))
+
+
     # TODO: update so this form so that it only shows up on the current_user's
     # profile
     if request.method == 'POST':
@@ -433,17 +470,21 @@ def user(id):
             return render_template('index.html')
         else:
             flash("Try again")
-    return render_template('user_profile.html', user=user, post=post, form=ProfileForm())
+    return render_template('user_profile.html', user=user, post=post, rating=rating, form=ProfileForm())
 
 @app.route('/item/<id>', methods=['GET', 'POST'])
 def item(id):
     item = Post.query.filter_by(id=id).first()
     item_userid = User.query.filter_by(id=item.userid).first()
+    buyer = User.query.filter_by(email=item.buyer).first();
+    seller = User.query.filter_by(id=item.userid).first()
     if request.method == 'POST':
         if not current_user.is_authenticated:
             flash('ERROR: You must be logged in to buy an item!')
-            return render_template('item.html', item=item, item_userid=item_userid)
+            return render_template('item.html', item=item, item_userid=item_userid, seller=seller, buyer=buyer)
+
         buyer = current_user
+
         if buyer.withdraw(int(item.getPrice())) == True:
             # get seller
             seller = User.query.filter(User.id==item.getUserID()).first()
@@ -469,7 +510,7 @@ def item(id):
         else:
             flash('Insufficient funds to purchase ' + item.title + '. Try selling some stuff! ')
             return redirect(url_for('show_entries'))
-    return render_template('item.html', item=item, item_userid=item_userid)
+    return render_template('item.html', item=item, item_userid=item_userid, seller=seller, buyer=buyer)
 
 @app.route('/showPosts', methods=['GET', 'POST'])
 def show_entries():
@@ -506,6 +547,51 @@ def reportUser(id):
         return redirect(url_for('show_entries'))
     return render_template('report_user.html')
 
+@app.route('/item/<id>/rateBuyer', methods=['GET', 'POST'])
+# @login_required
+def rateBuyer(id):
+    item = Post.query.filter_by(id=id).first()
+    buyer = User.query.filter_by(email=item.buyer).first();
+    seller = User.query.filter_by(id=item.userid).first()
+    if request.method == 'POST':
+        form = RateForm(request.form)
+        if form.validate():
+            rating = form.rating.data
+            comment = form.comment.data
+            entry = Rate(item.buyer, rating, comment)
+            item.buyerRated()
+            db.session.add(entry)
+            db.session.commit()
+            flash(item.buyer + ' successfully rated!')
+            return redirect('/index')
+        else:
+            print(form.errors)
+            flash('failed to rate!')
+            return render_template('rate_user.html', form=form, item=item, seller=seller, buyer=buyer)
+    return render_template('rate_user.html', form=RateForm(), item=item, seller=seller, buyer=buyer)
+
+@app.route('/item/<id>/rateSeller', methods=['GET', 'POST'])
+def rateSeller(id):
+    item = Post.query.filter_by(id=id).first()
+    buyer = User.query.filter_by(email=item.buyer).first();
+    seller = User.query.filter_by(id=item.userid).first()
+    if request.method == 'POST':
+        form = RateForm(request.form)
+        if form.validate():
+            rating = form.rating.data
+            comment = form.comment.data
+            entry = Rate(seller.email, rating, comment)
+            item.sellerRated()
+            db.session.add(entry)
+            db.session.commit()
+            flash(seller.email + ' successfully rated!')
+            return redirect('/index')
+        else:
+            print(form.errors)
+            flash('failed to rate')
+            return render_template('rate_user.html', form=form, item=item, seller=seller, buyer=buyer)
+    return render_template('rate_user.html', form=RateForm(), item=item, seller=seller, buyer=buyer)
+ 
 @app.route('/item/<id>/liked', methods=['GET', 'POST'])
 @login_required
 def likePost(id):

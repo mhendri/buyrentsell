@@ -7,7 +7,7 @@
 		<img align="middle" src="{{ user.image }}" style="height:300px;">
 		<h1 align="center">{{ user.firstname }} {{ user.lastname }}</h1>
 		<h2 align="center">{{ user.email }}</h2>
-		<h3 align="center">Rating:</h3>
+		<h3 align="center">Rating: {{ rating }}</h3>
 	</div>
 
 	{% if current_user.email == user.email %}
