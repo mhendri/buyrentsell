@@ -375,7 +375,7 @@ def post():
     if request.method == 'POST':
         form = PostForm(request.form)
         if form.validate():
-            userid = current_user.email
+            userid = current_user.id
             title = form.title.data
             price = form.price.data
             descr = form.descr.data
