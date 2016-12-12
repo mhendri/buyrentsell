@@ -54,6 +54,7 @@ class User(db.Model):
     password = db.Column('password', db.String(15), unique=False)
     phone = db.Column('phone', db.Integer, unique=False)
     balance = db.Column('balance', db.Integer, unique=False)
+    image = db.Column('image', db.String(220))
     active = db.Column('active', db.Boolean, unique=False)
     # authenticated for flask-login
     authenticated = db.Column(db.Boolean, default=False)
@@ -61,7 +62,7 @@ class User(db.Model):
     ############################################################################
     ## CONSTRUCTOR
     ############################################################################
-    def __init__(self, email="", password="", firstname="", lastname="", phone=""):
+    def __init__(self, email="", password="", firstname="", lastname="", phone="", image=""):
         ''' '''
         self.firstname = firstname
         self.lastname = lastname
@@ -69,6 +70,7 @@ class User(db.Model):
         self.password = password
         self.phone = phone
         self.balance = 0
+        self.image = image
         # active is initially False
         # user must be approved by superuser
         self.active = False
@@ -381,7 +383,8 @@ def signup():
                 email = form.email.data
                 password = form.password.data
                 phone = form.phone.data
-                entry = User(email, password, firstname, lastname, phone)
+                image = form.image.data
+                entry = User(email, password, firstname, lastname, phone, image)
                 db.session.add(entry)
                 db.session.commit()
                 flash('You have sucessfully signed up and will have access shortly! Thank you for your patience')
@@ -391,6 +394,7 @@ def signup():
     return render_template('signup.html', form=SignupForm())
 
 @app.route('/post', methods = ['GET', 'POST'])
+@login_required
 def post():
     if request.method == 'POST':
         form = PostForm(request.form)
@@ -414,7 +418,6 @@ def post():
 
 # User profile pages accessible by /user/id
 @app.route('/user/<id>', methods=['GET', 'POST'])
-#@login_required
 def user(id):
 
     user = User.query.filter_by(id=id).first()
@@ -439,13 +442,14 @@ def user(id):
 def item(id):
     item = Post.query.filter_by(id=id).first()
     item_userid = User.query.filter_by(id=item.userid).first()
-    # current_user = session.get('current_user')
+
     if request.method == 'POST':
         if not current_user.is_authenticated:
             flash('ERROR: You must be logged in to buy an item!')
             return render_template('item.html', item=item, item_userid=item_userid)
-        query = User.query.filter(User.id==current_user.id)
-        buyer = query.first()
+
+        buyer = current_user
+
         if buyer.withdraw(int(item.getPrice())) == True:
             # get seller
             seller = User.query.filter(User.id==item.getUserID()).first()
@@ -468,16 +472,18 @@ def show_entries():
         flash('Filter: %s Selected!' % CATEGORY)
         entries = Post.query.filter(Post.category==CATEGORY)
         filtered = entries.order_by(Post.date.desc())
-        if not session.get('logged_in'):
+        if not current_user.is_authenticated:
             return render_template('show_entries.html', entries=filtered)
         return render_template('show_entries.html', entries=filtered,
                                 )
     entries = Post.query.order_by(Post.date.desc())
-    if not session.get('logged_in'):
+    if not current_user.is_authenticated:
         return render_template('show_entries.html', entries=entries)
     return render_template('show_entries.html', entries=entries)
 
+# NOTE: may want to make this logged_in only
 @app.route('/item/<id>/reportUser', methods=['GET', 'POST'])
+@login_required
 def reportUser(id):
     item = Post.query.filter_by(id=id).first()
     if request.method == 'POST':

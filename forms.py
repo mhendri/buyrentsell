@@ -12,6 +12,7 @@ class SignupForm(Form):
 		validators.Email("Please enter your email address")])
 	password = PasswordField("Passsword", [validators.Required("Please enter a password.")])
 	phone = IntegerField("Phone", [validators.Required("Please enter a phone number.")])
+	image = TextField("Image", [validators.Required("Please upload an image")])
 	submit = SubmitField("Send")
 	recaptcha = RecaptchaField()
 
@@ -32,9 +33,13 @@ class LoginForm(Form):
 class ProfileForm(Form):
 	deposit = TextField('Deposit', [validators.Required("Please enter deposit amount.")])
 	withdraw = TextField('Withdraw', [validators.Required("Please enter withdraw amount.")])
+<<<<<<< HEAD
 	submit = SubmitField("Send")
 
 class RateForm(Form):
 	rating = RadioField("Rating", choices=[(1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5")], [validators.Required("Please select a rating.")])
 	comment = TextAreaField("Comment")
 	submit = SubmitField("Rate")
+=======
+	submit = SubmitField("Send")
+>>>>>>> master

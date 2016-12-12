@@ -29,10 +29,10 @@
       <ul class="nav navbar-nav navbar-right">
         {% if current_user.is_authenticated %}
         <li>
-          <a href="/user/{{ current_user.id }}">Welcome {{ current_user.email }}! </a>
+          <a href="/user/{{ current_user.id }}">Welcome {{ current_user.email }}! Balance: ${{ current_user.balance }}</a>
         </li>
         <li>
-          <a href="/logout">Logout</a>
+          <a href="/logout">Log Out</a>
         </li>
         {% else %}
         <li>

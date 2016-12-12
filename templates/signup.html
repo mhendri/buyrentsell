@@ -33,6 +33,11 @@
 			{{ form.phone.errors[0] }}
 		</div>
 
+		<div class="{%if form.image.errors %} has-error {% endif %}">
+			{{ form.image(placeholder="Image", class="form-control") }}
+			{{ form.image.errors[0] }}
+		</div>
+
 		{{ form.recaptcha }}
 
 
