@@ -34,3 +34,8 @@ class ProfileForm(Form):
 	deposit = TextField('Deposit', [validators.Required("Please enter deposit amount.")])
 	withdraw = TextField('Withdraw', [validators.Required("Please enter withdraw amount.")])
 	submit = SubmitField("Send")
+
+class RateForm(Form):
+	rating = RadioField("Rating", [validators.Required("Please select a rating.")], choices=[("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")])
+	comment = TextAreaField("Comment")
+	submit = SubmitField("Rate")
