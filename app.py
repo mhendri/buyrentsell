@@ -3,24 +3,19 @@ from flask import flash, redirect, render_template, request, session, abort, url
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
-
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
 
 from forms import *
 import random
 
 import os
-# from flask.ext.login import LoginManager
 
 # for datetime
 from datetime import datetime
 
 # Database Imports
 from sqlalchemy.orm import sessionmaker
-# from tabledef import *
-
-# # create enginer for database
-# engine = create_engine('sqlite:///brs.db', echo=True)
 
 app = Flask(__name__)
 # set the secret key
@@ -34,6 +29,11 @@ app.config['RECAPTCHA_OPTIONS'] = {'theme': 'white'}
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///brs.db'
 db = SQLAlchemy(app)
 admin = Admin(app, name='BRS Admin', template_mode='bootstrap3')
+
+# Flask-Login Login Manager
+lm = LoginManager()
+lm.init_app(app)
+lm.login_view = 'login'
 
 global resultnum
 resultnum = 0
@@ -55,6 +55,8 @@ class User(db.Model):
     phone = db.Column('phone', db.Integer, unique=False)
     balance = db.Column('balance', db.Integer, unique=False)
     active = db.Column('active', db.Boolean, unique=False)
+    # authenticated for flask-login
+    authenticated = db.Column(db.Boolean, default=False)
 
     ############################################################################
     ## CONSTRUCTOR
@@ -71,13 +73,10 @@ class User(db.Model):
         # user must be approved by superuser
         self.active = False
 
+
     ############################################################################
     ## GETTERS
     ############################################################################
-
-    def get_user_id(self):
-        return self.id
-
     def get_first_name(self):
         return self.firstname
 
@@ -98,19 +97,24 @@ class User(db.Model):
     ############################################################################
     def set_email(self, email):
         self.email = email
+        db.session.commit()
 
     def set_phone(self, phone):
         self.phone = phone
+        db.session.commit()
 
     # unsure about this setter / may not be needed
     def set_balance(self, balance):
         self.balance = balance
+        db.session.commit()
 
     def activate_user(self):
         self.active = True
+        db.session.commit()
 
     def suspend_user(self):
         self.active = False
+        db.session.commit()
 
     ############################################################################
     ## OTHER METHODS
@@ -133,9 +137,21 @@ class User(db.Model):
             db.session.commit()
             return True
 
-    #
-    # def __repr__(self):
-    #     return dict(self)
+    ############################################################################
+    ## Flask-Login Methods
+    ############################################################################
+    def is_active(self):
+        return self.active
+
+    def get_id(self):
+        return self.id
+
+    def is_authenticated(self):
+        return self.authenticated
+
+    def is_anonymous(self):
+        ''' False, as anonymous users aren't supported. '''
+        return False
 
 ##------------------------------------------------------------------------------
 ## Posts Model
@@ -167,6 +183,9 @@ class Post(db.Model):
         self.category = category
         self.image = image
         self.isSold = False
+
+    # TODO: Need to add few more things:
+    # buyer_id, (is_biddable, current_bid, time_limit), date_posted, is_reported, image
 
 
     ############################################################################
@@ -250,17 +269,6 @@ class Flag(db.Model):
     #     self.userid = userid
     #     db.session.commit()
 
-
-# Need to add few more things:
-# buyer_id, (is_biddable, current_bid, time_limit), date_posted, is_reported, image
-
-# Create Database
-# db.create_all()
-
-# to add mock data, add entries to dummy.py
-# following conventions in that file
-# then run `$ python dummy.py` from your shell to commit those changes
-
 ################################################################################
 ## FLASK-ADMIN
 ################################################################################
@@ -270,6 +278,19 @@ admin.add_view(ModelView(Post, db.session))
 admin.add_view(ModelView(Flag, db.session))
 
 ################################################################################
+## FLASK-LOGIN
+################################################################################
+#!py
+@lm.user_loader
+def user_loader(id):
+    ''' Given *od*, return the associated User object. '''
+    return User.query.filter(User.id==id).first()
+
+# @lm.unauthorized_handler
+# def unauthorized_handler():
+#     return 'Unauthorized'
+
+################################################################################
 ## ROUTES
 ################################################################################
 
@@ -277,46 +298,52 @@ admin.add_view(ModelView(Flag, db.session))
 @app.route('/')
 @app.route('/index')
 def index():
-    if not session.get('logged_in'):
-        return render_template('index.html')
-    else:
-        # if logged in, show index with username
-        return render_template('index.html',
-                        username=session.get('current_user'))
+    return render_template('index.html', title="Home")
 
 # Logging In
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        POST_USERNAME = str(request.form['email'])
-        POST_PASSWORD = str(request.form['password'])
+        email = str(request.form['email'])
+        password = str(request.form['password'])
+        query = User.query.filter(User.email==email, User.password==password)
+        user = query.first()
 
-        # Session = sessionmaker(bind=engine)
-        # s = db.session
-        query = User.query.filter(User.email==POST_USERNAME,
-                User.password==POST_PASSWORD)
-        result = query.first()
-
-        if result:
-            if result.active == False:
+        if user:
+            if not user.is_active():
                 flash ('Account not yet active, please wait for admin')
                 return render_template('login.html')
-            session['logged_in'] = True
-            session['current_user'] = result.email
+            user.authenticated = True
+            db.session.add(user)
+            db.session.commit()
+            login_user(user, True)
             flash('SUCCESS: Logged In!')
-            current_user = session.get('current_user')
+            next = request.args.get('next')
+
+            # # is_safe_url should check if the url is safe for redirects.
+            # # See http://flask.pocoo.org/snippets/62/ for an example.
+            # if not is_safe_url(next):
+            #     return abort(400)
+
+            return redirect(next or url_for('index'))
         else:
             flash('The email address/password you provided were not found!')
             return render_template('login.html')
-        return render_template('index.html', username=current_user)
     return render_template('login.html')
+
+# NOTE: example of login required route
+# @app.route('/protected')
+# @login_required
+# def protected():
+#     return 'Logged in as: ' + current_user.firstname
 
 # Logging Out
 @app.route('/logout')
+@login_required
 def logout():
-    session['logged_in'] = False
+    logout_user()
     flash('SUCCESS: Logged Out!')
-    return index()
+    return redirect(url_for('index'))
 
 # Signing Up
 @app.route('/signup', methods =['GET', 'POST'])
@@ -365,9 +392,6 @@ def post():
     return render_template('post.html', form=PostForm(),
                                 username=session.get('current_user'))
 
-if (__name__)=='__main__':
-    app.run(host='localhost', port=5000, debug=True)
-
 # User profile pages accessible by /user/id
 @app.route('/user/<id>', methods=['GET', 'POST'])
 #@login_required
@@ -390,7 +414,6 @@ def user(id):
         else:
             flash("Try again")
     return render_template('user_profile.html', user=user, post=post, form=ProfileForm())
-
 
 @app.route('/item/<id>', methods=['GET', 'POST'])
 def item(id):
