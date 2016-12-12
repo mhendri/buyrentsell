@@ -33,13 +33,9 @@ class LoginForm(Form):
 class ProfileForm(Form):
 	deposit = TextField('Deposit', [validators.Required("Please enter deposit amount.")])
 	withdraw = TextField('Withdraw', [validators.Required("Please enter withdraw amount.")])
-<<<<<<< HEAD
 	submit = SubmitField("Send")
 
 class RateForm(Form):
-	rating = RadioField("Rating", choices=[(1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5")], [validators.Required("Please select a rating.")])
+	rating = RadioField("Rating", [validators.Required("Please select a rating.")], choices=[(1, "1"), (2, "2"), (3, "3"), (4, "4"), (5, "5")])
 	comment = TextAreaField("Comment")
 	submit = SubmitField("Rate")
-=======
-	submit = SubmitField("Send")
->>>>>>> master

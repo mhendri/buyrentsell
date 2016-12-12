@@ -284,7 +284,7 @@ class Rate(db.Model):
     ############################################################################
     ## CONSTRUCTOR
     ############################################################################
-    def __init__(self, userid, rating, comment)
+    def __init__(self, userid, rating, comment):
         self.userid = userid
         self.rating = rating
         self.comment = comment
@@ -499,3 +499,8 @@ def reportUser(id):
         flash('Your flagging of '+ seller.email + ' is under review!')
         return redirect(url_for('show_entries'))
     return render_template('report_user.html')
+
+@app.route('/item/<id>/rateUser', methods=['GET', 'POST'])
+@login_required
+def rateUser(id):
+
