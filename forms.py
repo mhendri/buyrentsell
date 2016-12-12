@@ -20,3 +20,8 @@ class PostForm(Form):
 	image = TextField("Image", [validators.Required("Please upload an image")])
 	category = SelectField("Select Category", choices=[("Electronic", "Electronic"), ("Furniture", "Furniture"), ("Clothing", "Clothing"), ("Appliance", "Appliance"), ("Sports", "Sports")])
 	submit = SubmitField("Send")
+
+class ProfileForm(Form):
+	deposit = DecimalField('Deposit', [validators.Required("Please enter deposit amount.")])
+	withdraw = DecimalField('Withdraw', [validators.Required("Please enter withdraw amount.")])
+	submit = SelectField("Send")
