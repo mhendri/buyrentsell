@@ -3,7 +3,7 @@ from flask import flash, redirect, render_template, request, session, abort, url
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
-
+import flask_login
 
 from forms import *
 import random
@@ -33,6 +33,11 @@ app.config['RECAPTCHA_OPTIONS'] = {'theme': 'white'}
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///brs.db'
 db = SQLAlchemy(app)
 admin = Admin(app, name='BRS Admin', template_mode='bootstrap3')
+
+# Flask-Login Login Manager
+lm = flask_login.LoginManager()
+lm.init_app(app)
+lm.login_view = 'login'
 
 global resultnum
 resultnum = 0
@@ -144,7 +149,7 @@ class User(db.Model):
         return self.authenticated
 
     def is_anonymous(self):
-        ''' Flase, as anonymous users aren't supported. '''
+        ''' False, as anonymous users aren't supported. '''
         return False
 
     #
@@ -280,10 +285,23 @@ admin.add_view(ModelView(Flag, db.session))
 ## FLASK-LOGIN
 ################################################################################
 #!py
-@login_manager.user_loader
-def user_loader(user_id):
-    ''' Given *user_id*, return the associated User object. '''
-    return User.query.get(user_id)
+@lm.user_loader
+def user_loader(id):
+    ''' Given *od*, return the associated User object. '''
+    return User.query.filter(User.id==id).first()
+
+# @lm.request_loader
+# def request_loader(request):
+#     email = request.form.get('email')
+#     user = User.query.filter(User.email==email).first()
+#
+#     user.is_authenticated = request.form['password'] == user.password
+#
+#     return user
+
+# @lm.unauthorized_handler
+# def unauthorized_handler():
+#     return 'Unauthorized'
 
 ################################################################################
 ## ROUTES
@@ -326,6 +344,11 @@ def login():
             return render_template('login.html')
         return render_template('index.html', username=current_user)
     return render_template('login.html')
+
+@app.route('/protected')
+@flask_login.login_required
+def protected():
+    return 'Logged in as: ' + flask_login.current_user.firstname
 
 # Logging Out
 @app.route('/logout')
