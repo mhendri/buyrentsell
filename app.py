@@ -54,6 +54,7 @@ class User(db.Model):
     password = db.Column('password', db.String(15), unique=False)
     phone = db.Column('phone', db.Integer, unique=False)
     balance = db.Column('balance', db.Integer, unique=False)
+    image = db.Column('image', db.String(220))
     active = db.Column('active', db.Boolean, unique=False)
     # authenticated for flask-login
     authenticated = db.Column(db.Boolean, default=False)
@@ -61,7 +62,7 @@ class User(db.Model):
     ############################################################################
     ## CONSTRUCTOR
     ############################################################################
-    def __init__(self, email="", password="", firstname="", lastname="", phone=""):
+    def __init__(self, email="", password="", firstname="", lastname="", phone="", image=""):
         ''' '''
         self.firstname = firstname
         self.lastname = lastname
@@ -69,6 +70,7 @@ class User(db.Model):
         self.password = password
         self.phone = phone
         self.balance = 0
+        self.image = image
         # active is initially False
         # user must be approved by superuser
         self.active = False
@@ -361,7 +363,8 @@ def signup():
                 email = form.email.data
                 password = form.password.data
                 phone = form.phone.data
-                entry = User(email, password, firstname, lastname, phone)
+                image = form.image.data
+                entry = User(email, password, firstname, lastname, phone, image)
                 db.session.add(entry)
                 db.session.commit()
                 flash('You have sucessfully signed up and will have access shortly! Thank you for your patience')

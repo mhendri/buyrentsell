@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 
-	<div class="jumbotron">
+	<div align="center" class="jumbotron">
 	{% if user.id %}
 		<!-- Display the username, currently parameter is unknown -->
-		<h1 align="center">{{ user.email }}</h1>
-		<h2 align="center">Rating:</h2>
+		<img align="middle" src="{{ user.image }}" style="height:300px;">
+		<h1 align="center">{{ user.firstname }} {{ user.lastname }}</h1>
+		<h2 align="center">{{ user.email }}</h2>
+		<h3 align="center">Rating:</h3>
 
 	</div>
 
