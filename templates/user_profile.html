@@ -17,6 +17,11 @@
 
 			<div align="center">
 				<h2 align="center">Current Balance: ${{user.balance}}</h2>
+				{% if current_user.VIP == True %}
+				<h2> You're a VIP! Keep you balance above $5000 to maintain VIP </h2>
+				{% else %}
+					<h3> Achieve VIP status with a $5000 balance </h3>
+				{%endif%}
 			</div>
 
 			<div align="center" class="form-group">

@@ -60,6 +60,7 @@ class User(db.Model):
     active = db.Column('active', db.Boolean, unique=False)
     # authenticated for flask-login
     authenticated = db.Column(db.Boolean, default=False)
+    VIP = db.Column('VIP', db.Boolean, default = False)
 
     ############################################################################
     ## CONSTRUCTOR
@@ -76,6 +77,7 @@ class User(db.Model):
         # active is initially False
         # user must be approved by superuser
         self.active = False
+        self.VIP = False
 
 
     ############################################################################
@@ -457,6 +459,13 @@ def user(id):
             user_profile = User.query.filter(User.id==user.id).first()
             user_profile.deposit(int(deposit))
             user_profile.withdraw(int(withdraw))
+            if user.balance < 5000:
+                user.VIP = False
+                db.session.commit()
+            else:
+                user.VIP = True
+                db.session.commit()
+        
             flash("Done")
             return render_template('index.html')
         else:
@@ -484,6 +493,18 @@ def item(id):
             # mark item as sold
             item.markSold()
             item.updateBuyer(buyer.email)
+            if buyer.balance < 5000:
+                buyer.VIP = False
+                db.session.commit()
+            else:
+                buyer.VIP = True
+                db.session.commit()
+            if seller.balance < 5000:
+                seller.VIP = False
+                db.session.commit()
+            else:
+                seller.VIP = True
+                db.session.commit()
             flash(item.title + ' succesfully purchased!')
             return redirect(url_for('show_entries'))
         else:
