@@ -30,7 +30,7 @@ $ conda install -c conda-forge flask-wtf
 # Retrieve our project and get it running
 ```
 $ git clone https://github.com/mhendri/buyrentsell
-$ cd brs
+$ cd buyrentsell
 ```
 
 # Create our database based off our model, run the following commands
