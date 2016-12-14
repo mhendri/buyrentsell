@@ -22,8 +22,9 @@ $ source activate brs
 $ conda install -c conda-forge flask-sqlalchemy=2.1
 $ conda install sqlalchemy 
 $ conda install psycopg2
-$ conda install flask-login
-$ conda install flask-admin
+$ conda install -c conda-forge flask-login
+$ conda install -c conda-forge flask-admin
+$ conda install -c conda-forge flask-wtf
 ```
 
 # Retrieve our project and get it running
@@ -40,8 +41,10 @@ $ python
 >>> exit()
 ```
 
-# Get the app running locally
+# Get the app running locally 
+# Go to your web browser and go to localhost:5000
 ```
 $ export FLASK_APP=app.py
 $ flask run
 ```
+
