@@ -42,7 +42,6 @@ $ python
 ```
 
 # Get the app running locally 
-# Go to your web browser and go to localhost:5000
 ```
 $ export FLASK_APP=app.py
 $ flask run
